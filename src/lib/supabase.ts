@@ -33,3 +33,32 @@ export async function insertLead(params: {
   }
   return { ok: true };
 }
+
+export type Lead = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  lead_magnet: string;
+  created_at: string;
+};
+
+// 관리자 페이지 전용. service_role 키로 RLS를 우회해 전체 목록을 읽습니다.
+// 이 함수는 서버 컴포넌트/라우트에서만 호출하고, 절대 클라이언트로 값을 내려보내지 마세요.
+export async function getLeads(): Promise<Lead[]> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return [];
+
+  const res = await fetch(`${url}/rest/v1/leads?select=*&order=created_at.desc`, {
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return [];
+  return res.json();
+}
