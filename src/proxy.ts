@@ -22,10 +22,14 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
-  });
+  const authHeaderDecoded = authHeader?.startsWith("Basic ") ? atob(authHeader.slice(6)) : null;
+  return new NextResponse(
+    `DEBUG hasExpectedUser=${!!expectedUser} hasExpectedPass=${!!expectedPass} expectedPassLen=${expectedPass?.length ?? 0} receivedLen=${authHeaderDecoded?.length ?? 0} exactMatch=${authHeaderDecoded === `${expectedUser}:${expectedPass}`}`,
+    {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
+    }
+  );
 }
 
 export const config = {
