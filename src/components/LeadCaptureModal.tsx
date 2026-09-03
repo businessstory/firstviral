@@ -59,7 +59,7 @@ export default function LeadCaptureModal({
             <button
               type="button"
               onClick={handleClose}
-              className="mt-6 w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-95"
+              className="mt-6 w-full rounded-full bg-brand-700 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 active:scale-95"
             >
               닫기
             </button>
@@ -90,7 +90,7 @@ export default function LeadCaptureModal({
                 placeholder="이름"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
               />
               <input
                 type="email"
@@ -98,7 +98,7 @@ export default function LeadCaptureModal({
                 placeholder="이메일"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
               />
               <input
                 type="tel"
@@ -106,7 +106,7 @@ export default function LeadCaptureModal({
                 placeholder="연락처 (010-0000-0000)"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function LeadCaptureModal({
             <button
               type="submit"
               disabled={status === "loading" || !agree}
-              className="mt-5 w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 w-full rounded-full bg-brand-700 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === "loading" ? "전송 중..." : "무료로 받기"}
             </button>

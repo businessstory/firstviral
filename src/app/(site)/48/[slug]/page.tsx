@@ -61,7 +61,7 @@ export default async function NewsletterPostPage({
         href={post.ctaUrl}
         target="_blank"
         rel="noreferrer"
-        className="mt-8 inline-flex items-center gap-2 rounded-[9px] bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 active:scale-95"
+        className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-700 px-7 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95"
       >
         {post.ctaLabel}
       </a>

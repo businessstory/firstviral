@@ -37,8 +37,8 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-neutral-900 ${
-                  active ? "text-neutral-900" : "text-neutral-500"
+                className={`text-sm font-medium transition-colors hover:text-brand-700 ${
+                  active ? "text-brand-700" : "text-neutral-500"
                 }`}
               >
                 {item.label}
@@ -48,7 +48,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 md:flex">
+          <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-700 md:flex">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="8" r="4" />
               <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />

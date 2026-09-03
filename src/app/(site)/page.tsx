@@ -14,29 +14,41 @@ export default function Home() {
   return (
     <>
       {/* 히어로 */}
-      <section className="relative flex h-[calc(100vh-64px)] min-h-[520px] items-center justify-center overflow-hidden bg-neutral-900">
+      <section className="relative flex min-h-[640px] items-center justify-center overflow-hidden bg-brand-950 py-28">
         {/* TODO: 자체 촬영 이미지/영상으로 교체 (현재는 임시 플레이스홀더) */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(circle at 50% 35%, #2a2a2a 0%, #161616 60%, #0c0c0c 100%)",
+              "radial-gradient(circle at 50% 20%, #1c4f3a 0%, #123b2c 45%, #0b2b21 80%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 15% 85%, rgba(111,207,151,0.18), transparent 45%), radial-gradient(circle at 85% 15%, rgba(232,196,104,0.12), transparent 40%)",
           }}
         />
 
         <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-5 text-center">
-          <h1 className="text-4xl font-bold leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-400/30 bg-brand-900/60 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-brand-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
+            Instagram &amp; Threads Consulting
+          </span>
+
+          <h1 className="mt-6 text-4xl font-bold leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl">
             팔로워를 수익으로 바꾸는
             <br />
             가장 빠른 방법
           </h1>
-          <p className="mt-5 text-xs font-medium tracking-[0.2em] text-white/80 md:text-sm">
-            INSTAGRAM &amp; THREADS 1:1 CONSULTING
+          <p className="mt-5 max-w-md text-sm leading-relaxed text-brand-100/80 md:text-base">
+            계정마다 문제는 다 다릅니다. 1:1로 진단받고 방향을 잡아보세요.
           </p>
 
           <Link
             href="/261"
-            className="mt-10 inline-flex items-center gap-2 rounded-[9px] bg-white px-6 py-3.5 text-sm font-semibold text-neutral-900 transition-transform hover:scale-105 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-white active:scale-95"
+            className="mt-10 inline-flex items-center gap-2 rounded-full bg-accent-gold px-7 py-3.5 text-sm font-bold text-brand-950 shadow-[0_10px_30px_rgba(232,196,104,0.25)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-400 active:scale-95"
           >
             무료 자가진단 받아보기
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -47,7 +59,7 @@ export default function Home() {
       </section>
 
       {/* 페인포인트 */}
-      <section className="bg-[#161616] px-5 py-24">
+      <section className="bg-brand-950 px-5 py-24">
         <h2 className="mx-auto max-w-xl text-center text-2xl font-bold leading-tight tracking-tight text-white md:text-3xl">
           열심히 하고 있는데,
           <br />
@@ -57,7 +69,7 @@ export default function Home() {
         <div className="mx-auto mt-14 grid max-w-4xl gap-x-10 gap-y-12 sm:grid-cols-2">
           {painPoints.map((text, i) => (
             <div key={i} className="flex flex-col items-center text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-800 text-brand-400 ring-1 ring-inset ring-brand-700">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <circle cx="12" cy="12" r="9" />
                   <path d="M12 8v5M12 16h.01" />
@@ -76,7 +88,7 @@ export default function Home() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/361"
-            className="inline-flex items-center gap-2 rounded-[9px] bg-white px-6 py-3.5 text-sm font-semibold text-neutral-900 transition-transform hover:scale-105 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-white active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full bg-accent-gold px-7 py-3.5 text-sm font-bold text-brand-950 shadow-[0_10px_30px_rgba(232,196,104,0.25)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-400 active:scale-95"
           >
             1:1 컨설팅 신청하기
           </Link>
@@ -84,8 +96,8 @@ export default function Home() {
       </section>
 
       {/* 고객 후기 티저 */}
-      <section className="bg-white px-5 py-24 text-center">
-        <h2 className="text-2xl font-bold leading-snug text-neutral-900 md:text-3xl">
+      <section className="bg-brand-50 px-5 py-24 text-center">
+        <h2 className="text-2xl font-bold leading-snug text-brand-950 md:text-3xl">
           팔로워는 있었지만
           <br />
           수익은 없었던 사람들의 이야기
@@ -97,17 +109,17 @@ export default function Home() {
         </p>
         <Link
           href="/39"
-          className="mt-8 inline-flex items-center gap-2 rounded-[9px] border border-neutral-300 px-6 py-3 text-sm font-semibold text-neutral-800 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900 active:scale-95"
+          className="mt-8 inline-flex items-center gap-2 rounded-full border border-brand-700 px-7 py-3 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95"
         >
           인터뷰 확인하기
         </Link>
       </section>
 
       {/* 브랜드 스토리 */}
-      <section className="bg-neutral-50 px-5 py-24">
+      <section className="bg-white px-5 py-24">
         <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
           <div>
-            <h2 className="text-2xl font-bold leading-snug text-neutral-900 md:text-3xl">
+            <h2 className="text-2xl font-bold leading-snug text-brand-950 md:text-3xl">
               효과가 있을지 확신이 안 선다면,
               <br />
               먼저 진단부터 받아보세요.
@@ -123,14 +135,16 @@ export default function Home() {
             </p>
             <Link
               href="/361"
-              className="mt-8 inline-flex items-center gap-2 rounded-[9px] bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 active:scale-95"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-700 px-7 py-3 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95"
             >
               1:1 컨설팅 신청하기
             </Link>
           </div>
 
           {/* TODO: 실제 브랜드 소개 영상 Vimeo ID로 교체 */}
-          <VimeoEmbed vimeoId="76979871" title="브랜드 소개 영상" />
+          <div className="overflow-hidden rounded-2xl ring-1 ring-brand-100">
+            <VimeoEmbed vimeoId="76979871" title="브랜드 소개 영상" />
+          </div>
         </div>
       </section>
     </>

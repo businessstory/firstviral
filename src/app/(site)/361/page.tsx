@@ -1,7 +1,7 @@
 import ApplyButton from "@/components/ApplyButton";
 
 const BUTTON_CLASS =
-  "mt-4 block w-full rounded-full bg-neutral-900 py-3 text-center text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60";
+  "mt-4 block w-full rounded-full bg-brand-700 py-3 text-center text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60";
 
 const classes = [
   {
@@ -9,7 +9,7 @@ const classes = [
     desc: "팔로워는 있는데 수익으로 안 이어진다면, 계정을 함께 진단하고 수익화 방향을 잡아드려요.",
     price: 30000,
     priceLabel: "30,000원",
-    thumbBg: "bg-[#242424]",
+    thumbBg: "bg-brand-950",
     // 결제 링크 확보됨
     link: "https://litt.ly/businessstory/sale/p73JCxQ",
   },
@@ -18,7 +18,7 @@ const classes = [
     desc: "쓰레드 계정 구조부터 수익화 전략까지, 1:1로 맞춤 컨설팅해드려요.",
     price: 30000,
     priceLabel: "30,000원",
-    thumbBg: "bg-[#2A2A2A]",
+    thumbBg: "bg-gradient-to-br from-brand-600 to-brand-900",
     // TODO: 결제 링크 확보되면 채우기
     link: null as string | null,
   },
@@ -28,8 +28,8 @@ export default function ClassPage() {
   return (
     <section className="mx-auto max-w-4xl px-5 py-16">
       <div className="text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-neutral-500">
-          <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
           선착순 15명 한정
         </span>
 

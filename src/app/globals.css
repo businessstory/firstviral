@@ -3,12 +3,39 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* 브랜드 그린 팔레트 — Tailwind 기본 green이 아닌 커스텀 톤 */
+  --brand-950: #0b2b21; /* 가장 어두운 딥 그린 (히어로/다크 섹션 배경) */
+  --brand-900: #123b2c;
+  --brand-800: #1c4f3a;
+  --brand-700: #276448;
+  --brand-600: #2f8f5b; /* 메인 인터랙션 컬러 (버튼/링크) */
+  --brand-500: #3fae70;
+  --brand-400: #6fcf97; /* 밝은 포인트 그린 */
+  --brand-200: #bfe8cf;
+  --brand-100: #e3f5e9;
+  --brand-50: #f3faf5;
+
+  /* 그린과 보색 계열의 웜 액센트 (버튼 대비, 배지 등) */
+  --accent-gold: #e8c468;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-pretendard: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --color-brand-950: var(--brand-950);
+  --color-brand-900: var(--brand-900);
+  --color-brand-800: var(--brand-800);
+  --color-brand-700: var(--brand-700);
+  --color-brand-600: var(--brand-600);
+  --color-brand-500: var(--brand-500);
+  --color-brand-400: var(--brand-400);
+  --color-brand-200: var(--brand-200);
+  --color-brand-100: var(--brand-100);
+  --color-brand-50: var(--brand-50);
+  --color-accent-gold: var(--accent-gold);
 }
 
 body {

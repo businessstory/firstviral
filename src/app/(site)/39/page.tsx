@@ -5,7 +5,7 @@ const featured = {
   vimeoId: "76979871",
   overline: "인스타그램 컨설팅 고객",
   title: "팔로워 3천에서 월 매출 300만원까지",
-  poster: "https://placehold.co/800x450/1a1a1a/ffffff?text=OneViral",
+  poster: "https://placehold.co/800x450/0b2b21/ffffff?text=First+Viral",
 };
 
 const related = [
@@ -22,7 +22,7 @@ export default function ReviewsPage() {
         <h1 className="text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">
           퍼스트 바이럴 고객들의
           <br />
-          <a href="#interviews" className="text-blue-600 underline underline-offset-4">
+          <a href="#interviews" className="text-brand-700 underline underline-offset-4">
             인터뷰&후기를 확인해보세요
           </a>
         </h1>
@@ -51,9 +51,9 @@ export default function ReviewsPage() {
                 href="#"
                 className="group flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-neutral-50"
               >
-                <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-neutral-200">
-                  <span className="absolute inset-0 flex items-center justify-center text-white">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-80">
+                <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-brand-800">
+                  <span className="absolute inset-0 flex items-center justify-center text-brand-200">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </span>

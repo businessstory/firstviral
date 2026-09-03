@@ -7,10 +7,10 @@ export default function Footer() {
         <p>© 퍼스트 바이럴 | 이용약관</p>
 
         <div className="flex items-center gap-5">
-          <Link href="/261" className="hover:text-neutral-800">
+          <Link href="/261" className="hover:text-brand-700">
             무료 PDF
           </Link>
-          <Link href="/terms" className="hover:text-neutral-800">
+          <Link href="/terms" className="hover:text-brand-700">
             이용약관
           </Link>
           <a
@@ -18,7 +18,7 @@ export default function Footer() {
             target="_blank"
             rel="noreferrer"
             aria-label="Instagram"
-            className="text-neutral-500 hover:text-neutral-800"
+            className="text-neutral-500 hover:text-brand-700"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="3" width="18" height="18" rx="5" />

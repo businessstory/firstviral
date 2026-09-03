@@ -18,7 +18,7 @@ export const newsletterPosts: NewsletterPost[] = [
   {
     id: "reels-trend-0824",
     title: "(8월 4주차) 릴스 트렌드 분석하기",
-    thumbnail: "https://placehold.co/400x300/161616/ffffff?text=Reels+Trend+Top10",
+    thumbnail: "https://placehold.co/400x300/0b2b21/ffffff?text=Reels+Trend+Top10",
     date: "2026.08.24",
     url: "/48/reels-trend-0824",
   },

@@ -6,18 +6,18 @@ const templates = [
     label: "Self-Check Template",
     title: "인스타그램 자가진단 템플릿",
     desc: "내 계정이 왜 수익으로 안 이어지는지, 직접 체크해볼 수 있는 자가진단 템플릿이에요.",
-    bg: "bg-[#161616]",
+    bg: "bg-brand-950",
     text: "text-white",
-    labelBg: "bg-white text-neutral-900",
+    labelBg: "bg-accent-gold text-brand-950",
   },
   {
     leadMagnet: "template_vod",
     label: "Monetization VOD",
     title: "인스타그램 수익화 강의 VOD",
     desc: "팔로워를 수익으로 연결하는 방법을 처음부터 끝까지 담은 영상 강의예요.",
-    bg: "bg-[#6D4FC2]",
+    bg: "bg-gradient-to-br from-brand-500 to-brand-800",
     text: "text-white",
-    labelBg: "bg-white text-neutral-900",
+    labelBg: "bg-white text-brand-800",
   },
 ];
 
