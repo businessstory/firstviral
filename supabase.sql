@@ -44,6 +44,7 @@ DECLARE
   resend_key TEXT;
   admin_email TEXT := 'tlawjdgur11@naver.com';
   magnet_label TEXT;
+  resource_html TEXT;
 BEGIN
   SELECT decrypted_secret INTO resend_key
   FROM vault.decrypted_secrets
@@ -56,6 +57,17 @@ BEGIN
     WHEN 'template_selfcheck' THEN '인스타그램 자가진단 템플릿 (노마드 템플릿)'
     WHEN 'template_vod' THEN '인스타그램 수익화 강의 VOD'
     ELSE NEW.lead_magnet
+  END;
+
+  -- 리드 자석별 실제 자료 링크 (버튼으로 노출)
+  resource_html := CASE NEW.lead_magnet
+    WHEN 'free_pdf_selfcheck' THEN
+      '<a href="https://drive.google.com/file/d/1b5ogMvOt6gGLBqfRK1YKN1C7BOTz-pdQ/view?usp=sharing" target="_blank" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#2f8f5b;color:#ffffff;text-decoration:none;border-radius:999px;font-weight:bold;">자가진단 템플릿 받기</a>'
+    WHEN 'free_course' THEN
+      '<a href="https://www.youtube.com/watch?v=YtbnylHKvHI" target="_blank" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#2f8f5b;color:#ffffff;text-decoration:none;border-radius:999px;font-weight:bold;">무료 강의 보러 가기</a>'
+    WHEN 'threads_pdf' THEN
+      '<p style="margin-top:16px;color:#666;">자료를 준비 중이에요. 완성되는 대로 이 이메일로 바로 보내드릴게요!</p>'
+    ELSE ''
   END;
 
   -- 관리자 즉시 알림
@@ -84,7 +96,7 @@ BEGIN
       'from', 'First Viral <onboarding@resend.dev>',
       'to', jsonb_build_array(NEW.email),
       'subject', '[퍼스트 바이럴] 신청이 접수됐어요!',
-      'html', '<p>안녕하세요 ' || NEW.name || '님,</p><p><strong>' || magnet_label || '</strong> 신청이 접수됐어요. 곧 확인 후 자료를 보내드릴게요!</p>',
+      'html', '<p>안녕하세요 ' || NEW.name || '님,</p><p><strong>' || magnet_label || '</strong> 신청이 접수됐어요!</p>' || resource_html,
       'scheduledAt', 'in 1 min'
     )
   );

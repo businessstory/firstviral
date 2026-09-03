@@ -22,7 +22,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <Link href="/" className="relative h-9 w-[130px] shrink-0">
           <Image
-            src="/brand/logo.jpg"
+            src="/brand/logo.png"
             alt="퍼스트 바이럴"
             fill
             className="object-contain object-left"
