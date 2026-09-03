@@ -40,6 +40,7 @@ export type Lead = {
   phone: string;
   email: string;
   lead_magnet: string;
+  status: "pending" | "done";
   created_at: string;
 };
 
@@ -61,4 +62,29 @@ export async function getLeads(): Promise<Lead[]> {
 
   if (!res.ok) return [];
   return res.json();
+}
+
+// 관리자 페이지에서 신청 상태(대기중/완료)를 변경할 때 사용. service_role 키로 RLS 우회.
+export async function updateLeadStatus(
+  id: string,
+  status: "pending" | "done"
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/leads?id=eq.${id}`, {
+    method: "PATCH",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
 }

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_PATH_PREFIX = "/admin-952988";
+const PROTECTED_PREFIXES = ["/admin-952988", "/api/lead-status"];
 
 export function proxy(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith(ADMIN_PATH_PREFIX)) {
+  if (!PROTECTED_PREFIXES.some((p) => req.nextUrl.pathname.startsWith(p))) {
     return NextResponse.next();
   }
 
@@ -29,5 +29,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin-952988/:path*",
+  matcher: ["/admin-952988/:path*", "/api/lead-status/:path*"],
 };

@@ -5,8 +5,12 @@ CREATE TABLE leads (
   phone TEXT NOT NULL,
   email TEXT NOT NULL,
   lead_magnet TEXT NOT NULL,            -- 어떤 자료를 신청했는지 (free_pdf_selfcheck / free_course / threads_pdf / template_selfcheck / template_vod)
+  status TEXT NOT NULL DEFAULT 'pending', -- pending(대기중) / done(완료)
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- 이미 leads 테이블을 만든 상태라면(재실행 시 CREATE TABLE은 에러가 나므로) 아래 줄만 실행하세요.
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'pending';
 
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
