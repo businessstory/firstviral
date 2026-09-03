@@ -22,23 +22,10 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  function mask(v?: string) {
-    if (!v) return "undefined";
-    if (v.length <= 4) return `len${v.length}:${v[0] ?? ""}***`;
-    return `len${v.length}:${v.slice(0, 2)}...${v.slice(-2)}`;
-  }
-
-  const authHeaderDecoded = authHeader?.startsWith("Basic ") ? atob(authHeader.slice(6)) : null;
-  const recvUser = authHeaderDecoded?.split(":")[0];
-  const recvPass = authHeaderDecoded ? authHeaderDecoded.slice(authHeaderDecoded.indexOf(":") + 1) : undefined;
-
-  return new NextResponse(
-    `DEBUG expectedUser=${mask(expectedUser)} expectedPass=${mask(expectedPass)} receivedUser=${mask(recvUser)} receivedPass=${mask(recvPass)} userMatch=${recvUser === expectedUser} passMatch=${recvPass === expectedPass} passTrimMatch=${recvPass?.trim() === expectedPass?.trim()}`,
-    {
-      status: 401,
-      headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
-    }
-  );
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
+  });
 }
 
 export const config = {
