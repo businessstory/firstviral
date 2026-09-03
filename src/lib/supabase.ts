@@ -88,3 +88,44 @@ export async function updateLeadStatus(
   if (!res.ok) return { ok: false, reason: "request_failed" };
   return { ok: true };
 }
+
+export type AuthUser = {
+  id: string;
+  email: string;
+  created_at: string;
+  email_confirmed_at: string | null;
+};
+
+// 관리자 페이지 전용. 회원가입(Supabase Auth)한 사용자 목록을 가져옵니다.
+export async function getAuthUsers(): Promise<AuthUser[]> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return [];
+
+  const res = await fetch(`${url}/auth/v1/admin/users?per_page=200`, {
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return [];
+  const data = await res.json();
+  const users = (data.users ?? data) as {
+    id: string;
+    email: string;
+    created_at: string;
+    email_confirmed_at: string | null;
+  }[];
+
+  return users
+    .map((u) => ({
+      id: u.id,
+      email: u.email,
+      created_at: u.created_at,
+      email_confirmed_at: u.email_confirmed_at,
+    }))
+    .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+}

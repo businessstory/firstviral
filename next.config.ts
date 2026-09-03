@@ -7,7 +7,7 @@ const contentSecurityPolicy = [
   "font-src 'self' https://cdn.jsdelivr.net",
   "img-src 'self' data: https://placehold.co https://images.unsplash.com https://i.vimeocdn.com",
   "frame-src https://player.vimeo.com https://www.instagram.com",
-  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tquiqlubzmfjoynwowhh.supabase.co",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

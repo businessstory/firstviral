@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import AccountMenu from "./AccountMenu";
 
 const navItems = [
   { label: "무료 PDF", href: "/261" },
@@ -48,12 +49,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-700 md:flex">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-            </svg>
-          </div>
+          <AccountMenu />
           <button
             aria-label="메뉴 열기"
             className="flex h-9 w-9 items-center justify-center rounded-md text-neutral-700 md:hidden"
@@ -78,6 +74,22 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+          <div className="mt-1 flex gap-1 border-t border-black/5 pt-2">
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="flex-1 rounded-md px-2 py-2 text-center text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+            >
+              로그인
+            </Link>
+            <Link
+              href="/signup"
+              onClick={() => setOpen(false)}
+              className="flex-1 rounded-md px-2 py-2 text-center text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+            >
+              회원가입
+            </Link>
+          </div>
         </nav>
       )}
     </header>

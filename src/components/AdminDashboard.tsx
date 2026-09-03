@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import type { Lead } from "@/lib/supabase";
+import type { Lead, AuthUser } from "@/lib/supabase";
 import { leadMagnetLabel } from "@/lib/lead-magnets";
 
-export default function AdminDashboard({ leads }: { leads: Lead[] }) {
+export default function AdminDashboard({ leads, users }: { leads: Lead[]; users: AuthUser[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -72,6 +72,45 @@ export default function AdminDashboard({ leads }: { leads: Lead[] }) {
         <StatCard label="대기 중" value={pending} valueClassName="text-accent-gold" />
         <StatCard label="완료" value={done} valueClassName="text-brand-600" />
         <StatCard label="오늘 신청" value={todayCount} valueClassName="text-brand-800" />
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <div className="border-b border-neutral-100 px-5 py-4">
+          <h2 className="text-sm font-bold text-brand-950">회원가입 사용자 ({users.length}명)</h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[480px] text-left text-sm">
+            <thead className="bg-neutral-50 text-neutral-500">
+              <tr>
+                <th className="px-5 py-3 font-medium">이메일</th>
+                <th className="px-5 py-3 font-medium">이메일 인증</th>
+                <th className="px-5 py-3 font-medium">가입일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u.id} className="border-t border-neutral-100">
+                  <td className="px-5 py-3 font-medium text-neutral-900">{u.email}</td>
+                  <td className="px-5 py-3">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        u.email_confirmed_at ? "bg-brand-100 text-brand-700" : "bg-amber-50 text-amber-700"
+                      }`}
+                    >
+                      {u.email_confirmed_at ? "인증됨" : "미인증"}
+                    </span>
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-neutral-500">
+                    {new Date(u.created_at).toLocaleString("ko-KR")}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {users.length === 0 && (
+            <p className="px-5 py-10 text-center text-sm text-neutral-400">아직 가입한 사용자가 없어요.</p>
+          )}
+        </div>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
