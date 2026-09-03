@@ -38,7 +38,7 @@ export default function Home() {
           </span>
 
           <h1 className="mt-6 text-4xl font-bold leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl">
-            팔로워를 수익으로 바꾸는
+            트래픽을 수익으로 바꾸는
             <br />
             가장 빠른 방법
           </h1>

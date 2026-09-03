@@ -22,13 +22,6 @@ const classes: ClassItem[] = [
     cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
   },
   {
-    title: "1:1 맞춤 쓰레드 컨설팅",
-    desc: "쓰레드 계정 구조부터 수익화 전략까지, 1:1로 맞춤 컨설팅해드려요.",
-    priceLabel: "30,000원",
-    thumbBg: "bg-gradient-to-br from-brand-600 to-brand-900",
-    cta: { type: "soon" },
-  },
-  {
     title: "메타광고 교육",
     desc: "인스타그램·페이스북 광고를 처음부터 직접 세팅하고 운영하는 법을 알려드려요.",
     priceLabel: "90,000원",

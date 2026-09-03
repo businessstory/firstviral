@@ -16,7 +16,7 @@ const cards = [
   {
     leadMagnet: "threads_pdf",
     badge: "쓰레드로 첫 문의 받은 방법",
-    title: "쓰레드 성장 무료 PDF",
+    title: "조회수로 돈을 버는 방법 TOP 3",
     bg: "bg-gradient-to-br from-brand-400 to-brand-700",
   },
 ];
