@@ -8,7 +8,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-5">
           <Link href="/261" className="hover:text-brand-700">
-            무료 PDF
+            무료 자료실
           </Link>
           <Link href="/terms" className="hover:text-brand-700">
             이용약관
