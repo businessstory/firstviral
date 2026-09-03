@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn, signUp } from "@/lib/auth";
+import { signIn, signUp, signInWithGoogle } from "@/lib/auth";
 
 export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
@@ -59,7 +59,27 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
     <section className="mx-auto flex min-h-[60vh] max-w-sm flex-col justify-center px-5 py-16">
       <h1 className="text-xl font-bold text-brand-950">{mode === "login" ? "로그인" : "회원가입"}</h1>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={signInWithGoogle}
+        className="mt-6 flex items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.4H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z" />
+          <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z" />
+          <path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10.1 0 12s.5 3.8 1.4 5.5l4-3.1z" />
+          <path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1c.9-2.8 3.5-4.8 6.6-4.8z" />
+        </svg>
+        Google로 계속하기
+      </button>
+
+      <div className="my-5 flex items-center gap-3 text-xs text-neutral-400">
+        <div className="h-px flex-1 bg-neutral-200" />
+        또는
+        <div className="h-px flex-1 bg-neutral-200" />
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="email"
           required

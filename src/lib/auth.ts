@@ -20,9 +20,16 @@ export function getSession(): Session | null {
   }
 }
 
-function saveSession(session: Session) {
+export function saveSession(session: Session) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   window.dispatchEvent(new Event("fv-auth-change"));
+}
+
+// Google 계정으로 로그인. Supabase가 구글 인증 후 /auth/callback 으로 돌려보내줍니다.
+export function signInWithGoogle() {
+  if (!SUPABASE_URL) return;
+  const redirectTo = `${window.location.origin}/auth/callback`;
+  window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectTo)}`;
 }
 
 export function signOut() {
