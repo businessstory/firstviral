@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 
 export const maxDuration = 60;
 
-const MAX_POST_AGE_DAYS = 7;
+const MAX_POST_AGE_DAYS = 30;
 
 type ApifyRun = {
   id: string;

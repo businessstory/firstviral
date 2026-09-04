@@ -10,6 +10,7 @@ function formatCount(n: number | null): string {
 }
 
 const MILLION = 1000000;
+const MIN_VIEWS = 100000;
 
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
   const [category, setCategory] = useState<string>(TREND_CATEGORIES[0].key);
@@ -19,6 +20,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
     const q = query.trim().toLowerCase();
     return reels
       .filter((r) => r.category === category)
+      .filter((r) => (r.view_count ?? 0) >= MIN_VIEWS)
       .filter((r) => {
         if (!q) return true;
         return (
@@ -26,10 +28,8 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
           r.caption?.toLowerCase().includes(q)
         );
       })
-      .sort((a, b) => (b.view_count ?? b.like_count ?? 0) - (a.view_count ?? a.like_count ?? 0));
+      .sort((a, b) => (b.view_count ?? 0) - (a.view_count ?? 0));
   }, [reels, category, query]);
-
-  const hasMillionView = filtered.some((r) => (r.view_count ?? 0) >= MILLION);
 
   return (
     <div>
@@ -62,15 +62,10 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
 
       {filtered.length === 0 ? (
         <p className="mt-16 text-center text-sm text-neutral-400">
-          아직 수집된 콘텐츠가 없어요. 곧 업데이트됩니다.
+          최근 30일 이내 10만 뷰를 넘은 콘텐츠가 아직 없어요. 곧 업데이트됩니다.
         </p>
       ) : (
         <>
-          {!hasMillionView && (
-            <p className="mt-8 text-center text-xs text-neutral-400">
-              이번 주엔 이 카테고리에서 100만 뷰를 넘은 콘텐츠는 아직 없어요. 지금까지 중 조회수가 가장 높은 콘텐츠부터 보여드려요.
-            </p>
-          )}
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((reel, i) => (
               <a
