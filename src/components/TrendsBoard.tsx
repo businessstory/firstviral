@@ -10,7 +10,7 @@ function formatCount(n: number | null): string {
 }
 
 const MILLION = 1000000;
-const MIN_VIEWS = 100000;
+const MIN_VIEWS = 10000;
 
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
   const [category, setCategory] = useState<string>(TREND_CATEGORIES[0].key);
@@ -62,7 +62,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
 
       {filtered.length === 0 ? (
         <p className="mt-16 text-center text-sm text-neutral-400">
-          최근 30일 이내 10만 뷰를 넘은 콘텐츠가 아직 없어요. 곧 업데이트됩니다.
+          최근 30일 이내 1만 뷰를 넘은 콘텐츠가 아직 없어요. 곧 업데이트됩니다.
         </p>
       ) : (
         <>

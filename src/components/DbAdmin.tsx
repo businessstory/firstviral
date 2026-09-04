@@ -160,10 +160,19 @@ export default function DbAdmin({ leads }: { leads: Lead[] }) {
             <tbody>
               {pageItems.map((lead) => (
                 <tr key={lead.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
-                  <td className="px-5 py-3 font-medium text-neutral-900">{lead.name}</td>
-                  <td className="px-5 py-3 text-neutral-600">{lead.email}</td>
-                  <td className="px-5 py-3 text-neutral-600">{lead.phone}</td>
-                  <td className="px-5 py-3 text-neutral-600">{leadMagnetLabel(lead.lead_magnet)}</td>
+                  <td className="max-w-[120px] truncate px-5 py-3 font-medium text-neutral-900" title={lead.name}>
+                    {lead.name}
+                  </td>
+                  <td className="max-w-[200px] truncate px-5 py-3 text-neutral-600" title={lead.email}>
+                    {lead.email}
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-neutral-600">{lead.phone}</td>
+                  <td
+                    className="max-w-[180px] truncate px-5 py-3 text-neutral-600"
+                    title={leadMagnetLabel(lead.lead_magnet)}
+                  >
+                    {leadMagnetLabel(lead.lead_magnet)}
+                  </td>
                   <td className="px-5 py-3">
                     <ConsentBadge agreed={lead.agree_privacy} />
                   </td>

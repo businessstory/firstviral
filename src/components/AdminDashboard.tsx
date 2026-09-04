@@ -109,7 +109,9 @@ export default function AdminDashboard({
             <tbody>
               {usersPage.pageItems.map((u) => (
                 <tr key={u.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
-                  <td className="px-5 py-3 font-medium text-neutral-900">{u.email}</td>
+                  <td className="max-w-[240px] truncate px-5 py-3 font-medium text-neutral-900" title={u.email}>
+                    {u.email}
+                  </td>
                   <td className="px-5 py-3">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -186,12 +188,13 @@ export default function AdminDashboard({
               {accountsPage.pageItems.map((acc) => (
                 <tr key={acc.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3 text-neutral-600">{categoryLabel(acc.category)}</td>
-                  <td className="px-5 py-3 font-medium text-neutral-900">
+                  <td className="max-w-[180px] truncate px-5 py-3 font-medium text-neutral-900">
                     <a
                       href={`https://www.instagram.com/${acc.username}/`}
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-brand-700"
+                      title={acc.username}
                     >
                       @{acc.username}
                     </a>
