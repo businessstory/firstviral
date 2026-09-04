@@ -161,3 +161,50 @@ export async function getTrackedAccounts(): Promise<TrackedAccount[]> {
   if (!res.ok) return [];
   return res.json();
 }
+
+// 관리자 페이지에서 계정을 수동으로 추가할 때 사용. service_role 키로 RLS 우회.
+export async function addTrackedAccount(params: {
+  category: string;
+  username: string;
+}): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/tracked_accounts?on_conflict=category,username`, {
+    method: "POST",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify({ category: params.category, username: params.username }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
+// 관리자 페이지에서 계정을 삭제할 때 사용. service_role 키로 RLS 우회.
+export async function deleteTrackedAccount(
+  id: string
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/tracked_accounts?id=eq.${id}`, {
+    method: "DELETE",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      Prefer: "return=minimal",
+    },
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import type { Lead, AuthUser, TrackedAccount } from "@/lib/supabase";
 import { leadMagnetLabel } from "@/lib/lead-magnets";
-import { categoryLabel } from "@/lib/trends";
+import { categoryLabel, TREND_CATEGORIES } from "@/lib/trends";
 
 export default function AdminDashboard({
   leads,
@@ -18,6 +18,10 @@ export default function AdminDashboard({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [newCategory, setNewCategory] = useState(TREND_CATEGORIES[0].key);
+  const [newUsername, setNewUsername] = useState("");
+  const [accountBusy, setAccountBusy] = useState(false);
+  const [accountError, setAccountError] = useState<string | null>(null);
 
   const today = new Date().toISOString().slice(0, 10);
   const total = leads.length;
@@ -37,6 +41,42 @@ export default function AdminDashboard({
       startTransition(() => router.refresh());
     } finally {
       setUpdatingId(null);
+    }
+  }
+
+  async function handleAddAccount(e: FormEvent) {
+    e.preventDefault();
+    if (!newUsername.trim()) return;
+    setAccountBusy(true);
+    setAccountError(null);
+    try {
+      const res = await fetch("/api/tracked-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category: newCategory, username: newUsername }),
+      });
+      if (!res.ok) {
+        setAccountError("추가에 실패했어요. 다시 시도해주세요.");
+        return;
+      }
+      setNewUsername("");
+      startTransition(() => router.refresh());
+    } finally {
+      setAccountBusy(false);
+    }
+  }
+
+  async function handleDeleteAccount(id: string) {
+    setAccountBusy(true);
+    try {
+      await fetch("/api/tracked-accounts", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      startTransition(() => router.refresh());
+    } finally {
+      setAccountBusy(false);
     }
   }
 
@@ -131,6 +171,36 @@ export default function AdminDashboard({
             팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정
           </p>
         </div>
+
+        <form onSubmit={handleAddAccount} className="flex flex-wrap items-center gap-2 border-b border-neutral-100 px-5 py-4">
+          <select
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          >
+            {TREND_CATEGORIES.map((c) => (
+              <option key={c.key} value={c.key}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            value={newUsername}
+            onChange={(e) => setNewUsername(e.target.value)}
+            placeholder="계정 아이디 (예: @없이 username 또는 인스타그램 링크)"
+            className="min-w-[240px] flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+          />
+          <button
+            type="submit"
+            disabled={accountBusy}
+            className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95 disabled:opacity-50"
+          >
+            추가
+          </button>
+          {accountError && <p className="w-full text-xs text-red-500">{accountError}</p>}
+        </form>
+
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead className="bg-neutral-50 text-neutral-500">
@@ -139,6 +209,7 @@ export default function AdminDashboard({
                 <th className="px-5 py-3 font-medium">계정</th>
                 <th className="px-5 py-3 font-medium">팔로워</th>
                 <th className="px-5 py-3 font-medium">발굴일</th>
+                <th className="px-5 py-3 font-medium"></th>
               </tr>
             </thead>
             <tbody>
@@ -160,6 +231,16 @@ export default function AdminDashboard({
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 text-neutral-500">
                     {new Date(acc.discovered_at).toLocaleDateString("ko-KR")}
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteAccount(acc.id)}
+                      disabled={accountBusy}
+                      className="text-xs font-medium text-neutral-400 transition-colors hover:text-red-500 disabled:opacity-40"
+                    >
+                      삭제
+                    </button>
                   </td>
                 </tr>
               ))}
