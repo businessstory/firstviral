@@ -1,0 +1,51 @@
+import TrendsBoard from "@/components/TrendsBoard";
+import type { TrendingReel } from "@/lib/trends";
+
+export const metadata = {
+  title: "인기 콘텐츠 랭킹 | 퍼스트 바이럴",
+  description: "카테고리별로 지금 인스타그램에서 터지고 있는 인기 콘텐츠를 한눈에 확인하세요.",
+};
+
+export const revalidate = 3600;
+
+async function getTrendingReels(): Promise<TrendingReel[]> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) return [];
+
+  const res = await fetch(
+    `${url}/rest/v1/trending_reels?select=*&order=scraped_at.desc&limit=500`,
+    {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      next: { revalidate: 3600 },
+    }
+  );
+
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export default async function TrendsPage() {
+  const reels = await getTrendingReels();
+
+  return (
+    <section className="mx-auto max-w-5xl px-5 py-16">
+      <div className="text-center">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
+          매일 자동 업데이트
+        </span>
+        <h1 className="mt-4 text-2xl font-extrabold text-neutral-900 md:text-3xl">
+          지금 인스타그램에서 터지는 콘텐츠
+        </h1>
+        <p className="mt-3 text-sm text-neutral-500">
+          카테고리별 인기 콘텐츠를 확인하고 트렌드를 참고해보세요
+        </p>
+      </div>
+
+      <div className="mt-12">
+        <TrendsBoard reels={reels} />
+      </div>
+    </section>
+  );
+}

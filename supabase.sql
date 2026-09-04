@@ -111,3 +111,31 @@ CREATE TRIGGER on_lead_created
   AFTER INSERT ON leads
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_lead();
+
+-- ============================================================
+-- 인기 콘텐츠 랭킹 (/trends)
+-- Vercel Cron이 매일 Apify로 카테고리별 인스타그램 인기 게시물을 수집해
+-- 이 테이블에 저장하고, /trends 페이지가 이 테이블을 읽어 보여줍니다.
+-- ============================================================
+
+CREATE TABLE trending_reels (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  category TEXT NOT NULL,              -- beauty / food / fitness / influencer / selfdev
+  post_url TEXT NOT NULL UNIQUE,        -- 중복 저장 방지 (매일 갱신 시 upsert 기준)
+  account_handle TEXT,
+  thumbnail_url TEXT,
+  caption TEXT,
+  like_count BIGINT,
+  view_count BIGINT,
+  comment_count BIGINT,
+  posted_at TIMESTAMP WITH TIME ZONE,
+  scraped_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE trending_reels ENABLE ROW LEVEL SECURITY;
+
+-- 누구나(사이트 방문자) 조회만 가능 (쓰기는 service_role 키로 서버에서만)
+CREATE POLICY "Anyone can read trending reels" ON trending_reels
+  FOR SELECT
+  TO anon
+  USING (true);
