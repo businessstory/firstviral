@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { addTrackedAccount, deleteTrackedAccount } from "@/lib/supabase";
 import { TREND_CATEGORIES } from "@/lib/trends";
 
-const VALID_CATEGORIES = new Set(TREND_CATEGORIES.map((c) => c.key));
+const VALID_CATEGORIES = new Set<string>(TREND_CATEGORIES.map((c) => c.key));
 
 // 계정 핸들이 "@handle" 또는 인스타그램 URL로 들어와도 순수 아이디만 뽑아냅니다.
 function normalizeUsername(input: string): string {

@@ -18,7 +18,7 @@ export default function AdminDashboard({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [newCategory, setNewCategory] = useState(TREND_CATEGORIES[0].key);
+  const [newCategory, setNewCategory] = useState<string>(TREND_CATEGORIES[0].key);
   const [newUsername, setNewUsername] = useState("");
   const [accountBusy, setAccountBusy] = useState(false);
   const [accountError, setAccountError] = useState<string | null>(null);
