@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { TREND_CATEGORIES } from "@/lib/trends";
 
 export const maxDuration = 60;
@@ -98,6 +99,8 @@ export async function GET(req: NextRequest) {
       return [category.key, outcome.status === "fulfilled" ? outcome.value : 0];
     })
   );
+
+  revalidatePath("/trends");
 
   return NextResponse.json({ ok: true, results });
 }

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { TREND_CATEGORIES, type TrendingReel } from "@/lib/trends";
 
 function formatCount(n: number | null): string {
-  if (n === null || n === undefined) return "-";
+  if (n === null || n === undefined || n < 0) return "비공개";
   if (n >= 10000) return `${(n / 10000).toFixed(1)}만`;
   return n.toLocaleString();
 }
