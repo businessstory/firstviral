@@ -139,3 +139,24 @@ CREATE POLICY "Anyone can read trending reels" ON trending_reels
   FOR SELECT
   TO anon
   USING (true);
+
+-- ============================================================
+-- 추적 계정 목록 (팔로워 1만+ 실계정, 카테고리별로 큐레이션)
+-- /api/cron/discover-accounts 가 Apify로 실제 팔로워 수를 확인해서 채워넣고,
+-- /api/cron/sync-trends 가 이 계정들의 최근 게시물을 긁어서 trending_reels에 저장하는 데 씁니다.
+-- 관리자 페이지(/admin-952988)에서 목록을 확인할 수 있어요.
+-- ============================================================
+
+CREATE TABLE tracked_accounts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  category TEXT NOT NULL,
+  username TEXT NOT NULL,
+  follower_count BIGINT,
+  full_name TEXT,
+  profile_pic_url TEXT,
+  discovered_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE (category, username)
+);
+
+ALTER TABLE tracked_accounts ENABLE ROW LEVEL SECURITY;
+-- 관리자 페이지만 service_role 키로 읽음. 공개 조회 정책은 두지 않습니다.

@@ -2,10 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import type { Lead, AuthUser } from "@/lib/supabase";
+import type { Lead, AuthUser, TrackedAccount } from "@/lib/supabase";
 import { leadMagnetLabel } from "@/lib/lead-magnets";
+import { categoryLabel } from "@/lib/trends";
 
-export default function AdminDashboard({ leads, users }: { leads: Lead[]; users: AuthUser[] }) {
+export default function AdminDashboard({
+  leads,
+  users,
+  trackedAccounts,
+}: {
+  leads: Lead[];
+  users: AuthUser[];
+  trackedAccounts: TrackedAccount[];
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -109,6 +118,57 @@ export default function AdminDashboard({ leads, users }: { leads: Lead[]; users:
           </table>
           {users.length === 0 && (
             <p className="px-5 py-10 text-center text-sm text-neutral-400">아직 가입한 사용자가 없어요.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <div className="border-b border-neutral-100 px-5 py-4">
+          <h2 className="text-sm font-bold text-brand-950">
+            추적 계정 목록 ({trackedAccounts.length}개)
+          </h2>
+          <p className="mt-1 text-xs text-neutral-400">
+            팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="bg-neutral-50 text-neutral-500">
+              <tr>
+                <th className="px-5 py-3 font-medium">카테고리</th>
+                <th className="px-5 py-3 font-medium">계정</th>
+                <th className="px-5 py-3 font-medium">팔로워</th>
+                <th className="px-5 py-3 font-medium">발굴일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trackedAccounts.map((acc) => (
+                <tr key={acc.id} className="border-t border-neutral-100">
+                  <td className="px-5 py-3 text-neutral-600">{categoryLabel(acc.category)}</td>
+                  <td className="px-5 py-3 font-medium text-neutral-900">
+                    <a
+                      href={`https://www.instagram.com/${acc.username}/`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-brand-700"
+                    >
+                      @{acc.username}
+                    </a>
+                  </td>
+                  <td className="px-5 py-3 text-neutral-600">
+                    {acc.follower_count?.toLocaleString() ?? "-"}
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-neutral-500">
+                    {new Date(acc.discovered_at).toLocaleDateString("ko-KR")}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {trackedAccounts.length === 0 && (
+            <p className="px-5 py-10 text-center text-sm text-neutral-400">
+              아직 발굴된 계정이 없어요.
+            </p>
           )}
         </div>
       </div>

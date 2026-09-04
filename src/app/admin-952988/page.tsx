@@ -1,7 +1,11 @@
-import { getLeads, getAuthUsers } from "@/lib/supabase";
+import { getLeads, getAuthUsers, getTrackedAccounts } from "@/lib/supabase";
 import AdminDashboard from "@/components/AdminDashboard";
 
 export default async function AdminPage() {
-  const [leads, users] = await Promise.all([getLeads(), getAuthUsers()]);
-  return <AdminDashboard leads={leads} users={users} />;
+  const [leads, users, trackedAccounts] = await Promise.all([
+    getLeads(),
+    getAuthUsers(),
+    getTrackedAccounts(),
+  ]);
+  return <AdminDashboard leads={leads} users={users} trackedAccounts={trackedAccounts} />;
 }

@@ -129,3 +129,35 @@ export async function getAuthUsers(): Promise<AuthUser[]> {
     }))
     .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 }
+
+export type TrackedAccount = {
+  id: string;
+  category: string;
+  username: string;
+  follower_count: number | null;
+  full_name: string | null;
+  profile_pic_url: string | null;
+  discovered_at: string;
+};
+
+// 관리자 페이지 전용. 카테고리별로 발굴해둔 팔로워 1만+ 계정 목록을 가져옵니다.
+export async function getTrackedAccounts(): Promise<TrackedAccount[]> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) return [];
+
+  const res = await fetch(
+    `${url}/rest/v1/tracked_accounts?select=*&order=category.asc,follower_count.desc`,
+    {
+      headers: {
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) return [];
+  return res.json();
+}
