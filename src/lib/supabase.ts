@@ -298,7 +298,7 @@ export async function deleteNewsletterPost(
 export async function uploadImage(
   file: File
 ): Promise<{ ok: true; url: string } | { ok: false; reason: "not_configured" | "request_failed" }> {
-  const url = process.env.SUPABASE_URL;
+  const url = process.env.SUPABASE_URL?.trim();
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
 
