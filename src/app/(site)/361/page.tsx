@@ -22,32 +22,18 @@ const classes: ClassItem[] = [
     cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
   },
   {
-    title: "메타광고 교육",
-    desc: "인스타그램·페이스북 광고를 처음부터 직접 세팅하고 운영하는 법을 알려드려요.",
-    priceLabel: "90,000원",
-    thumbBg: "bg-gradient-to-br from-brand-500 to-brand-800",
-    cta: { type: "kakao" },
-  },
-  {
-    title: "인스타 교육",
-    desc: "계정 세팅부터 콘텐츠 전략까지, 인스타그램 성장의 기본기를 잡아드려요.",
-    priceLabel: "가격 문의",
-    thumbBg: "bg-gradient-to-br from-brand-400 to-brand-700",
-    cta: { type: "kakao" },
-  },
-  {
-    title: "릴스 대행",
+    title: "프리미엄 릴스 대행",
     desc: "기획부터 제작까지, 릴스 콘텐츠를 대신 만들어드려요.",
     priceLabel: "가격 문의",
     thumbBg: "bg-gradient-to-br from-brand-700 to-brand-950",
     cta: { type: "kakao" },
   },
   {
-    title: "메타광고 대행",
-    desc: "광고 세팅부터 운영, 최적화까지 전체를 대신 관리해드려요.",
-    priceLabel: "가격 문의",
-    thumbBg: "bg-gradient-to-br from-brand-800 to-brand-950",
-    cta: { type: "kakao" },
+    title: "100만 뷰 콘텐츠 무료 특강",
+    desc: "100만 조회수를 만든 콘텐츠 기획 공식을 무료로 알려드려요.",
+    priceLabel: "무료",
+    thumbBg: "bg-gradient-to-br from-brand-400 to-brand-700",
+    cta: { type: "link", url: "https://open.kakao.com/o/gyj1vFIi" },
   },
 ];
 

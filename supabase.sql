@@ -78,7 +78,7 @@ BEGIN
       'Content-Type', 'application/json'
     ),
     body := jsonb_build_object(
-      'from', 'First Viral <onboarding@resend.dev>',
+      'from', '퍼스트 바이럴 <noreply@businessstory.co.kr>',
       'to', jsonb_build_array(admin_email),
       'subject', '새 신청 도착 - ' || magnet_label,
       'html', '<p>이름: ' || NEW.name || '</p><p>이메일: ' || NEW.email || '</p><p>연락처: ' || NEW.phone || '</p>'
@@ -93,7 +93,7 @@ BEGIN
       'Content-Type', 'application/json'
     ),
     body := jsonb_build_object(
-      'from', 'First Viral <onboarding@resend.dev>',
+      'from', '퍼스트 바이럴 <noreply@businessstory.co.kr>',
       'to', jsonb_build_array(NEW.email),
       'subject', '[퍼스트 바이럴] 신청이 접수됐어요!',
       'html', '<p>안녕하세요 ' || NEW.name || '님,</p><p><strong>' || magnet_label || '</strong> 신청이 접수됐어요!</p>' || resource_html,
