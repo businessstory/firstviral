@@ -5,7 +5,7 @@ const contentSecurityPolicy = [
   "script-src 'self' 'unsafe-inline' https://www.instagram.com https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
   "font-src 'self' https://cdn.jsdelivr.net",
-  "img-src 'self' data: https://placehold.co https://images.unsplash.com https://i.vimeocdn.com https://*.cdninstagram.com https://*.fbcdn.net",
+  "img-src 'self' data: https:",
   "frame-src https://player.vimeo.com https://www.instagram.com",
   "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tquiqlubzmfjoynwowhh.supabase.co",
   "object-src 'none'",

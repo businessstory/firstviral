@@ -92,6 +92,12 @@ export default function AdminDashboard({
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-brand-950">퍼스트 바이럴 관리자</h1>
         <div className="flex items-center gap-4 text-sm font-medium">
+          <a href="/admin-952988/card-news" className="text-neutral-500 transition-colors hover:text-brand-700">
+            카드뉴스 관리
+          </a>
+          <a href="/admin-952988/broadcast" className="text-neutral-500 transition-colors hover:text-brand-700">
+            이메일 전체발송
+          </a>
           <button
             type="button"
             onClick={() => startTransition(() => router.refresh())}

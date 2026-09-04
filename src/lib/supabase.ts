@@ -208,3 +208,97 @@ export async function deleteTrackedAccount(
   if (!res.ok) return { ok: false, reason: "request_failed" };
   return { ok: true };
 }
+
+export type CardNews = {
+  id: string;
+  title: string;
+  body: string;
+  cover_image_url: string | null;
+  published_at: string;
+};
+
+// 공개 목록 조회 (카드뉴스 페이지). anon 키로 조회, RLS에 공개 읽기 정책 있음.
+export async function getCardNewsList(): Promise<CardNews[]> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) return [];
+
+  const res = await fetch(
+    `${url}/rest/v1/card_news?select=*&order=published_at.desc`,
+    { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
+  );
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export async function getCardNewsById(id: string): Promise<CardNews | null> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+
+  const res = await fetch(`${url}/rest/v1/card_news?id=eq.${id}&select=*`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const rows = (await res.json()) as CardNews[];
+  return rows[0] ?? null;
+}
+
+// 관리자 페이지에서 카드뉴스 작성 시 사용. service_role 키로 RLS 우회.
+export async function createCardNews(params: {
+  title: string;
+  body: string;
+  coverImageUrl: string | null;
+}): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/card_news`, {
+    method: "POST",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      title: params.title,
+      body: params.body,
+      cover_image_url: params.coverImageUrl,
+    }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
+export async function deleteCardNews(
+  id: string
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/card_news?id=eq.${id}`, {
+    method: "DELETE",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      Prefer: "return=minimal",
+    },
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
+// 관리자 전체발송 대상 이메일 목록: 신청자(leads) + 회원가입(Auth) 이메일을 합쳐 중복 제거.
+export async function getAllRecipientEmails(): Promise<string[]> {
+  const [leads, users] = await Promise.all([getLeads(), getAuthUsers()]);
+  const emails = new Set<string>();
+  for (const l of leads) if (l.email) emails.add(l.email.toLowerCase());
+  for (const u of users) if (u.email) emails.add(u.email.toLowerCase());
+  return Array.from(emails);
+}

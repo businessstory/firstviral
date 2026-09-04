@@ -180,3 +180,25 @@ CREATE TABLE apify_runs (
 
 ALTER TABLE apify_runs ENABLE ROW LEVEL SECURITY;
 -- service_role 키로만 접근. 공개 조회 정책은 두지 않습니다.
+
+-- ============================================================
+-- 카드뉴스 (/card-news)
+-- 관리자 페이지(/admin-952988/card-news)에서 작성하면 여기 저장되고,
+-- 공개 페이지에서 누구나 볼 수 있습니다.
+-- ============================================================
+
+CREATE TABLE card_news (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  cover_image_url TEXT,
+  published_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE card_news ENABLE ROW LEVEL SECURITY;
+
+-- 누구나(사이트 방문자) 조회만 가능 (쓰기는 service_role 키로 서버에서만)
+CREATE POLICY "Anyone can read card news" ON card_news
+  FOR SELECT
+  TO anon
+  USING (true);
