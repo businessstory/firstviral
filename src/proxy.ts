@@ -4,7 +4,8 @@ const PROTECTED_PREFIXES = [
   "/admin-952988",
   "/api/lead-status",
   "/api/tracked-accounts",
-  "/api/card-news",
+  "/api/newsletter-posts",
+  "/api/upload-image",
   "/api/broadcast-email",
 ];
 
@@ -39,7 +40,8 @@ export const config = {
     "/admin-952988/:path*",
     "/api/lead-status/:path*",
     "/api/tracked-accounts/:path*",
-    "/api/card-news/:path*",
+    "/api/newsletter-posts/:path*",
+    "/api/upload-image/:path*",
     "/api/broadcast-email/:path*",
   ],
 };

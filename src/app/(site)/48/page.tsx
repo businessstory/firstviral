@@ -1,8 +1,24 @@
-import Image from "next/image";
 import Link from "next/link";
-import { newsletterPosts } from "@/data/newsletter-posts";
+import { getNewsletterPosts } from "@/lib/supabase";
+import { newsletterPosts as legacyPosts } from "@/data/newsletter-posts";
 
-export default function NewsletterPage() {
+export const revalidate = 300;
+
+export default async function NewsletterPage() {
+  const dbPosts = await getNewsletterPosts();
+
+  const items = [
+    ...dbPosts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      thumbnail: p.thumbnail_url ?? "https://placehold.co/400x300/0b2b21/ffffff?text=First+Viral",
+      date: new Date(p.published_at).toLocaleDateString("ko-KR").replaceAll(". ", ".").replace(/\.$/, ""),
+      url: `/48/${p.id}`,
+      sortAt: p.published_at,
+    })),
+    ...legacyPosts.map((p) => ({ ...p, sortAt: p.date })),
+  ].sort((a, b) => (a.sortAt < b.sortAt ? 1 : -1));
+
   return (
     <section className="mx-auto max-w-6xl px-5 py-14">
       <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">
@@ -13,17 +29,16 @@ export default function NewsletterPage() {
       </p>
 
       <div className="mt-8 grid gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {newsletterPosts.map((post) => {
+        {items.map((post) => {
           const internal = post.url.startsWith("/");
           const Card = (
             <>
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={post.thumbnail}
                   alt={post.title}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  unoptimized
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <h2 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-neutral-900">
@@ -44,6 +59,10 @@ export default function NewsletterPage() {
           );
         })}
       </div>
+
+      {items.length === 0 && (
+        <p className="mt-20 text-center text-sm text-neutral-400">아직 등록된 뉴스레터가 없어요.</p>
+      )}
     </section>
   );
 }

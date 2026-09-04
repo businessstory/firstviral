@@ -182,23 +182,35 @@ ALTER TABLE apify_runs ENABLE ROW LEVEL SECURITY;
 -- service_role 키로만 접근. 공개 조회 정책은 두지 않습니다.
 
 -- ============================================================
--- 카드뉴스 (/card-news)
--- 관리자 페이지(/admin-952988/card-news)에서 작성하면 여기 저장되고,
--- 공개 페이지에서 누구나 볼 수 있습니다.
+-- 뉴스레터 (/48)
+-- 관리자 페이지(/admin-952988/newsletter)에서 작성하면 여기 저장되고,
+-- 공개 페이지(/48)에서 누구나 볼 수 있습니다.
+-- ※ 이미 card_news 테이블을 만드셨다면 아래 대신 이 3줄만 실행하세요:
+--   ALTER TABLE card_news RENAME TO newsletter_posts;
+--   ALTER TABLE newsletter_posts RENAME COLUMN cover_image_url TO thumbnail_url;
+--   ALTER POLICY "Anyone can read card news" ON newsletter_posts RENAME TO "Anyone can read newsletter posts";
 -- ============================================================
 
-CREATE TABLE card_news (
+CREATE TABLE newsletter_posts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
-  cover_image_url TEXT,
+  thumbnail_url TEXT,
   published_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-ALTER TABLE card_news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE newsletter_posts ENABLE ROW LEVEL SECURITY;
 
 -- 누구나(사이트 방문자) 조회만 가능 (쓰기는 service_role 키로 서버에서만)
-CREATE POLICY "Anyone can read card news" ON card_news
+CREATE POLICY "Anyone can read newsletter posts" ON newsletter_posts
   FOR SELECT
   TO anon
   USING (true);
+
+-- ============================================================
+-- 이미지 업로드용 Storage 버킷 (뉴스레터 썸네일 등)
+-- ============================================================
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('newsletter-images', 'newsletter-images', true)
+ON CONFLICT (id) DO NOTHING;

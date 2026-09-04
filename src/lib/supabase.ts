@@ -209,53 +209,53 @@ export async function deleteTrackedAccount(
   return { ok: true };
 }
 
-export type CardNews = {
+export type NewsletterPostRow = {
   id: string;
   title: string;
   body: string;
-  cover_image_url: string | null;
+  thumbnail_url: string | null;
   published_at: string;
 };
 
-// 공개 목록 조회 (카드뉴스 페이지). anon 키로 조회, RLS에 공개 읽기 정책 있음.
-export async function getCardNewsList(): Promise<CardNews[]> {
+// 공개 목록 조회 (뉴스레터 페이지). anon 키로 조회, RLS에 공개 읽기 정책 있음.
+export async function getNewsletterPosts(): Promise<NewsletterPostRow[]> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) return [];
 
   const res = await fetch(
-    `${url}/rest/v1/card_news?select=*&order=published_at.desc`,
+    `${url}/rest/v1/newsletter_posts?select=*&order=published_at.desc`,
     { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
   );
   if (!res.ok) return [];
   return res.json();
 }
 
-export async function getCardNewsById(id: string): Promise<CardNews | null> {
+export async function getNewsletterPostById(id: string): Promise<NewsletterPostRow | null> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) return null;
 
-  const res = await fetch(`${url}/rest/v1/card_news?id=eq.${id}&select=*`, {
+  const res = await fetch(`${url}/rest/v1/newsletter_posts?id=eq.${id}&select=*`, {
     headers: { apikey: key, Authorization: `Bearer ${key}` },
     cache: "no-store",
   });
   if (!res.ok) return null;
-  const rows = (await res.json()) as CardNews[];
+  const rows = (await res.json()) as NewsletterPostRow[];
   return rows[0] ?? null;
 }
 
-// 관리자 페이지에서 카드뉴스 작성 시 사용. service_role 키로 RLS 우회.
-export async function createCardNews(params: {
+// 관리자 페이지에서 뉴스레터 작성 시 사용. service_role 키로 RLS 우회.
+export async function createNewsletterPost(params: {
   title: string;
   body: string;
-  coverImageUrl: string | null;
+  thumbnailUrl: string | null;
 }): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
   const url = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
 
-  const res = await fetch(`${url}/rest/v1/card_news`, {
+  const res = await fetch(`${url}/rest/v1/newsletter_posts`, {
     method: "POST",
     headers: {
       apikey: serviceKey,
@@ -266,7 +266,7 @@ export async function createCardNews(params: {
     body: JSON.stringify({
       title: params.title,
       body: params.body,
-      cover_image_url: params.coverImageUrl,
+      thumbnail_url: params.thumbnailUrl,
     }),
   });
 
@@ -274,14 +274,14 @@ export async function createCardNews(params: {
   return { ok: true };
 }
 
-export async function deleteCardNews(
+export async function deleteNewsletterPost(
   id: string
 ): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
   const url = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
 
-  const res = await fetch(`${url}/rest/v1/card_news?id=eq.${id}`, {
+  const res = await fetch(`${url}/rest/v1/newsletter_posts?id=eq.${id}`, {
     method: "DELETE",
     headers: {
       apikey: serviceKey,
@@ -292,6 +292,31 @@ export async function deleteCardNews(
 
   if (!res.ok) return { ok: false, reason: "request_failed" };
   return { ok: true };
+}
+
+// 관리자 페이지에서 이미지를 올릴 때 사용 (Supabase Storage). service_role 키로 업로드.
+export async function uploadImage(
+  file: File
+): Promise<{ ok: true; url: string } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${crypto.randomUUID()}.${ext}`;
+
+  const res = await fetch(`${url}/storage/v1/object/newsletter-images/${path}`, {
+    method: "POST",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": file.type || "application/octet-stream",
+    },
+    body: await file.arrayBuffer(),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true, url: `${url}/storage/v1/object/public/newsletter-images/${path}` };
 }
 
 // 관리자 전체발송 대상 이메일 목록: 신청자(leads) + 회원가입(Auth) 이메일을 합쳐 중복 제거.

@@ -10,7 +10,6 @@ const navItems = [
   { label: "무료 자료실", href: "/261" },
   { label: "인기 콘텐츠", href: "/trends" },
   { label: "뉴스레터", href: "/48" },
-  { label: "카드뉴스", href: "/card-news" },
   { label: "수강생 후기", href: "/39" },
   { label: "클래스", href: "/361" },
 ];

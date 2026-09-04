@@ -1,10 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent, type ReactNode } from "react";
 import type { Lead, AuthUser, TrackedAccount } from "@/lib/supabase";
 import { leadMagnetLabel } from "@/lib/lead-magnets";
 import { categoryLabel, TREND_CATEGORIES } from "@/lib/trends";
+import { usePagination } from "@/lib/usePagination";
+import AdminShell from "./AdminShell";
+import Pagination from "./Pagination";
 
 export default function AdminDashboard({
   leads,
@@ -28,6 +31,10 @@ export default function AdminDashboard({
   const pending = leads.filter((l) => l.status === "pending").length;
   const done = leads.filter((l) => l.status === "done").length;
   const todayCount = leads.filter((l) => l.created_at.startsWith(today)).length;
+
+  const usersPage = usePagination(users);
+  const accountsPage = usePagination(trackedAccounts);
+  const leadsPage = usePagination(leads);
 
   async function toggleStatus(lead: Lead) {
     const nextStatus = lead.status === "pending" ? "done" : "pending";
@@ -80,59 +87,34 @@ export default function AdminDashboard({
     }
   }
 
-  function handleLogout() {
-    // Basic Auth는 표준 로그아웃이 없어서, 잘못된 자격증명으로 재요청해 브라우저 캐시를 무효화하는 방식이에요.
-    // 브라우저에 따라 동작이 다를 수 있어요 — 확실히 로그아웃하려면 탭/브라우저를 닫아주세요.
-    window.location.href = `https://logout:logout@${window.location.host}/admin-952988`;
-  }
-
   return (
-    <div className="min-h-screen bg-neutral-50">
-    <section className="mx-auto max-w-6xl px-5 py-12">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-brand-950">퍼스트 바이럴 관리자</h1>
-        <div className="flex items-center gap-4 text-sm font-medium">
-          <a href="/admin-952988/card-news" className="text-neutral-500 transition-colors hover:text-brand-700">
-            카드뉴스 관리
-          </a>
-          <a href="/admin-952988/broadcast" className="text-neutral-500 transition-colors hover:text-brand-700">
-            이메일 전체발송
-          </a>
-          <button
-            type="button"
-            onClick={() => startTransition(() => router.refresh())}
-            disabled={isPending}
-            className="flex items-center gap-1.5 text-neutral-500 transition-colors hover:text-brand-700 disabled:opacity-50"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
-              <path d="M21 3v5h-5" />
-              <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
-              <path d="M3 21v-5h5" />
-            </svg>
-            새로고침
-          </button>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="text-neutral-500 transition-colors hover:text-brand-700"
-          >
-            로그아웃
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <AdminShell
+      title="대시보드"
+      actions={
+        <button
+          type="button"
+          onClick={() => startTransition(() => router.refresh())}
+          disabled={isPending}
+          className="flex items-center gap-1.5 rounded-full border border-neutral-200 px-3.5 py-2 text-xs font-semibold text-neutral-500 transition-colors hover:border-brand-200 hover:text-brand-700 disabled:opacity-50"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+          새로고침
+        </button>
+      }
+    >
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard label="전체 신청" value={total} valueClassName="text-brand-950" />
         <StatCard label="대기 중" value={pending} valueClassName="text-accent-gold" />
         <StatCard label="완료" value={done} valueClassName="text-brand-600" />
         <StatCard label="오늘 신청" value={todayCount} valueClassName="text-brand-800" />
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        <div className="border-b border-neutral-100 px-5 py-4">
-          <h2 className="text-sm font-bold text-brand-950">회원가입 사용자 ({users.length}명)</h2>
-        </div>
+      <Panel title="회원가입 사용자" count={users.length} className="mt-8">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[480px] text-left text-sm">
             <thead className="bg-neutral-50 text-neutral-500">
@@ -143,8 +125,8 @@ export default function AdminDashboard({
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
-                <tr key={u.id} className="border-t border-neutral-100">
+              {usersPage.pageItems.map((u) => (
+                <tr key={u.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3 font-medium text-neutral-900">{u.email}</td>
                   <td className="px-5 py-3">
                     <span
@@ -166,19 +148,19 @@ export default function AdminDashboard({
             <p className="px-5 py-10 text-center text-sm text-neutral-400">아직 가입한 사용자가 없어요.</p>
           )}
         </div>
-      </div>
+        <Pagination page={usersPage.page} totalPages={usersPage.totalPages} onChange={usersPage.setPage} />
+      </Panel>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        <div className="border-b border-neutral-100 px-5 py-4">
-          <h2 className="text-sm font-bold text-brand-950">
-            추적 계정 목록 ({trackedAccounts.length}개)
-          </h2>
-          <p className="mt-1 text-xs text-neutral-400">
-            팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정
-          </p>
-        </div>
-
-        <form onSubmit={handleAddAccount} className="flex flex-wrap items-center gap-2 border-b border-neutral-100 px-5 py-4">
+      <Panel
+        title="추적 계정 목록"
+        count={trackedAccounts.length}
+        subtitle="팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정"
+        className="mt-6"
+      >
+        <form
+          onSubmit={handleAddAccount}
+          className="flex flex-wrap items-center gap-2 border-b border-neutral-100 px-5 py-4"
+        >
           <select
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
@@ -219,8 +201,8 @@ export default function AdminDashboard({
               </tr>
             </thead>
             <tbody>
-              {trackedAccounts.map((acc) => (
-                <tr key={acc.id} className="border-t border-neutral-100">
+              {accountsPage.pageItems.map((acc) => (
+                <tr key={acc.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3 text-neutral-600">{categoryLabel(acc.category)}</td>
                   <td className="px-5 py-3 font-medium text-neutral-900">
                     <a
@@ -253,18 +235,13 @@ export default function AdminDashboard({
             </tbody>
           </table>
           {trackedAccounts.length === 0 && (
-            <p className="px-5 py-10 text-center text-sm text-neutral-400">
-              아직 발굴된 계정이 없어요.
-            </p>
+            <p className="px-5 py-10 text-center text-sm text-neutral-400">아직 발굴된 계정이 없어요.</p>
           )}
         </div>
-      </div>
+        <Pagination page={accountsPage.page} totalPages={accountsPage.totalPages} onChange={accountsPage.setPage} />
+      </Panel>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        <div className="border-b border-neutral-100 px-5 py-4">
-          <h2 className="text-sm font-bold text-brand-950">신청 목록</h2>
-        </div>
-
+      <Panel title="신청 목록" count={leads.length} className="mt-6">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-neutral-50 text-neutral-500">
@@ -278,8 +255,8 @@ export default function AdminDashboard({
               </tr>
             </thead>
             <tbody>
-              {leads.map((lead) => (
-                <tr key={lead.id} className="border-t border-neutral-100">
+              {leadsPage.pageItems.map((lead) => (
+                <tr key={lead.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3 font-medium text-neutral-900">{lead.name}</td>
                   <td className="px-5 py-3 text-neutral-600">{lead.email}</td>
                   <td className="px-5 py-3 text-neutral-600">{lead.phone}</td>
@@ -305,13 +282,39 @@ export default function AdminDashboard({
               ))}
             </tbody>
           </table>
-
           {leads.length === 0 && (
             <p className="px-5 py-10 text-center text-sm text-neutral-400">아직 신청 내역이 없어요.</p>
           )}
         </div>
+        <Pagination page={leadsPage.page} totalPages={leadsPage.totalPages} onChange={leadsPage.setPage} />
+      </Panel>
+    </AdminShell>
+  );
+}
+
+function Panel({
+  title,
+  count,
+  subtitle,
+  className = "",
+  children,
+}: {
+  title: string;
+  count: number;
+  subtitle?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ${className}`}>
+      <div className="flex items-center gap-2 border-b border-neutral-100 px-5 py-4">
+        <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+        <h2 className="text-sm font-bold text-brand-950">
+          {title} <span className="font-medium text-neutral-400">({count})</span>
+        </h2>
       </div>
-    </section>
+      {subtitle && <p className="px-5 pt-3 text-xs text-neutral-400">{subtitle}</p>}
+      {children}
     </div>
   );
 }

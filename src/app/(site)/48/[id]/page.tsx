@@ -1,14 +1,45 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { postsBySlug } from "@/data/posts";
+import { getNewsletterPostById } from "@/lib/supabase";
+import LinkifiedText from "@/components/LinkifiedText";
 
 export default async function NewsletterPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = await params;
-  const post = postsBySlug[slug as keyof typeof postsBySlug];
+  const { id } = await params;
+
+  const dbPost = await getNewsletterPostById(id);
+  if (dbPost) {
+    return (
+      <article className="mx-auto max-w-2xl px-5 py-16">
+        <Link href="/48" className="text-xs font-medium text-neutral-400 hover:text-neutral-700">
+          ← 뉴스레터 목록
+        </Link>
+        {dbPost.thumbnail_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={dbPost.thumbnail_url}
+            alt={dbPost.title}
+            className="mt-6 w-full rounded-2xl object-cover"
+          />
+        )}
+        <h1 className="mt-6 text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">
+          {dbPost.title}
+        </h1>
+        <p className="mt-2 text-sm text-neutral-400">
+          {new Date(dbPost.published_at).toLocaleDateString("ko-KR")}
+        </p>
+        <div className="mt-8 text-sm text-neutral-700">
+          <LinkifiedText text={dbPost.body} />
+        </div>
+      </article>
+    );
+  }
+
+  const post = postsBySlug[id as keyof typeof postsBySlug];
   if (!post) notFound();
 
   return (
