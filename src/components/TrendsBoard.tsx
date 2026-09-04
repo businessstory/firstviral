@@ -9,6 +9,8 @@ function formatCount(n: number | null): string {
   return n.toLocaleString();
 }
 
+const MILLION = 1000000;
+
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
   const [category, setCategory] = useState<string>(TREND_CATEGORIES[0].key);
   const [query, setQuery] = useState("");
@@ -26,6 +28,8 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
       })
       .sort((a, b) => (b.view_count ?? b.like_count ?? 0) - (a.view_count ?? a.like_count ?? 0));
   }, [reels, category, query]);
+
+  const hasMillionView = filtered.some((r) => (r.view_count ?? 0) >= MILLION);
 
   return (
     <div>
@@ -61,32 +65,43 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
           아직 수집된 콘텐츠가 없어요. 곧 업데이트됩니다.
         </p>
       ) : (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((reel, i) => (
-            <a
-              key={reel.id}
-              href={reel.post_url}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
-            >
-              <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                {reel.thumbnail_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={reel.thumbnail_url}
-                    alt={reel.account_handle ?? "인기 콘텐츠"}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-xs text-neutral-300">
-                    이미지 없음
-                  </div>
-                )}
-                <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white">
-                  TOP {i + 1}
-                </span>
-              </div>
+        <>
+          {!hasMillionView && (
+            <p className="mt-8 text-center text-xs text-neutral-400">
+              이번 주엔 이 카테고리에서 100만 뷰를 넘은 콘텐츠는 아직 없어요. 지금까지 중 조회수가 가장 높은 콘텐츠부터 보여드려요.
+            </p>
+          )}
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((reel, i) => (
+              <a
+                key={reel.id}
+                href={reel.post_url}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
+              >
+                <div className="relative aspect-square overflow-hidden bg-neutral-100">
+                  {reel.thumbnail_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={reel.thumbnail_url}
+                      alt={reel.account_handle ?? "인기 콘텐츠"}
+                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-xs text-neutral-300">
+                      이미지 없음
+                    </div>
+                  )}
+                  <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white">
+                    TOP {i + 1}
+                  </span>
+                  {(reel.view_count ?? 0) >= MILLION && (
+                    <span className="absolute right-3 top-3 rounded-full bg-accent-gold px-2.5 py-1 text-[11px] font-bold text-brand-950">
+                      🔥 100만 뷰
+                    </span>
+                  )}
+                </div>
               <div className="flex flex-1 flex-col gap-2 p-4">
                 <p className="text-sm font-bold text-neutral-900">
                   @{reel.account_handle ?? "unknown"}
@@ -101,9 +116,10 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                   <span>좋아요 {formatCount(reel.like_count)}</span>
                 </div>
               </div>
-            </a>
-          ))}
-        </div>
+              </a>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

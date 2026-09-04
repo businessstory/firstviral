@@ -4,10 +4,11 @@ import { TREND_CATEGORIES } from "@/lib/trends";
 
 export const maxDuration = 60;
 
-const ACTOR_ID = "apify~instagram-hashtag-scraper";
-const RESULTS_PER_HASHTAG = 15;
+const REEL_ACTOR = "apify~instagram-reel-scraper";
+const RESULTS_PER_ACCOUNT = 5;
+const MAX_POST_AGE_DAYS = 7;
 
-type ApifyItem = {
+type ReelItem = {
   url?: string;
   shortCode?: string;
   ownerUsername?: string;
@@ -20,34 +21,60 @@ type ApifyItem = {
   timestamp?: string;
 };
 
+async function getTrackedUsernames(
+  categoryKey: string,
+  supabaseUrl: string,
+  serviceKey: string
+): Promise<string[]> {
+  const res = await fetch(
+    `${supabaseUrl}/rest/v1/tracked_accounts?select=username&category=eq.${categoryKey}`,
+    {
+      headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+    }
+  );
+  if (!res.ok) return [];
+  const rows = (await res.json()) as { username: string }[];
+  return rows.map((r) => r.username);
+}
+
+function isWithinLastDays(timestamp: string | undefined, days: number): boolean {
+  if (!timestamp) return false;
+  const postedAt = new Date(timestamp).getTime();
+  if (Number.isNaN(postedAt)) return false;
+  return Date.now() - postedAt <= days * 24 * 60 * 60 * 1000;
+}
+
 async function syncCategory(
   category: (typeof TREND_CATEGORIES)[number],
   apifyToken: string,
   supabaseUrl: string,
   serviceKey: string
 ): Promise<number> {
+  const usernames = await getTrackedUsernames(category.key, supabaseUrl, serviceKey);
+  if (usernames.length === 0) return 0;
+
   const apifyRes = await fetch(
-    `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${apifyToken}`,
+    `https://api.apify.com/v2/acts/${REEL_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        hashtags: [category.hashtag],
-        resultsLimit: RESULTS_PER_HASHTAG,
+        username: usernames,
+        resultsLimit: RESULTS_PER_ACCOUNT,
       }),
     }
   );
 
   if (!apifyRes.ok) return 0;
 
-  const items = (await apifyRes.json()) as ApifyItem[];
+  const items = (await apifyRes.json()) as ReelItem[];
   if (!Array.isArray(items)) return 0;
 
   const rows = items
-    .filter((item) => item.url || item.shortCode)
+    .filter((item) => (item.url || item.shortCode) && isWithinLastDays(item.timestamp, MAX_POST_AGE_DAYS))
     .map((item) => ({
       category: category.key,
-      post_url: item.url ?? `https://www.instagram.com/p/${item.shortCode}/`,
+      post_url: item.url ?? `https://www.instagram.com/reel/${item.shortCode}/`,
       account_handle: item.ownerUsername ?? null,
       thumbnail_url: item.displayUrl ?? null,
       caption: typeof item.caption === "string" ? item.caption.slice(0, 300) : null,
