@@ -2,6 +2,17 @@
 
 import { useState } from "react";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^01[016789]-\d{3,4}-\d{4}$/;
+
+function formatPhone(input: string): string {
+  const digits = input.replace(/\D/g, "").slice(0, 11);
+  if (digits.length < 4) return digits;
+  if (digits.length < 8) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  if (digits.length < 11) return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+}
+
 export default function LeadCaptureModal({
   open,
   onClose,
@@ -16,21 +27,34 @@ export default function LeadCaptureModal({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [agree, setAgree] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [agreeMarketing, setAgreeMarketing] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
 
   if (!open) return null;
 
+  const emailValid = EMAIL_RE.test(email);
+  const phoneValid = PHONE_RE.test(phone);
+  const canSubmit =
+    name.trim().length > 0 && emailValid && phoneValid && agreePrivacy && agreeMarketing;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!agree) return;
+    if (!canSubmit) return;
 
     setStatus("loading");
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, leadMagnet }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          leadMagnet,
+          agreePrivacy,
+          agreeMarketing,
+        }),
       });
       setStatus(res.ok ? "done" : "error");
     } catch {
@@ -43,7 +67,8 @@ export default function LeadCaptureModal({
     setName("");
     setEmail("");
     setPhone("");
-    setAgree(false);
+    setAgreePrivacy(false);
+    setAgreeMarketing(false);
     onClose();
   }
 
@@ -92,45 +117,72 @@ export default function LeadCaptureModal({
                 onChange={(e) => setName(e.target.value)}
                 className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
               />
-              <input
-                type="email"
-                required
-                placeholder="이메일"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
-              />
-              <input
-                type="tel"
-                required
-                placeholder="연락처 (010-0000-0000)"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
-              />
+              <div>
+                <input
+                  type="email"
+                  required
+                  placeholder="이메일"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
+                />
+                {email.length > 0 && !emailValid && (
+                  <p className="mt-1 text-[11px] text-rose-500">이메일 형식이 올바르지 않아요.</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="tel"
+                  required
+                  placeholder="연락처 (010-0000-0000)"
+                  value={phone}
+                  onChange={(e) => setPhone(formatPhone(e.target.value))}
+                  className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-700"
+                />
+                {phone.length > 0 && !phoneValid && (
+                  <p className="mt-1 text-[11px] text-rose-500">연락처 형식이 올바르지 않아요.</p>
+                )}
+              </div>
             </div>
 
-            <label className="mt-4 flex items-start gap-2 text-xs text-neutral-500">
-              <input
-                type="checkbox"
-                required
-                checked={agree}
-                onChange={(e) => setAgree(e.target.checked)}
-                className="mt-0.5"
-              />
-              {/* TODO: 실제 개인정보 처리방침 페이지로 연결 */}
-              자료 발송을 위한 이름/이메일/연락처 수집에 동의합니다.
-            </label>
+            <div className="mt-4 flex flex-col gap-2">
+              <label className="flex items-start gap-2 text-xs text-neutral-500">
+                <input
+                  type="checkbox"
+                  required
+                  checked={agreePrivacy}
+                  onChange={(e) => setAgreePrivacy(e.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>
+                  (필수){" "}
+                  <a href="/privacy" target="_blank" className="underline hover:text-brand-700">
+                    개인정보 수집 및 이용
+                  </a>
+                  에 동의합니다.
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-xs text-neutral-500">
+                <input
+                  type="checkbox"
+                  required
+                  checked={agreeMarketing}
+                  onChange={(e) => setAgreeMarketing(e.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>(필수) 광고성 정보 수신에 동의합니다.</span>
+              </label>
+            </div>
 
             {status === "error" && (
               <p className="mt-3 text-xs text-rose-500">
-                아직 저장 연동 준비 중이에요. 우측 하단 문의 버튼으로 요청해주세요.
+                신청 중 오류가 발생했어요. 다시 시도해주세요.
               </p>
             )}
 
             <button
               type="submit"
-              disabled={status === "loading" || !agree}
+              disabled={status === "loading" || !canSubmit}
               className="mt-5 w-full rounded-full bg-brand-700 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === "loading" ? "전송 중..." : "무료로 받기"}

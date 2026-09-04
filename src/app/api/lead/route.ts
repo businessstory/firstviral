@@ -7,7 +7,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // leads 테이블에 insert되는 순간 자동으로 실행되므로, 여기서는 저장만 담당합니다.
 // (supabase.sql 의 on_lead_created 트리거 참고)
 export async function POST(req: NextRequest) {
-  const { name, phone, email, leadMagnet } = await req.json();
+  const { name, phone, email, leadMagnet, agreePrivacy, agreeMarketing } = await req.json();
 
   if (typeof name !== "string" || name.trim().length < 1) {
     return NextResponse.json({ error: "invalid_name" }, { status: 400 });
@@ -21,8 +21,11 @@ export async function POST(req: NextRequest) {
   if (typeof leadMagnet !== "string" || leadMagnet.trim().length < 1) {
     return NextResponse.json({ error: "invalid_lead_magnet" }, { status: 400 });
   }
+  if (agreePrivacy !== true || agreeMarketing !== true) {
+    return NextResponse.json({ error: "consent_required" }, { status: 400 });
+  }
 
-  const result = await insertLead({ name, phone, email, leadMagnet });
+  const result = await insertLead({ name, phone, email, leadMagnet, agreePrivacy, agreeMarketing });
 
   if (!result.ok) {
     const status = result.reason === "not_configured" ? 501 : 502;

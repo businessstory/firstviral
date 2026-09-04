@@ -214,3 +214,10 @@ CREATE POLICY "Anyone can read newsletter posts" ON newsletter_posts
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('newsletter-images', 'newsletter-images', true)
 ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================
+-- leads 테이블에 개인정보 수집/광고성 정보 수신 동의 여부 추가
+-- ============================================================
+
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS agree_privacy BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS agree_marketing BOOLEAN NOT NULL DEFAULT false;

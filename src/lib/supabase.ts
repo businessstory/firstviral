@@ -4,6 +4,8 @@ export async function insertLead(params: {
   phone: string;
   email: string;
   leadMagnet: string;
+  agreePrivacy: boolean;
+  agreeMarketing: boolean;
 }): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
@@ -25,6 +27,8 @@ export async function insertLead(params: {
       phone: params.phone,
       email: params.email,
       lead_magnet: params.leadMagnet,
+      agree_privacy: params.agreePrivacy,
+      agree_marketing: params.agreeMarketing,
     }),
   });
 
@@ -41,6 +45,8 @@ export type Lead = {
   email: string;
   lead_magnet: string;
   status: "pending" | "done";
+  agree_privacy: boolean;
+  agree_marketing: boolean;
   created_at: string;
 };
 
