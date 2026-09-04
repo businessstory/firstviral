@@ -5,6 +5,7 @@ export const LEAD_MAGNET_LABELS: Record<string, string> = {
   threads_pdf: "쓰레드 성장 무료 PDF",
   template_selfcheck: "인스타그램 자가진단 템플릿 (노마드 템플릿)",
   template_vod: "인스타그램 수익화 강의 VOD",
+  manual: "관리자 직접 등록",
 };
 
 export function leadMagnetLabel(key: string): string {

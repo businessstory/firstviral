@@ -3,5 +3,5 @@ import BroadcastEmailForm from "@/components/BroadcastEmailForm";
 
 export default async function BroadcastPage() {
   const emails = await getAllRecipientEmails();
-  return <BroadcastEmailForm recipientCount={emails.length} />;
+  return <BroadcastEmailForm recipients={emails} />;
 }

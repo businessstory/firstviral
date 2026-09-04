@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PROTECTED_PREFIXES = [
   "/admin-952988",
   "/api/lead-status",
+  "/api/leads",
   "/api/tracked-accounts",
   "/api/newsletter-posts",
   "/api/upload-image",
@@ -39,6 +40,7 @@ export const config = {
   matcher: [
     "/admin-952988/:path*",
     "/api/lead-status/:path*",
+    "/api/leads/:path*",
     "/api/tracked-accounts/:path*",
     "/api/newsletter-posts/:path*",
     "/api/upload-image/:path*",

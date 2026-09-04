@@ -333,3 +333,59 @@ export async function getAllRecipientEmails(): Promise<string[]> {
   for (const u of users) if (u.email) emails.add(u.email.toLowerCase());
   return Array.from(emails);
 }
+
+// 관리자 페이지(DB 탭)에서 개인정보를 직접 추가할 때 사용. service_role 키로 RLS 우회.
+export async function adminCreateLead(params: {
+  name: string;
+  phone: string;
+  email: string;
+  leadMagnet: string;
+  agreePrivacy: boolean;
+  agreeMarketing: boolean;
+}): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/leads`, {
+    method: "POST",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name: params.name,
+      phone: params.phone,
+      email: params.email,
+      lead_magnet: params.leadMagnet,
+      agree_privacy: params.agreePrivacy,
+      agree_marketing: params.agreeMarketing,
+    }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
+// 관리자 페이지(DB 탭)에서 개인정보를 삭제할 때 사용. service_role 키로 RLS 우회.
+export async function deleteLead(
+  id: string
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/leads?id=eq.${id}`, {
+    method: "DELETE",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      Prefer: "return=minimal",
+    },
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
