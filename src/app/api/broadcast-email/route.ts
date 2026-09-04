@@ -3,6 +3,30 @@ import { getAllRecipientEmails } from "@/lib/supabase";
 
 export const maxDuration = 60;
 
+const URL_RE = /(https?:\/\/[^\s<]+)/g;
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// 줄바꿈은 문단으로, http(s) 링크는 클릭 가능한 <a> 태그로 바꿔줍니다.
+function bodyToHtml(body: string): string {
+  return body
+    .split("\n")
+    .map((line) => {
+      const escaped = escapeHtml(line);
+      const linked = escaped.replace(
+        URL_RE,
+        (url) => `<a href="${url}" style="color:#2f8f5b;">${url}</a>`
+      );
+      return `<p style="margin:0 0 12px;">${linked}</p>`;
+    })
+    .join("");
+}
+
 async function sendOne(to: string, subject: string, html: string, resendKey: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -40,10 +64,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, sent: 0, failed: 0, total: 0 });
   }
 
-  const html = body
-    .split("\n")
-    .map((line: string) => `<p>${line}</p>`)
-    .join("");
+  const html = bodyToHtml(body);
 
   const outcomes = await Promise.allSettled(
     recipients.map((to) => sendOne(to, subject.trim(), html, resendKey))

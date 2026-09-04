@@ -62,6 +62,9 @@ export default function BroadcastEmailForm({ recipientCount }: { recipientCount:
         </div>
         <div>
           <label className="text-xs font-bold text-neutral-500">내용</label>
+          <p className="mt-1 text-[11px] text-neutral-400">
+            링크(https://...)를 붙여넣으면 자동으로 클릭 가능한 링크가 돼요.
+          </p>
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
