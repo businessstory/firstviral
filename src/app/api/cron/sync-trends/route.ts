@@ -1,25 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { TREND_CATEGORIES } from "@/lib/trends";
 
 export const maxDuration = 60;
 
 const REEL_ACTOR = "apify~instagram-reel-scraper";
 const RESULTS_PER_ACCOUNT = 5;
-const MAX_POST_AGE_DAYS = 7;
-
-type ReelItem = {
-  url?: string;
-  shortCode?: string;
-  ownerUsername?: string;
-  displayUrl?: string;
-  caption?: string;
-  likesCount?: number;
-  videoViewCount?: number;
-  videoPlayCount?: number;
-  commentsCount?: number;
-  timestamp?: string;
-};
 
 async function getTrackedUsernames(
   categoryKey: string,
@@ -37,24 +22,19 @@ async function getTrackedUsernames(
   return rows.map((r) => r.username);
 }
 
-function isWithinLastDays(timestamp: string | undefined, days: number): boolean {
-  if (!timestamp) return false;
-  const postedAt = new Date(timestamp).getTime();
-  if (Number.isNaN(postedAt)) return false;
-  return Date.now() - postedAt <= days * 24 * 60 * 60 * 1000;
-}
-
-async function syncCategory(
+// 결과를 기다리지 않고 Apify에 수집만 "시작"시킵니다 (Vercel 함수 시간제한 회피).
+// 실제 결과는 /api/cron/collect-trends 가 나중에 와서 가져갑니다.
+async function startCategory(
   category: (typeof TREND_CATEGORIES)[number],
   apifyToken: string,
   supabaseUrl: string,
   serviceKey: string
-): Promise<number> {
+): Promise<"started" | "no_accounts" | "start_failed"> {
   const usernames = await getTrackedUsernames(category.key, supabaseUrl, serviceKey);
-  if (usernames.length === 0) return 0;
+  if (usernames.length === 0) return "no_accounts";
 
-  const apifyRes = await fetch(
-    `https://api.apify.com/v2/acts/${REEL_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
+  const runRes = await fetch(
+    `https://api.apify.com/v2/acts/${REEL_ACTOR}/runs?token=${apifyToken}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,39 +45,31 @@ async function syncCategory(
     }
   );
 
-  if (!apifyRes.ok) return 0;
+  if (!runRes.ok) return "start_failed";
 
-  const items = (await apifyRes.json()) as ReelItem[];
-  if (!Array.isArray(items)) return 0;
+  const runData = await runRes.json();
+  const runId: string | undefined = runData?.data?.id;
+  const datasetId: string | undefined = runData?.data?.defaultDatasetId;
+  if (!runId || !datasetId) return "start_failed";
 
-  const rows = items
-    .filter((item) => (item.url || item.shortCode) && isWithinLastDays(item.timestamp, MAX_POST_AGE_DAYS))
-    .map((item) => ({
-      category: category.key,
-      post_url: item.url ?? `https://www.instagram.com/reel/${item.shortCode}/`,
-      account_handle: item.ownerUsername ?? null,
-      thumbnail_url: item.displayUrl ?? null,
-      caption: typeof item.caption === "string" ? item.caption.slice(0, 300) : null,
-      like_count: item.likesCount ?? null,
-      view_count: item.videoViewCount ?? item.videoPlayCount ?? null,
-      comment_count: item.commentsCount ?? null,
-      posted_at: item.timestamp ?? null,
-    }));
-
-  if (rows.length === 0) return 0;
-
-  await fetch(`${supabaseUrl}/rest/v1/trending_reels?on_conflict=post_url`, {
+  await fetch(`${supabaseUrl}/rest/v1/apify_runs`, {
     method: "POST",
     headers: {
       apikey: serviceKey,
       Authorization: `Bearer ${serviceKey}`,
       "Content-Type": "application/json",
-      Prefer: "resolution=merge-duplicates,return=minimal",
+      Prefer: "return=minimal",
     },
-    body: JSON.stringify(rows),
+    body: JSON.stringify({
+      category: category.key,
+      run_id: runId,
+      dataset_id: datasetId,
+      status: "pending",
+      purpose: "trends",
+    }),
   });
 
-  return rows.length;
+  return "started";
 }
 
 export async function GET(req: NextRequest) {
@@ -116,18 +88,16 @@ export async function GET(req: NextRequest) {
 
   const outcomes = await Promise.allSettled(
     TREND_CATEGORIES.map((category) =>
-      syncCategory(category, apifyToken, supabaseUrl, serviceKey)
+      startCategory(category, apifyToken, supabaseUrl, serviceKey)
     )
   );
 
   const results = Object.fromEntries(
     TREND_CATEGORIES.map((category, i) => {
       const outcome = outcomes[i];
-      return [category.key, outcome.status === "fulfilled" ? outcome.value : 0];
+      return [category.key, outcome.status === "fulfilled" ? outcome.value : "error"];
     })
   );
 
-  revalidatePath("/trends");
-
-  return NextResponse.json({ ok: true, results });
+  return NextResponse.json({ ok: true, started: results });
 }

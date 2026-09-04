@@ -160,3 +160,23 @@ CREATE TABLE tracked_accounts (
 
 ALTER TABLE tracked_accounts ENABLE ROW LEVEL SECURITY;
 -- 관리자 페이지만 service_role 키로 읽음. 공개 조회 정책은 두지 않습니다.
+
+-- ============================================================
+-- Apify 실행 추적 (비동기 수집용)
+-- /api/cron/sync-trends 가 Apify 수집을 "시작"만 하고 여기 기록해두면,
+-- /api/cron/collect-trends 가 나중에 와서 완료된 결과를 가져갑니다.
+-- (Vercel 함수 실행시간 제한 때문에 결과를 기다리지 않고 비동기로 처리)
+-- ============================================================
+
+CREATE TABLE apify_runs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  category TEXT NOT NULL,
+  run_id TEXT NOT NULL,
+  dataset_id TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',  -- pending / done / failed
+  purpose TEXT NOT NULL DEFAULT 'trends',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE apify_runs ENABLE ROW LEVEL SECURITY;
+-- service_role 키로만 접근. 공개 조회 정책은 두지 않습니다.
