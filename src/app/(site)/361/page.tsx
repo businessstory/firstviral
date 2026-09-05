@@ -8,37 +8,33 @@ const BUTTON_PRIMARY = `${BUTTON_CLASS} bg-brand-700 text-white hover:scale-[1.0
 const BUTTON_SOON = `${BUTTON_CLASS} bg-neutral-100 text-neutral-400 cursor-not-allowed`;
 
 type ClassItem = {
-  impact: string;
+  image: string;
   title: string;
   tag: string;
   priceLabel: string;
-  thumbBg: string;
   cta: { type: "link"; url: string } | { type: "kakao" } | { type: "soon" };
 };
 
 const classes: ClassItem[] = [
   {
-    impact: "계정 문제\n1:1 진단",
+    image: "/class/consulting.png",
     title: "1:1 맞춤 인스타그램 컨설팅",
     tag: "1:1 컨설팅",
     priceLabel: "30,000원",
-    thumbBg: "bg-brand-950",
     cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
   },
   {
-    impact: "릴스\n대신 만들어드려요",
+    image: "/class/reels-agency.png",
     title: "프리미엄 릴스 대행",
     tag: "대행",
     priceLabel: "가격 문의",
-    thumbBg: "bg-gradient-to-br from-brand-700 to-brand-950",
     cta: { type: "kakao" },
   },
   {
-    impact: "100만 뷰\n공식 공개",
+    image: "/class/million-views-lecture.png",
     title: "100만 뷰 콘텐츠 무료 특강",
     tag: "무료 특강",
     priceLabel: "무료",
-    thumbBg: "bg-gradient-to-br from-brand-400 to-brand-700",
     cta: { type: "link", url: "https://open.kakao.com/o/gyj1vFIi" },
   },
 ];
@@ -57,12 +53,9 @@ export default function ClassPage() {
       <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {classes.map((cls) => (
           <div key={cls.title} className="group flex flex-col">
-            <div
-              className={`relative aspect-video overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${cls.thumbBg}`}
-            >
-              <span className="absolute inset-x-4 top-4 whitespace-pre-line text-xl font-black leading-[1.2] text-white">
-                {cls.impact}
-              </span>
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-neutral-100 transition-transform group-hover:-translate-y-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={cls.image} alt={cls.title} className="h-full w-full object-cover" />
             </div>
 
             <h3 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
