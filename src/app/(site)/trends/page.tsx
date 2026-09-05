@@ -30,20 +30,16 @@ export default async function TrendsPage() {
 
   return (
     <section className="mx-auto max-w-5xl px-5 py-16">
-      <div className="text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
+      <div className="flex items-center gap-2">
+        <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
+        <span className="text-xs font-bold uppercase tracking-wider text-brand-700">
           매일 자동 업데이트
         </span>
-        <h1 className="mt-4 text-2xl font-extrabold text-neutral-900 md:text-3xl">
-          지금 인스타그램에서 터지는 콘텐츠
-        </h1>
-        <p className="mt-3 text-sm text-neutral-500">
-          카테고리별 인기 콘텐츠를 확인하고 트렌드를 참고해보세요
-        </p>
       </div>
+      <h1 className="mt-3 text-xl font-extrabold text-neutral-900 md:text-2xl">인기 콘텐츠</h1>
+      <p className="mt-2 text-sm text-neutral-500">지금 인스타그램에서 터지는 콘텐츠</p>
 
-      <div className="mt-12">
+      <div className="mt-10">
         <TrendsBoard reels={reels} />
       </div>
     </section>

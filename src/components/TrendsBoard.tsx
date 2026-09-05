@@ -34,31 +34,30 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
 
   return (
     <div>
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {TREND_CATEGORIES.map((c) => (
+            <button
+              key={c.key}
+              type="button"
+              onClick={() => setCategory(c.key)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-transform active:scale-95 ${
+                category === c.key
+                  ? "bg-brand-700 text-white"
+                  : "bg-brand-50 text-brand-700 hover:bg-brand-100"
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="계정명, 키워드 검색"
-          className="w-full max-w-md rounded-full border border-black/10 px-5 py-3 text-sm outline-none transition-shadow focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
+          className="w-full max-w-[220px] rounded-full border border-black/10 px-4 py-2 text-sm outline-none transition-shadow focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
         />
-      </div>
-
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
-        {TREND_CATEGORIES.map((c) => (
-          <button
-            key={c.key}
-            type="button"
-            onClick={() => setCategory(c.key)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-transform active:scale-95 ${
-              category === c.key
-                ? "bg-brand-700 text-white"
-                : "bg-brand-50 text-brand-700 hover:bg-brand-100"
-            }`}
-          >
-            {c.label}
-          </button>
-        ))}
       </div>
 
       {filtered.length === 0 ? (
