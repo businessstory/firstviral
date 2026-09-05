@@ -49,13 +49,8 @@ export default function FreePdfPage() {
             <div
               className={`relative aspect-video overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${card.bg}`}
             >
-              <span className="absolute inset-x-4 bottom-4 whitespace-pre-line text-2xl font-black leading-[1.15] text-white">
+              <span className="absolute inset-x-4 top-4 whitespace-pre-line text-xl font-black leading-[1.2] text-white">
                 {card.impact}
-              </span>
-              <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
               </span>
             </div>
             <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">

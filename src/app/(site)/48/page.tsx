@@ -37,6 +37,10 @@ export default async function NewsletterPage() {
                   alt={post.title}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/5 to-transparent" />
+                <span className="absolute inset-x-4 top-4 line-clamp-2 text-lg font-black leading-[1.2] text-white">
+                  {post.title}
+                </span>
               </div>
               <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
                 {post.title}

@@ -60,7 +60,7 @@ export default function ClassPage() {
             <div
               className={`relative aspect-video overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${cls.thumbBg}`}
             >
-              <span className="absolute inset-x-4 bottom-4 whitespace-pre-line text-2xl font-black leading-[1.15] text-white">
+              <span className="absolute inset-x-4 top-4 whitespace-pre-line text-xl font-black leading-[1.2] text-white">
                 {cls.impact}
               </span>
             </div>
