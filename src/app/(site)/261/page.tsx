@@ -47,7 +47,7 @@ export default function FreePdfPage() {
         {cards.map((card) => (
           <LeadMagnetCard key={card.title} leadMagnet={card.leadMagnet} title={card.title} className="group">
             <div
-              className={`relative aspect-square overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${card.bg}`}
+              className={`relative aspect-video overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${card.bg}`}
             >
               <span className="absolute inset-x-4 bottom-4 whitespace-pre-line text-2xl font-black leading-[1.15] text-white">
                 {card.impact}

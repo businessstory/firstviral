@@ -30,7 +30,7 @@ export default async function NewsletterPage() {
           const internal = post.url.startsWith("/");
           const Card = (
             <>
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-100">
+              <div className="relative aspect-video overflow-hidden rounded-2xl bg-neutral-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.thumbnail}

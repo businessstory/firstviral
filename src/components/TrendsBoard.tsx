@@ -75,7 +75,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                 rel="noreferrer"
                 className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
               >
-                <div className="relative aspect-square overflow-hidden bg-neutral-100">
+                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
                   {reel.thumbnail_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img

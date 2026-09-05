@@ -34,7 +34,7 @@ export default function ReviewsPage() {
       <div className="mt-10 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
         {related.map((video, i) => (
           <a key={i} href="#" className="group block">
-            <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-950 transition-transform group-hover:-translate-y-1">
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-brand-950 transition-transform group-hover:-translate-y-1">
               <span className="absolute inset-0 flex items-center justify-center">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur transition-transform group-hover:scale-110">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
