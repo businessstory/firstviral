@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { postsBySlug } from "@/data/posts";
 import { getNewsletterPostById } from "@/lib/supabase";
 import LinkifiedText from "@/components/LinkifiedText";
+import InstagramEmbedScript from "@/components/InstagramEmbedScript";
 
 export default async function NewsletterPostPage({
   params,
@@ -35,6 +36,7 @@ export default async function NewsletterPostPage({
         <div className="mt-8 text-sm text-neutral-700">
           <LinkifiedText text={dbPost.body} />
         </div>
+        <InstagramEmbedScript />
       </article>
     );
   }
