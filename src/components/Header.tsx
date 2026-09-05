@@ -31,15 +31,15 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden h-full items-center gap-7 md:flex">
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-brand-700 ${
-                  active ? "text-brand-700" : "text-neutral-500"
+                className={`flex h-full items-center border-b-2 text-sm font-medium transition-colors hover:text-brand-700 ${
+                  active ? "border-brand-700 text-brand-700" : "border-transparent text-neutral-500"
                 }`}
               >
                 {item.label}
