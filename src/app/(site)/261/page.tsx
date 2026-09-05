@@ -3,35 +3,31 @@ import LeadMagnetCard from "@/components/LeadMagnetCard";
 import Tag from "@/components/Tag";
 
 type FreeCard = {
-  impact: string;
+  image: string;
   title: string;
   tag: string;
   isNew?: boolean;
-  bg: string;
   action: { type: "modal"; leadMagnet: string } | { type: "link"; href: string };
 };
 
 const cards: FreeCard[] = [
   {
-    impact: "100만 뷰\n공식 3가지",
+    image: "/free-resources/million-views-pdf.png",
     title: "인스타그램 100만 뷰 공식 3가지 PDF",
     tag: "PDF",
     isNew: true,
-    bg: "bg-gradient-to-br from-brand-400 to-brand-700",
     action: { type: "link", href: "/261/million-views" },
   },
   {
-    impact: "내 계정\n진짜 문제는?",
+    image: "/free-resources/selfcheck.png",
     title: "인스타그램 자가진단 템플릿",
     tag: "체크리스트",
-    bg: "bg-gradient-to-br from-brand-600 to-brand-900",
     action: { type: "modal", leadMagnet: "free_pdf_selfcheck" },
   },
   {
-    impact: "팔로워를\n돈으로",
+    image: "/free-resources/course-vod.png",
     title: "인스타그램 수익화 무료 강의",
     tag: "무료 강의",
-    bg: "bg-brand-950",
     action: { type: "modal", leadMagnet: "free_course" },
   },
 ];
@@ -39,12 +35,9 @@ const cards: FreeCard[] = [
 function CardVisual({ card }: { card: FreeCard }) {
   return (
     <>
-      <div
-        className={`relative aspect-video overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${card.bg}`}
-      >
-        <span className="absolute inset-x-4 top-4 whitespace-pre-line text-xl font-black leading-[1.2] text-white">
-          {card.impact}
-        </span>
+      <div className="relative aspect-video overflow-hidden rounded-2xl bg-neutral-100 transition-transform group-hover:-translate-y-1">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={card.image} alt={card.title} className="h-full w-full object-cover" />
       </div>
       <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">{card.title}</h2>
       <div className="mt-2 flex items-center gap-1.5">
