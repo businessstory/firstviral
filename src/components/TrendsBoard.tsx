@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { TREND_CATEGORIES, type TrendingReel } from "@/lib/trends";
 import Tag from "./Tag";
-import AddMyAccountButton from "./AddMyAccountButton";
 
 function formatCount(n: number | null): string {
   if (n === null || n === undefined || n < 0) return "비공개";
@@ -28,24 +27,21 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-2">
-          {TABS.map((c) => (
-            <button
-              key={c.key}
-              type="button"
-              onClick={() => setCategory(c.key)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-transform active:scale-95 ${
-                category === c.key
-                  ? "bg-brand-700 text-white"
-                  : "bg-brand-50 text-brand-700 hover:bg-brand-100"
-              }`}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <AddMyAccountButton defaultCategory={category === ALL_KEY ? TREND_CATEGORIES[0].key : category} />
+      <div className="flex flex-wrap gap-2">
+        {TABS.map((c) => (
+          <button
+            key={c.key}
+            type="button"
+            onClick={() => setCategory(c.key)}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition-transform active:scale-95 ${
+              category === c.key
+                ? "bg-brand-700 text-white"
+                : "bg-brand-50 text-brand-700 hover:bg-brand-100"
+            }`}
+          >
+            {c.label}
+          </button>
+        ))}
       </div>
 
       {filtered.length === 0 ? (

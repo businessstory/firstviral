@@ -7,20 +7,43 @@ export const maxDuration = 60;
 const REEL_ACTOR = "apify~instagram-reel-scraper";
 const RESULTS_PER_ACCOUNT = 5;
 
-async function getTrackedUsernames(
+// 카테고리당 하루에 동기화할 계정 수. 5개 카테고리 x 4 = 하루 총 20개.
+// 계정이 아무리 많아져도(예: 1000개) 이 숫자만큼만 매일 순환하며 동기화되므로
+// 무료 크레딧 예산이 계정 총수와 무관하게 항상 일정하게 유지됩니다.
+const DAILY_BATCH_PER_CATEGORY = 4;
+
+async function getAccountsToSync(
   categoryKey: string,
   supabaseUrl: string,
   serviceKey: string
-): Promise<string[]> {
+): Promise<{ id: string; username: string }[]> {
   const res = await fetch(
-    `${supabaseUrl}/rest/v1/tracked_accounts?select=username&category=eq.${categoryKey}`,
+    `${supabaseUrl}/rest/v1/tracked_accounts?select=id,username&category=eq.${categoryKey}&order=last_synced_at.asc.nullsfirst&limit=${DAILY_BATCH_PER_CATEGORY}`,
     {
       headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
     }
   );
   if (!res.ok) return [];
-  const rows = (await res.json()) as { username: string }[];
-  return rows.map((r) => r.username);
+  return (await res.json()) as { id: string; username: string }[];
+}
+
+async function markAccountsSynced(
+  ids: string[],
+  supabaseUrl: string,
+  serviceKey: string
+): Promise<void> {
+  if (ids.length === 0) return;
+  const idList = ids.join(",");
+  await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?id=in.(${idList})`, {
+    method: "PATCH",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({ last_synced_at: new Date().toISOString() }),
+  });
 }
 
 // 결과를 기다리지 않고 Apify에 수집만 "시작"시킵니다 (Vercel 함수 시간제한 회피).
@@ -31,8 +54,9 @@ async function startCategory(
   supabaseUrl: string,
   serviceKey: string
 ): Promise<"started" | "no_accounts" | "start_failed"> {
-  const usernames = await getTrackedUsernames(category.key, supabaseUrl, serviceKey);
-  if (usernames.length === 0) return "no_accounts";
+  const accounts = await getAccountsToSync(category.key, supabaseUrl, serviceKey);
+  if (accounts.length === 0) return "no_accounts";
+  const usernames = accounts.map((a) => a.username);
 
   const runRes = await fetch(
     `https://api.apify.com/v2/acts/${REEL_ACTOR}/runs?token=${apifyToken}`,
@@ -69,6 +93,12 @@ async function startCategory(
       purpose: "trends",
     }),
   });
+
+  await markAccountsSynced(
+    accounts.map((a) => a.id),
+    supabaseUrl,
+    serviceKey
+  );
 
   return "started";
 }

@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# 서버 SSH 개인키 (절대 커밋 금지)
+/서버 파일/
+
 # vercel
 .vercel
 

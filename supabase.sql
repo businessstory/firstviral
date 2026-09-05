@@ -288,3 +288,21 @@ CREATE TRIGGER on_pdf_application_created
 
 ALTER TABLE tracked_accounts DROP CONSTRAINT IF EXISTS tracked_accounts_category_username_key;
 ALTER TABLE tracked_accounts ADD CONSTRAINT tracked_accounts_username_key UNIQUE (username);
+
+-- ============================================================
+-- instagrapi 기반 대량 계정 스크래퍼용 (scraper/ 폴더, 별도 무료 서버에서 실행)
+-- Apify와 별개로 동작하며, 같은 tracked_accounts / trending_reels 테이블을 공유합니다.
+-- last_synced_at: 어떤 계정을 먼저 동기화할지(오래된 순) 정렬하는 데 사용
+-- scraper_state: 해시태그 탐색 커서 등 스크래퍼 진행 상태 저장
+-- ============================================================
+
+ALTER TABLE tracked_accounts ADD COLUMN IF NOT EXISTS last_synced_at TIMESTAMP WITH TIME ZONE;
+
+CREATE TABLE IF NOT EXISTS scraper_state (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE scraper_state ENABLE ROW LEVEL SECURITY;
+-- service_role 키로만 접근 (스크래퍼 서버 전용). 공개 정책 없음.
