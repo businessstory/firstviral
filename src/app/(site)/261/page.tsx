@@ -13,6 +13,14 @@ type FreeCard = {
 
 const cards: FreeCard[] = [
   {
+    impact: "100만 뷰\n공식 3가지",
+    title: "인스타그램 100만 뷰 공식 3가지 PDF",
+    tag: "PDF",
+    isNew: true,
+    bg: "bg-gradient-to-br from-brand-400 to-brand-700",
+    action: { type: "link", href: "/261/million-views" },
+  },
+  {
     impact: "내 계정\n진짜 문제는?",
     title: "인스타그램 자가진단 템플릿",
     tag: "체크리스트",
@@ -23,16 +31,8 @@ const cards: FreeCard[] = [
     impact: "팔로워를\n돈으로",
     title: "인스타그램 수익화 무료 강의",
     tag: "무료 강의",
-    isNew: true,
     bg: "bg-brand-950",
     action: { type: "modal", leadMagnet: "free_course" },
-  },
-  {
-    impact: "100만 뷰\n공식 3가지",
-    title: "인스타그램 100만 뷰 공식 3가지 PDF",
-    tag: "PDF",
-    bg: "bg-gradient-to-br from-brand-400 to-brand-700",
-    action: { type: "link", href: "/261/million-views" },
   },
 ];
 
