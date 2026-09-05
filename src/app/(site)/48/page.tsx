@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getNewsletterPosts } from "@/lib/supabase";
 import { newsletterPosts as legacyPosts } from "@/data/newsletter-posts";
+import Tag from "@/components/Tag";
 
 export const revalidate = 300;
 
@@ -21,19 +22,15 @@ export default async function NewsletterPage() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-14">
-      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">
-        퍼스트 바이럴 뉴스레터
-      </h1>
-      <p className="mt-2 text-sm text-neutral-500">
-        매주 인사이트를 전해드려요. 놓치지 마세요.
-      </p>
+      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">뉴스레터</h1>
+      <p className="mt-2 text-sm text-neutral-500">매주 인사이트를 전해드려요.</p>
 
-      <div className="mt-8 grid gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((post) => {
+      <div className="mt-8 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map((post, i) => {
           const internal = post.url.startsWith("/");
           const Card = (
             <>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100">
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.thumbnail}
@@ -41,9 +38,13 @@ export default async function NewsletterPage() {
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <h2 className="mt-3 line-clamp-2 text-sm font-semibold leading-snug text-neutral-900">
+              <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
                 {post.title}
               </h2>
+              <div className="mt-2 flex items-center gap-1.5">
+                <Tag>뉴스레터</Tag>
+                {i === 0 && <Tag tone="new">New</Tag>}
+              </div>
               <p className="mt-2 text-xs text-neutral-400">{post.date}</p>
             </>
           );

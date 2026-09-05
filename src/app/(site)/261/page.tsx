@@ -1,63 +1,71 @@
 import LeadMagnetCard from "@/components/LeadMagnetCard";
+import Tag from "@/components/Tag";
 
-const cards = [
+type FreeCard = {
+  leadMagnet: string;
+  impact: string;
+  title: string;
+  tag: string;
+  isNew?: boolean;
+  bg: string;
+};
+
+const cards: FreeCard[] = [
   {
     leadMagnet: "free_pdf_selfcheck",
-    badge: "가장 많이 본 무료 자료",
+    impact: "내 계정\n진짜 문제는?",
     title: "인스타그램 자가진단 템플릿",
+    tag: "체크리스트",
     bg: "bg-gradient-to-br from-brand-600 to-brand-900",
   },
   {
     leadMagnet: "free_course",
-    badge: "팔로워를 수익으로 바꾸는 법",
+    impact: "팔로워를\n돈으로",
     title: "인스타그램 수익화 무료 강의",
+    tag: "무료 강의",
+    isNew: true,
     bg: "bg-brand-950",
   },
   {
     leadMagnet: "threads_pdf",
-    badge: "쓰레드로 첫 문의 받은 방법",
+    impact: "조회수 =\n매출",
     title: "조회수로 돈을 버는 방법 TOP 3",
+    tag: "쓰레드",
     bg: "bg-gradient-to-br from-brand-400 to-brand-700",
   },
 ];
 
 export default function FreePdfPage() {
   return (
-    <section className="mx-auto max-w-4xl px-5 py-20 text-center">
-      <p className="text-sm font-bold text-brand-600">퍼스트 바이럴</p>
-
-      <h1 className="mt-4 text-2xl font-extrabold leading-snug text-neutral-900 md:text-4xl">
-        팔로워를 수익으로 바꾸는
-        <br />
-        가장 빠른 방법
-      </h1>
-
-      <p className="mt-5 text-xs text-neutral-400">
-        *인스타그램, 쓰레드 둘 다 활용 가능합니다
-      </p>
-      <p className="mt-1 text-sm text-neutral-500">
+    <section className="mx-auto max-w-5xl px-5 py-16">
+      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">무료 자료실</h1>
+      <p className="mt-2 text-sm text-neutral-500">
         팔로워는 있는데 수익이 안 된다면, 지금 무료로 확인해보세요
       </p>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-3">
+      <div className="mt-10 grid gap-x-5 gap-y-9 sm:grid-cols-3">
         {cards.map((card) => (
-          <LeadMagnetCard
-            key={card.title}
-            leadMagnet={card.leadMagnet}
-            title={card.title}
-            className={`group relative flex aspect-[3/4] flex-col justify-between overflow-hidden rounded-2xl p-5 text-left text-white shadow-[0_12px_30px_rgba(0,0,0,0.15)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400 active:translate-y-0 ${card.bg}`}
-          >
-            <span className="text-xs font-semibold leading-snug text-white/85">
-              {card.badge}
-            </span>
-
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur transition-transform group-hover:scale-110">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </span>
-
-            <span className="text-lg font-bold leading-snug">{card.title}</span>
+          <LeadMagnetCard key={card.title} leadMagnet={card.leadMagnet} title={card.title} className="group">
+            <div
+              className={`relative aspect-square overflow-hidden rounded-2xl transition-transform group-hover:-translate-y-1 ${card.bg}`}
+            >
+              <span className="absolute inset-x-4 bottom-4 whitespace-pre-line text-2xl font-black leading-[1.15] text-white">
+                {card.impact}
+              </span>
+              <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+            </div>
+            <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
+              {card.title}
+            </h2>
+            <div className="mt-2 flex items-center gap-1.5">
+              <Tag>{card.tag}</Tag>
+              <Tag tone="gold">무료</Tag>
+              {card.isNew && <Tag tone="new">New</Tag>}
+            </div>
           </LeadMagnetCard>
         ))}
       </div>

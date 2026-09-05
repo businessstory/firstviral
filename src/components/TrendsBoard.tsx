@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { TREND_CATEGORIES, type TrendingReel } from "@/lib/trends";
+import Tag from "./Tag";
 
 function formatCount(n: number | null): string {
   if (n === null || n === undefined || n < 0) return "비공개";
@@ -97,19 +98,11 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                     </span>
                   )}
                 </div>
-              <div className="flex flex-1 flex-col gap-2 p-4">
-                <p className="text-sm font-bold text-neutral-900">
+              <div className="flex flex-col gap-1.5 p-3.5">
+                <p className="truncate text-sm font-bold text-neutral-900">
                   @{reel.account_handle ?? "unknown"}
                 </p>
-                {reel.caption && (
-                  <p className="line-clamp-2 text-xs leading-relaxed text-neutral-500">
-                    {reel.caption}
-                  </p>
-                )}
-                <div className="mt-auto flex items-center gap-3 pt-1 text-xs font-semibold text-neutral-400">
-                  <span>조회수 {formatCount(reel.view_count)}</span>
-                  <span>좋아요 {formatCount(reel.like_count)}</span>
-                </div>
+                <Tag>조회수 {formatCount(reel.view_count)}</Tag>
               </div>
               </a>
             ))}
