@@ -1,5 +1,5 @@
 import Link from "next/link";
-import VimeoEmbed from "@/components/VimeoEmbed";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 
 // TODO: 아래 문구들은 레이아웃만 참고한 자리표시(placeholder) 카피입니다.
 // 브랜드 실제 헤드라인/스토리/후기 콘텐츠로 교체해주세요.
@@ -141,9 +141,8 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* TODO: 실제 브랜드 소개 영상 Vimeo ID로 교체 */}
           <div className="overflow-hidden rounded-2xl ring-1 ring-brand-100">
-            <VimeoEmbed vimeoId="76979871" title="브랜드 소개 영상" />
+            <YouTubeEmbed youtubeId="FQKgCmWbMz0" title="브랜드 소개 영상" />
           </div>
         </div>
       </section>
