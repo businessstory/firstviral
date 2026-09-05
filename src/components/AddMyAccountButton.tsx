@@ -65,7 +65,7 @@ export default function AddMyAccountButton({ defaultCategory }: { defaultCategor
         onClick={() => setOpen(true)}
         className="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50"
       >
-        + 내 계정 추가하기
+        + 내 릴스도 트렌드인지 확인하기
       </button>
     );
   }
