@@ -36,6 +36,16 @@ export default async function NewsletterPostPage({
         <div className="mt-8 text-sm text-neutral-700">
           <LinkifiedText text={dbPost.body} />
         </div>
+
+        <a
+          href="https://litt.ly/businessstory/sale/p73JCxQ"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-12 flex items-center justify-center gap-2 rounded-full bg-brand-700 px-7 py-3.5 text-sm font-bold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95"
+        >
+          내 인스타 계정 도움받으러 가기
+        </a>
+
         <InstagramEmbedScript />
       </article>
     );
