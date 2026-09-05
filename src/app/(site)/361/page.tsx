@@ -12,15 +12,17 @@ type ClassItem = {
   title: string;
   tag: string;
   priceLabel: string;
+  originalPriceLabel?: string;
   cta: { type: "link"; url: string } | { type: "kakao" } | { type: "soon" };
 };
 
 const classes: ClassItem[] = [
   {
     image: "/class/consulting.png",
-    title: "1:1 맞춤 인스타그램 컨설팅",
+    title: "1:1 맞춤 인스타그램 컨설팅(오프라인)",
     tag: "1:1 컨설팅",
     priceLabel: "30,000원",
+    originalPriceLabel: "200,000원",
     cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
   },
   {
@@ -64,7 +66,13 @@ export default function ClassPage() {
             <div className="mt-2">
               <Tag>{cls.tag}</Tag>
             </div>
-            <p className="mt-2 text-lg font-extrabold text-neutral-900">{cls.priceLabel}</p>
+            <div className="mt-2 flex items-center gap-2">
+              {cls.originalPriceLabel && (
+                <span className="text-sm text-neutral-400 line-through">{cls.originalPriceLabel}</span>
+              )}
+              <p className="text-lg font-extrabold text-neutral-900">{cls.priceLabel}</p>
+              {cls.originalPriceLabel && <Tag tone="new">할인중</Tag>}
+            </div>
 
             {cls.cta.type === "link" && (
               <a href={cls.cta.url} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>

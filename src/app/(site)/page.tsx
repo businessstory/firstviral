@@ -50,7 +50,7 @@ export default function Home() {
             href="/261"
             className="mt-10 inline-flex items-center gap-2 rounded-full bg-accent-gold px-7 py-3.5 text-sm font-bold text-brand-950 shadow-[0_10px_30px_rgba(232,196,104,0.25)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-400 active:scale-95"
           >
-            무료 자가진단 받아보기
+            인스타 수익화 무료 강의 VOD 보러가기
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M9 6l6 6-6 6" />
             </svg>
