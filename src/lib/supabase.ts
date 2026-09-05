@@ -389,3 +389,58 @@ export async function deleteLead(
   if (!res.ok) return { ok: false, reason: "request_failed" };
   return { ok: true };
 }
+
+// "인스타그램 100만 뷰 공식 PDF" 전용 신청 폼 저장. anon 키로 insert.
+export async function insertPdfApplication(params: {
+  name: string;
+  phone: string;
+  reason: string;
+  agreePrivacy: boolean;
+}): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/pdf_applications`, {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name: params.name,
+      phone: params.phone,
+      reason: params.reason,
+      agree_privacy: params.agreePrivacy,
+    }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
+export type PdfApplication = {
+  id: string;
+  name: string;
+  phone: string;
+  reason: string;
+  agree_privacy: boolean;
+  created_at: string;
+};
+
+// 관리자 페이지 전용. service_role 키로 RLS 우회.
+export async function getPdfApplications(): Promise<PdfApplication[]> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return [];
+
+  const res = await fetch(`${url}/rest/v1/pdf_applications?select=*&order=created_at.desc`, {
+    headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return [];
+  return res.json();
+}

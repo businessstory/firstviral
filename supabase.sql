@@ -221,3 +221,62 @@ ON CONFLICT (id) DO NOTHING;
 
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS agree_privacy BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS agree_marketing BOOLEAN NOT NULL DEFAULT false;
+
+-- ============================================================
+-- "인스타그램 100만 뷰 공식 3가지 PDF" 전용 신청 폼 (/261/million-views)
+-- 이름/연락처/신청 이유만 받고, 책자는 연락처로 수동 발송합니다.
+-- ============================================================
+
+CREATE TABLE pdf_applications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  agree_privacy BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE pdf_applications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can insert pdf applications" ON pdf_applications
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- 신청 들어오면 관리자에게 즉시 이메일 알림 (책자를 수동으로 보내야 하니까)
+CREATE OR REPLACE FUNCTION public.handle_new_pdf_application()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  resend_key TEXT;
+  admin_email TEXT := 'tlawjdgur11@naver.com';
+BEGIN
+  SELECT decrypted_secret INTO resend_key
+  FROM vault.decrypted_secrets
+  WHERE name = 'resend_api_key';
+
+  PERFORM net.http_post(
+    url := 'https://api.resend.com/emails',
+    headers := jsonb_build_object(
+      'Authorization', 'Bearer ' || resend_key,
+      'Content-Type', 'application/json'
+    ),
+    body := jsonb_build_object(
+      'from', '퍼스트 바이럴 <noreply@businessstory.co.kr>',
+      'to', jsonb_build_array(admin_email),
+      'subject', '새 PDF 신청 도착 - ' || NEW.name,
+      'html', '<p>이름: ' || NEW.name || '</p><p>연락처: ' || NEW.phone || '</p><p>신청 이유: ' || NEW.reason || '</p>'
+    )
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_pdf_application_created ON pdf_applications;
+CREATE TRIGGER on_pdf_application_created
+  AFTER INSERT ON pdf_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_pdf_application();
