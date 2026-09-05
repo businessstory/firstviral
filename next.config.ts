@@ -6,7 +6,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
   "font-src 'self' https://cdn.jsdelivr.net",
   "img-src 'self' data: https:",
-  "frame-src https://player.vimeo.com https://www.instagram.com",
+  "frame-src https://player.vimeo.com https://www.instagram.com https://www.youtube.com https://www.youtube-nocookie.com",
   "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tquiqlubzmfjoynwowhh.supabase.co",
   "object-src 'none'",
   "base-uri 'self'",
@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "i.vimeocdn.com" },
+      { protocol: "https", hostname: "img.youtube.com" },
     ],
   },
   async headers() {
