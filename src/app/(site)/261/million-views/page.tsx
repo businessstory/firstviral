@@ -23,10 +23,15 @@ export default function MillionViewsPdfPage() {
         <p className="text-sm font-bold text-neutral-500">[목차 일부만 공개합니다]</p>
         <ol className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700">
           <li>1. 알고리즘 해킹, 세팅 전략</li>
-          <li>2. 그로스해킹 전략</li>
-          <li>3. 100만 뷰 조회수 공식</li>
-          <li>4. 스토리텔링 공식</li>
-          <li className="text-neutral-400">등등...</li>
+          <li>2. 인스타그램 100만 뷰 콘텐츠 전략</li>
+          <li>3. 인스타그램 릴스를 꼭 해야 하는 이유</li>
+          <li>4. 필승법, 그로스해킹 전략</li>
+          <li>5. 릴스가 터진다고 돈이 될까?</li>
+          <li>6. 공식 1 조회수 공식</li>
+          <li>7. 공식 2: 인스타 성공 원리 공식</li>
+          <li>8. 공식 3: 스토리텔링 공식</li>
+          <li>9. 공식 4: 데이트레이딩 공식</li>
+          <li>10. 공식 5: 경쟁 우위 공식</li>
         </ol>
       </div>
 
