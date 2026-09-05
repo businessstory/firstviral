@@ -1,4 +1,5 @@
 import TrendsBoard from "@/components/TrendsBoard";
+import AuthGate from "@/components/AuthGate";
 import type { TrendingReel } from "@/lib/trends";
 
 export const metadata = {
@@ -40,7 +41,9 @@ export default async function TrendsPage() {
       <p className="mt-2 text-sm text-neutral-500">지금 인스타그램에서 터지는 콘텐츠</p>
 
       <div className="mt-10">
-        <TrendsBoard reels={reels} />
+        <AuthGate>
+          <TrendsBoard reels={reels} />
+        </AuthGate>
       </div>
     </section>
   );

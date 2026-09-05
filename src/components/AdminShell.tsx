@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 const TABS = [
   { label: "대시보드", href: "/admin-952988" },
   { label: "DB", href: "/admin-952988/db" },
+  { label: "회원", href: "/admin-952988/members" },
   { label: "뉴스레터", href: "/admin-952988/newsletter" },
   { label: "이메일 발송", href: "/admin-952988/broadcast" },
 ];
