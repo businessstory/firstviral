@@ -12,15 +12,17 @@ function formatCount(n: number | null): string {
 
 const MILLION = 1000000;
 const MIN_VIEWS = 10000;
+const ALL_KEY = "all";
+const TABS = [{ key: ALL_KEY, label: "모든 콘텐츠" }, ...TREND_CATEGORIES];
 
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
-  const [category, setCategory] = useState<string>(TREND_CATEGORIES[0].key);
+  const [category, setCategory] = useState<string>(ALL_KEY);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return reels
-      .filter((r) => r.category === category)
+      .filter((r) => category === ALL_KEY || r.category === category)
       .filter((r) => (r.view_count ?? 0) >= MIN_VIEWS)
       .filter((r) => {
         if (!q) return true;
@@ -36,7 +38,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
-          {TREND_CATEGORIES.map((c) => (
+          {TABS.map((c) => (
             <button
               key={c.key}
               type="button"

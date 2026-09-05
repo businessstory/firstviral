@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { isAdminBasicAuth } from "@/lib/adminAuth";
 
 export const maxDuration = 60;
 
@@ -119,7 +120,8 @@ async function collectRun(
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const isCron = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  if (!isCron && !isAdminBasicAuth(authHeader)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

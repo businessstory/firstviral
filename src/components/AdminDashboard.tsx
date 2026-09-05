@@ -23,6 +23,8 @@ export default function AdminDashboard({
   const [newUsername, setNewUsername] = useState("");
   const [accountBusy, setAccountBusy] = useState(false);
   const [accountError, setAccountError] = useState<string | null>(null);
+  const [applying, setApplying] = useState(false);
+  const [applyMessage, setApplyMessage] = useState<string | null>(null);
 
   const today = new Date().toISOString().slice(0, 10);
   const total = leads.length;
@@ -66,6 +68,37 @@ export default function AdminDashboard({
       startTransition(() => router.refresh());
     } finally {
       setAccountBusy(false);
+    }
+  }
+
+  async function handleApplyNow() {
+    setApplying(true);
+    setApplyMessage("수집을 시작하고 있어요...");
+    try {
+      const startRes = await fetch("/api/cron/sync-trends");
+      if (!startRes.ok) {
+        setApplyMessage("시작에 실패했어요. 다시 시도해주세요.");
+        return;
+      }
+
+      setApplyMessage("인스타그램에서 최신 콘텐츠를 가져오는 중이에요. 잠시만 기다려주세요 (약 1분)...");
+      await new Promise((resolve) => setTimeout(resolve, 75000));
+
+      const collectRes = await fetch("/api/cron/collect-trends");
+      const data = await collectRes.json();
+      if (!collectRes.ok) {
+        setApplyMessage("수집 결과를 가져오지 못했어요. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      const collected = (data.results ?? []).reduce((sum: number, r: { result: string }) => {
+        const match = /collected:(\d+)/.exec(r.result);
+        return sum + (match ? Number(match[1]) : 0);
+      }, 0);
+      setApplyMessage(`완료! 새 콘텐츠 ${collected}개가 인기 콘텐츠에 반영됐어요.`);
+      startTransition(() => router.refresh());
+    } finally {
+      setApplying(false);
     }
   }
 
@@ -140,7 +173,22 @@ export default function AdminDashboard({
         count={trackedAccounts.length}
         subtitle="팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정"
         className="mt-6"
+        actions={
+          <button
+            type="button"
+            onClick={handleApplyNow}
+            disabled={applying}
+            className="shrink-0 rounded-full bg-brand-700 px-3.5 py-1.5 text-xs font-bold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 disabled:opacity-50"
+          >
+            {applying ? "적용 중..." : "지금 바로 적용하기"}
+          </button>
+        }
       >
+        {applyMessage && (
+          <p className="border-b border-neutral-100 bg-brand-50 px-5 py-2.5 text-xs font-medium text-brand-700">
+            {applyMessage}
+          </p>
+        )}
         <form
           onSubmit={handleAddAccount}
           className="flex flex-wrap items-center gap-2 border-b border-neutral-100 px-5 py-4"
@@ -241,22 +289,27 @@ function Panel({
   title,
   count,
   subtitle,
+  actions,
   className = "",
   children,
 }: {
   title: string;
   count: number;
   subtitle?: string;
+  actions?: ReactNode;
   className?: string;
   children: ReactNode;
 }) {
   return (
     <div className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ${className}`}>
-      <div className="flex items-center gap-2 border-b border-neutral-100 px-5 py-4">
-        <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
-        <h2 className="text-sm font-bold text-brand-950">
-          {title} <span className="font-medium text-neutral-400">({count})</span>
-        </h2>
+      <div className="flex items-center justify-between gap-2 border-b border-neutral-100 px-5 py-4">
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+          <h2 className="text-sm font-bold text-brand-950">
+            {title} <span className="font-medium text-neutral-400">({count})</span>
+          </h2>
+        </div>
+        {actions}
       </div>
       {subtitle && <p className="px-5 pt-3 text-xs text-neutral-400">{subtitle}</p>}
       {children}
