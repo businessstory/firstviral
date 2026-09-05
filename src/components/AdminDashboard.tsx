@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition, type FormEvent, type ReactNode } from "react";
 import type { Lead, TrackedAccount } from "@/lib/supabase";
-import { categoryLabel, TREND_CATEGORIES } from "@/lib/trends";
+import { categoryLabel } from "@/lib/trends";
 import { usePagination } from "@/lib/usePagination";
 import AdminShell from "./AdminShell";
 import Pagination from "./Pagination";
@@ -17,7 +17,6 @@ export default function AdminDashboard({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [newCategory, setNewCategory] = useState<string>(TREND_CATEGORIES[0].key);
   const [newUsername, setNewUsername] = useState("");
   const [accountBusy, setAccountBusy] = useState(false);
   const [accountError, setAccountError] = useState<string | null>(null);
@@ -41,7 +40,7 @@ export default function AdminDashboard({
       const res = await fetch("/api/tracked-accounts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category: newCategory, username: newUsername }),
+        body: JSON.stringify({ username: newUsername }),
       });
       if (!res.ok) {
         setAccountError("추가에 실패했어요. 다시 시도해주세요.");
@@ -151,17 +150,6 @@ export default function AdminDashboard({
           onSubmit={handleAddAccount}
           className="flex flex-wrap items-center gap-2 border-b border-neutral-100 px-5 py-4"
         >
-          <select
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
-          >
-            {TREND_CATEGORIES.map((c) => (
-              <option key={c.key} value={c.key}>
-                {c.label}
-              </option>
-            ))}
-          </select>
           <input
             type="text"
             value={newUsername}
