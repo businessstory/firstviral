@@ -280,6 +280,33 @@ export async function createNewsletterPost(params: {
   return { ok: true };
 }
 
+export async function updateNewsletterPost(
+  id: string,
+  params: { title: string; body: string; thumbnailUrl: string | null }
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
+
+  const res = await fetch(`${url}/rest/v1/newsletter_posts?id=eq.${id}`, {
+    method: "PATCH",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      title: params.title,
+      body: params.body,
+      thumbnail_url: params.thumbnailUrl,
+    }),
+  });
+
+  if (!res.ok) return { ok: false, reason: "request_failed" };
+  return { ok: true };
+}
+
 export async function deleteNewsletterPost(
   id: string
 ): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "request_failed" }> {

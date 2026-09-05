@@ -10,6 +10,7 @@ import Pagination from "./Pagination";
 export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [body, setBody] = useState("");
@@ -19,6 +20,22 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { pageItems, page, setPage, totalPages } = usePagination(posts);
+
+  function resetForm() {
+    setEditingId(null);
+    setTitle("");
+    setThumbnailUrl(null);
+    setBody("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function startEdit(post: NewsletterPostRow) {
+    setEditingId(post.id);
+    setTitle(post.title);
+    setThumbnailUrl(post.thumbnail_url);
+    setBody(post.body);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   async function handleThumbnailSelect(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -47,18 +64,17 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
     setError(null);
     try {
       const res = await fetch("/api/newsletter-posts", {
-        method: "POST",
+        method: editingId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, body, thumbnailUrl }),
+        body: JSON.stringify(
+          editingId ? { id: editingId, title, body, thumbnailUrl } : { title, body, thumbnailUrl }
+        ),
       });
       if (!res.ok) {
-        setError("등록에 실패했어요. 다시 시도해주세요.");
+        setError(editingId ? "수정에 실패했어요. 다시 시도해주세요." : "등록에 실패했어요. 다시 시도해주세요.");
         return;
       }
-      setTitle("");
-      setThumbnailUrl(null);
-      setBody("");
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      resetForm();
       startTransition(() => router.refresh());
     } finally {
       setBusy(false);
@@ -73,6 +89,7 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
+      if (editingId === id) resetForm();
       startTransition(() => router.refresh());
     } finally {
       setBusy(false);
@@ -86,6 +103,21 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
         onSubmit={handleSubmit}
         className="space-y-5 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
       >
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold text-brand-950">
+            {editingId ? "글 수정하기" : "새 글 작성"}
+          </h2>
+          {editingId && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="text-xs font-semibold text-neutral-400 hover:text-neutral-600"
+            >
+              취소하고 새 글 쓰기
+            </button>
+          )}
+        </div>
+
         <div>
           <label className="text-xs font-bold text-neutral-500">제목</label>
           <input
@@ -130,7 +162,7 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            rows={10}
+            rows={28}
             placeholder="내용을 입력하세요."
             className="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm outline-none transition-shadow focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
           />
@@ -143,7 +175,7 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
           disabled={busy || uploading}
           className="rounded-xl bg-brand-700 px-6 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02] hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-700 active:scale-95 disabled:opacity-50"
         >
-          {busy ? "게시 중..." : "게시하기"}
+          {busy ? (editingId ? "수정 중..." : "게시 중...") : editingId ? "수정 완료" : "게시하기"}
         </button>
       </form>
 
@@ -178,6 +210,14 @@ export default function NewsletterAdmin({ posts }: { posts: NewsletterPostRow[] 
               >
                 보기
               </a>
+              <button
+                type="button"
+                onClick={() => startEdit(post)}
+                disabled={busy}
+                className="shrink-0 text-xs font-semibold text-neutral-500 transition-colors hover:text-brand-700 disabled:opacity-40"
+              >
+                수정
+              </button>
               <button
                 type="button"
                 onClick={() => handleDelete(post.id)}
