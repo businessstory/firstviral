@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { TREND_CATEGORIES, type TrendingReel } from "@/lib/trends";
 import Tag from "./Tag";
+import AddMyAccountButton from "./AddMyAccountButton";
 
 function formatCount(n: number | null): string {
   if (n === null || n === undefined || n < 0) return "비공개";
@@ -17,22 +18,13 @@ const TABS = [{ key: ALL_KEY, label: "모든 콘텐츠" }, ...TREND_CATEGORIES];
 
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
   const [category, setCategory] = useState<string>(ALL_KEY);
-  const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
     return reels
       .filter((r) => category === ALL_KEY || r.category === category)
       .filter((r) => (r.view_count ?? 0) >= MIN_VIEWS)
-      .filter((r) => {
-        if (!q) return true;
-        return (
-          r.account_handle?.toLowerCase().includes(q) ||
-          r.caption?.toLowerCase().includes(q)
-        );
-      })
       .sort((a, b) => (b.view_count ?? 0) - (a.view_count ?? 0));
-  }, [reels, category, query]);
+  }, [reels, category]);
 
   return (
     <div>
@@ -53,13 +45,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
             </button>
           ))}
         </div>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="계정명, 키워드 검색"
-          className="w-full max-w-[220px] rounded-full border border-black/10 px-4 py-2 text-sm outline-none transition-shadow focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
-        />
+        <AddMyAccountButton defaultCategory={category === ALL_KEY ? TREND_CATEGORIES[0].key : category} />
       </div>
 
       {filtered.length === 0 ? (

@@ -13,7 +13,7 @@ type FreeCard = {
 const cards: FreeCard[] = [
   {
     image: "/free-resources/million-views-pdf.png",
-    title: "인스타그램 100만 뷰 공식 3가지 PDF",
+    title: "인스타그램 100만 뷰 공식 5가지 PDF",
     tag: "PDF",
     isNew: true,
     action: { type: "link", href: "/261/million-views" },

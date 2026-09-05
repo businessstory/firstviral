@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAdminBasicAuth } from "@/lib/adminAuth";
+import { isValidUserToken } from "@/lib/userAuth";
 
 export const maxDuration = 60;
 
@@ -121,7 +122,7 @@ async function collectRun(
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const isCron = authHeader === `Bearer ${process.env.CRON_SECRET}`;
-  if (!isCron && !isAdminBasicAuth(authHeader)) {
+  if (!isCron && !isAdminBasicAuth(authHeader) && !(await isValidUserToken(authHeader))) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

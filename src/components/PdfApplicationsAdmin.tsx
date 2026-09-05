@@ -11,7 +11,7 @@ export default function PdfApplicationsAdmin({ applications }: { applications: P
   return (
     <AdminShell title="100만 뷰 PDF 신청">
       <p className="text-sm text-neutral-500">
-        &ldquo;인스타그램 100만 뷰 공식 3가지 PDF&rdquo; 신청자 목록이에요. 총{" "}
+        &ldquo;인스타그램 100만 뷰 공식 5가지 PDF&rdquo; 신청자 목록이에요. 총{" "}
         <span className="font-bold text-brand-700">{applications.length}건</span>
       </p>
 

@@ -1,7 +1,7 @@
 import PdfApplicationForm from "@/components/PdfApplicationForm";
 
 export const metadata = {
-  title: "인스타그램 100만 뷰 공식 3가지 PDF | 퍼스트 바이럴",
+  title: "인스타그램 100만 뷰 공식 5가지 PDF | 퍼스트 바이럴",
 };
 
 export default function MillionViewsPdfPage() {
