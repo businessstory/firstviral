@@ -26,7 +26,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
           </svg>
         </span>
         <p className="mt-4 text-sm font-bold text-neutral-900">로그인이 필요한 콘텐츠예요</p>
-        <p className="mt-1 text-xs text-neutral-500">로그인하고 인기 콘텐츠를 확인해보세요</p>
+        <p className="mt-1 text-xs text-neutral-500">로그인하고 릴스 트렌드를 확인해보세요</p>
         <Link
           href="/login"
           className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-700 px-6 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105 hover:bg-brand-800 active:scale-95"

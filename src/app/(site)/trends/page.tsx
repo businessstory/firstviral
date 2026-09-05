@@ -3,8 +3,8 @@ import AuthGate from "@/components/AuthGate";
 import type { TrendingReel } from "@/lib/trends";
 
 export const metadata = {
-  title: "인기 콘텐츠 랭킹 | 퍼스트 바이럴",
-  description: "카테고리별로 지금 인스타그램에서 터지고 있는 인기 콘텐츠를 한눈에 확인하세요.",
+  title: "릴스 트렌드 랭킹 | 퍼스트 바이럴",
+  description: "카테고리별로 지금 인스타그램에서 터지고 있는 릴스 트렌드를 한눈에 확인하세요.",
 };
 
 export const revalidate = 3600;
@@ -37,7 +37,7 @@ export default async function TrendsPage() {
           매일 자동 업데이트
         </span>
       </div>
-      <h1 className="mt-3 text-xl font-extrabold text-neutral-900 md:text-2xl">인기 콘텐츠</h1>
+      <h1 className="mt-3 text-xl font-extrabold text-neutral-900 md:text-2xl">릴스 트렌드</h1>
       <p className="mt-2 text-sm text-neutral-500">지금 인스타그램에서 터지는 콘텐츠</p>
 
       <div className="mt-10">

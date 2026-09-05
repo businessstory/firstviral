@@ -50,7 +50,7 @@ export default function AddMyAccountButton({ defaultCategory }: { defaultCategor
         return;
       }
 
-      setMessage("완료! 인기 콘텐츠에 반영됐어요.");
+      setMessage("완료! 릴스 트렌드에 반영됐어요.");
       setUsername("");
       router.refresh();
     } finally {

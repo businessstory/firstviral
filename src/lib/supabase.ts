@@ -178,7 +178,7 @@ export async function addTrackedAccount(params: {
 
   if (!url || !serviceKey) return { ok: false, reason: "not_configured" };
 
-  const res = await fetch(`${url}/rest/v1/tracked_accounts?on_conflict=category,username`, {
+  const res = await fetch(`${url}/rest/v1/tracked_accounts?on_conflict=username`, {
     method: "POST",
     headers: {
       apikey: serviceKey,

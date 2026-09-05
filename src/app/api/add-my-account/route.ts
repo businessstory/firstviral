@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 계정 등록 (이미 있으면 무시)
-  await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?on_conflict=category,username`, {
+  await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?on_conflict=username`, {
     method: "POST",
     headers: {
       apikey: serviceKey,

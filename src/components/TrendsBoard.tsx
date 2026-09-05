@@ -68,7 +68,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={reel.thumbnail_url}
-                      alt={reel.account_handle ?? "인기 콘텐츠"}
+                      alt={reel.account_handle ?? "릴스 트렌드"}
                       className="h-full w-full object-cover transition-transform group-hover:scale-105"
                     />
                   ) : (

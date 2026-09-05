@@ -92,7 +92,7 @@ export default function AdminDashboard({
         const match = /collected:(\d+)/.exec(r.result);
         return sum + (match ? Number(match[1]) : 0);
       }, 0);
-      setApplyMessage(`완료! 새 콘텐츠 ${collected}개가 인기 콘텐츠에 반영됐어요.`);
+      setApplyMessage(`완료! 새 콘텐츠 ${collected}개가 릴스 트렌드에 반영됐어요.`);
       startTransition(() => router.refresh());
     } finally {
       setApplying(false);
@@ -129,7 +129,7 @@ export default function AdminDashboard({
       <Panel
         title="추적 계정 목록"
         count={trackedAccounts.length}
-        subtitle="팔로워 1만 이상, 카테고리별 인기 콘텐츠 추적 대상 계정"
+        subtitle="팔로워 1만 이상, 카테고리별 릴스 트렌드 추적 대상 계정"
         className="mt-6"
         actions={
           <button

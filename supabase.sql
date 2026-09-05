@@ -280,3 +280,11 @@ CREATE TRIGGER on_pdf_application_created
   AFTER INSERT ON pdf_applications
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_pdf_application();
+
+-- ============================================================
+-- 추적 계정 중복 방지 강화: 같은 계정이 카테고리를 바꿔서 또 등록되는 것도 막기
+-- (기존엔 카테고리+계정 조합만 막아서, 같은 계정이 다른 카테고리로 중복 등록될 수 있었음)
+-- ============================================================
+
+ALTER TABLE tracked_accounts DROP CONSTRAINT IF EXISTS tracked_accounts_category_username_key;
+ALTER TABLE tracked_accounts ADD CONSTRAINT tracked_accounts_username_key UNIQUE (username);

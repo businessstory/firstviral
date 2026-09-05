@@ -68,7 +68,7 @@ async function discoverCategory(
 
   if (qualified.length === 0) return 0;
 
-  await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?on_conflict=category,username`, {
+  await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?on_conflict=username`, {
     method: "POST",
     headers: {
       apikey: serviceKey,
