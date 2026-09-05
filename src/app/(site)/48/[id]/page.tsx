@@ -41,7 +41,7 @@ export default async function NewsletterPostPage({
     );
   }
 
-  const post = postsBySlug[id as keyof typeof postsBySlug];
+  const post = postsBySlug[id];
   if (!post) notFound();
 
   return (
