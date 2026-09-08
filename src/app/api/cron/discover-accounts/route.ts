@@ -34,7 +34,8 @@ async function discoverCategory(
   supabaseUrl: string,
   serviceKey: string,
   targetCount: number = TARGET_PER_CATEGORY,
-  candidateLimit: number = CANDIDATE_LIMIT
+  candidateLimit: number = CANDIDATE_LIMIT,
+  hashtagsOverride?: string[]
 ): Promise<{ count: number; debug: DiscoverDebug }> {
   const debug: DiscoverDebug = {
     hashtagStatus: 0,
@@ -52,7 +53,7 @@ async function discoverCategory(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        hashtags: [category.hashtag],
+        hashtags: hashtagsOverride && hashtagsOverride.length > 0 ? hashtagsOverride : [category.hashtag],
         resultsLimit: candidateLimit,
       }),
     }
@@ -132,8 +133,10 @@ export async function GET(req: NextRequest) {
   const categoriesParam = req.nextUrl.searchParams.get("categories");
   const countParam = req.nextUrl.searchParams.get("count");
   const candidateLimitParam = req.nextUrl.searchParams.get("candidateLimit");
+  const hashtagsParam = req.nextUrl.searchParams.get("hashtags");
   const targetCount = countParam ? Number(countParam) : TARGET_PER_CATEGORY;
   const candidateLimit = candidateLimitParam ? Number(candidateLimitParam) : CANDIDATE_LIMIT;
+  const hashtagsOverride = hashtagsParam ? hashtagsParam.split(",") : undefined;
   const selectedCategories = categoriesParam
     ? TREND_CATEGORIES.filter((c) => categoriesParam.split(",").includes(c.key))
     : TREND_CATEGORIES;
@@ -142,7 +145,15 @@ export async function GET(req: NextRequest) {
 
   const outcomes = await Promise.allSettled(
     selectedCategories.map((category) =>
-      discoverCategory(category, apifyToken, supabaseUrl, serviceKey, targetCount, candidateLimit)
+      discoverCategory(
+        category,
+        apifyToken,
+        supabaseUrl,
+        serviceKey,
+        targetCount,
+        candidateLimit,
+        hashtagsOverride
+      )
     )
   );
 
