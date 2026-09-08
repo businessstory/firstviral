@@ -18,6 +18,16 @@ type ProfileItem = {
   profilePicUrl?: string;
 };
 
+type DiscoverDebug = {
+  hashtagStatus: number;
+  postsCount: number;
+  candidatesCount: number;
+  profileStatus: number;
+  profilesCount: number;
+  qualifiedCount: number;
+  sampleFollowerCounts: (number | null | undefined)[];
+};
+
 async function discoverCategory(
   category: (typeof TREND_CATEGORIES)[number],
   apifyToken: string,
@@ -25,7 +35,17 @@ async function discoverCategory(
   serviceKey: string,
   targetCount: number = TARGET_PER_CATEGORY,
   candidateLimit: number = CANDIDATE_LIMIT
-): Promise<number> {
+): Promise<{ count: number; debug: DiscoverDebug }> {
+  const debug: DiscoverDebug = {
+    hashtagStatus: 0,
+    postsCount: 0,
+    candidatesCount: 0,
+    profileStatus: 0,
+    profilesCount: 0,
+    qualifiedCount: 0,
+    sampleFollowerCounts: [],
+  };
+
   const hashtagRes = await fetch(
     `https://api.apify.com/v2/acts/${HASHTAG_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
     {
@@ -37,13 +57,16 @@ async function discoverCategory(
       }),
     }
   );
-  if (!hashtagRes.ok) return 0;
+  debug.hashtagStatus = hashtagRes.status;
+  if (!hashtagRes.ok) return { count: 0, debug };
 
   const posts = (await hashtagRes.json()) as HashtagItem[];
+  debug.postsCount = posts.length;
   const candidates = Array.from(
     new Set(posts.map((p) => p.ownerUsername).filter((u): u is string => !!u))
   );
-  if (candidates.length === 0) return 0;
+  debug.candidatesCount = candidates.length;
+  if (candidates.length === 0) return { count: 0, debug };
 
   const profileRes = await fetch(
     `https://api.apify.com/v2/acts/${PROFILE_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
@@ -53,9 +76,12 @@ async function discoverCategory(
       body: JSON.stringify({ usernames: candidates }),
     }
   );
-  if (!profileRes.ok) return 0;
+  debug.profileStatus = profileRes.status;
+  if (!profileRes.ok) return { count: 0, debug };
 
   const profiles = (await profileRes.json()) as ProfileItem[];
+  debug.profilesCount = profiles.length;
+  debug.sampleFollowerCounts = profiles.slice(0, 10).map((p) => p.followersCount);
 
   const qualified = profiles
     .filter((p) => p.username && (p.followersCount ?? 0) >= MIN_FOLLOWERS)
@@ -68,8 +94,9 @@ async function discoverCategory(
       full_name: p.fullName ?? null,
       profile_pic_url: p.profilePicUrl ?? null,
     }));
+  debug.qualifiedCount = qualified.length;
 
-  if (qualified.length === 0) return 0;
+  if (qualified.length === 0) return { count: 0, debug };
 
   await fetch(`${supabaseUrl}/rest/v1/tracked_accounts?on_conflict=username`, {
     method: "POST",
@@ -82,7 +109,7 @@ async function discoverCategory(
     body: JSON.stringify(qualified),
   });
 
-  return qualified.length;
+  return { count: qualified.length, debug };
 }
 
 export async function GET(req: NextRequest) {
@@ -111,6 +138,8 @@ export async function GET(req: NextRequest) {
     ? TREND_CATEGORIES.filter((c) => categoriesParam.split(",").includes(c.key))
     : TREND_CATEGORIES;
 
+  const debugMode = req.nextUrl.searchParams.get("debug") === "1";
+
   const outcomes = await Promise.allSettled(
     selectedCategories.map((category) =>
       discoverCategory(category, apifyToken, supabaseUrl, serviceKey, targetCount, candidateLimit)
@@ -120,9 +149,22 @@ export async function GET(req: NextRequest) {
   const results = Object.fromEntries(
     selectedCategories.map((category, i) => {
       const outcome = outcomes[i];
-      return [category.key, outcome.status === "fulfilled" ? outcome.value : 0];
+      return [category.key, outcome.status === "fulfilled" ? outcome.value.count : 0];
     })
   );
+
+  if (debugMode) {
+    const debugInfo = Object.fromEntries(
+      selectedCategories.map((category, i) => {
+        const outcome = outcomes[i];
+        return [
+          category.key,
+          outcome.status === "fulfilled" ? outcome.value.debug : String(outcome.reason),
+        ];
+      })
+    );
+    return NextResponse.json({ ok: true, results, debug: debugInfo });
+  }
 
   return NextResponse.json({ ok: true, results });
 }
