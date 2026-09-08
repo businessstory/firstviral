@@ -22,7 +22,8 @@ async function discoverCategory(
   category: (typeof TREND_CATEGORIES)[number],
   apifyToken: string,
   supabaseUrl: string,
-  serviceKey: string
+  serviceKey: string,
+  targetCount: number = TARGET_PER_CATEGORY
 ): Promise<number> {
   const hashtagRes = await fetch(
     `https://api.apify.com/v2/acts/${HASHTAG_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
@@ -58,7 +59,7 @@ async function discoverCategory(
   const qualified = profiles
     .filter((p) => p.username && (p.followersCount ?? 0) >= MIN_FOLLOWERS)
     .sort((a, b) => (b.followersCount ?? 0) - (a.followersCount ?? 0))
-    .slice(0, TARGET_PER_CATEGORY)
+    .slice(0, targetCount)
     .map((p) => ({
       category: category.key,
       username: p.username,
@@ -98,14 +99,23 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "not_configured" }, { status: 501 });
   }
 
+  // ?categories=food,fitness&count=10 으로 특정 카테고리만, 원하는 수만큼 수동 발굴 가능.
+  // 파라미터 없으면 기존과 동일하게(전체 카테고리, 기본 목표치) 동작 — 매일 도는 크론은 영향 없음.
+  const categoriesParam = req.nextUrl.searchParams.get("categories");
+  const countParam = req.nextUrl.searchParams.get("count");
+  const targetCount = countParam ? Number(countParam) : TARGET_PER_CATEGORY;
+  const selectedCategories = categoriesParam
+    ? TREND_CATEGORIES.filter((c) => categoriesParam.split(",").includes(c.key))
+    : TREND_CATEGORIES;
+
   const outcomes = await Promise.allSettled(
-    TREND_CATEGORIES.map((category) =>
-      discoverCategory(category, apifyToken, supabaseUrl, serviceKey)
+    selectedCategories.map((category) =>
+      discoverCategory(category, apifyToken, supabaseUrl, serviceKey, targetCount)
     )
   );
 
   const results = Object.fromEntries(
-    TREND_CATEGORIES.map((category, i) => {
+    selectedCategories.map((category, i) => {
       const outcome = outcomes[i];
       return [category.key, outcome.status === "fulfilled" ? outcome.value : 0];
     })
