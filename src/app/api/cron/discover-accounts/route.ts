@@ -23,7 +23,8 @@ async function discoverCategory(
   apifyToken: string,
   supabaseUrl: string,
   serviceKey: string,
-  targetCount: number = TARGET_PER_CATEGORY
+  targetCount: number = TARGET_PER_CATEGORY,
+  candidateLimit: number = CANDIDATE_LIMIT
 ): Promise<number> {
   const hashtagRes = await fetch(
     `https://api.apify.com/v2/acts/${HASHTAG_ACTOR}/run-sync-get-dataset-items?token=${apifyToken}`,
@@ -32,7 +33,7 @@ async function discoverCategory(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         hashtags: [category.hashtag],
-        resultsLimit: CANDIDATE_LIMIT,
+        resultsLimit: candidateLimit,
       }),
     }
   );
@@ -103,14 +104,16 @@ export async function GET(req: NextRequest) {
   // 파라미터 없으면 기존과 동일하게(전체 카테고리, 기본 목표치) 동작 — 매일 도는 크론은 영향 없음.
   const categoriesParam = req.nextUrl.searchParams.get("categories");
   const countParam = req.nextUrl.searchParams.get("count");
+  const candidateLimitParam = req.nextUrl.searchParams.get("candidateLimit");
   const targetCount = countParam ? Number(countParam) : TARGET_PER_CATEGORY;
+  const candidateLimit = candidateLimitParam ? Number(candidateLimitParam) : CANDIDATE_LIMIT;
   const selectedCategories = categoriesParam
     ? TREND_CATEGORIES.filter((c) => categoriesParam.split(",").includes(c.key))
     : TREND_CATEGORIES;
 
   const outcomes = await Promise.allSettled(
     selectedCategories.map((category) =>
-      discoverCategory(category, apifyToken, supabaseUrl, serviceKey, targetCount)
+      discoverCategory(category, apifyToken, supabaseUrl, serviceKey, targetCount, candidateLimit)
     )
   );
 
