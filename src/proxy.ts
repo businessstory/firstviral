@@ -8,6 +8,7 @@ const PROTECTED_PREFIXES = [
   "/api/newsletter-posts",
   "/api/upload-image",
   "/api/broadcast-email",
+  "/api/broadcast-sms",
 ];
 
 export function proxy(req: NextRequest) {
@@ -45,5 +46,6 @@ export const config = {
     "/api/newsletter-posts/:path*",
     "/api/upload-image/:path*",
     "/api/broadcast-email/:path*",
+    "/api/broadcast-sms/:path*",
   ],
 };
