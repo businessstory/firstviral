@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.instagram.com https://va.vercel-scripts.com https://www.clarity.ms",
+  "script-src 'self' 'unsafe-inline' https://www.instagram.com https://va.vercel-scripts.com https://*.clarity.ms",
   "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
   "font-src 'self' https://cdn.jsdelivr.net",
   "img-src 'self' data: https:",
   "frame-src https://player.vimeo.com https://www.instagram.com https://www.youtube.com https://www.youtube-nocookie.com",
-  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tquiqlubzmfjoynwowhh.supabase.co https://www.clarity.ms https://c.clarity.ms",
+  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tquiqlubzmfjoynwowhh.supabase.co https://*.clarity.ms",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
