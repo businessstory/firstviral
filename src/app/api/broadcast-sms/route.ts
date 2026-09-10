@@ -15,25 +15,24 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return chunks;
 }
 
+// 알리고가 고정 IP만 허용해서, Vercel(고정 IP 없음) 대신
+// 고정 IP를 가진 중계 서버(오라클 클라우드)를 거쳐서 보냅니다.
 async function sendChunk(
   receivers: string[],
   message: string,
-  aligoKey: string,
-  aligoUserId: string,
-  aligoSender: string
+  proxyUrl: string,
+  proxySecret: string
 ): Promise<{ ok: boolean; successCnt: number; errorCnt: number; raw: unknown }> {
-  const body = new URLSearchParams({
-    key: aligoKey,
-    user_id: aligoUserId,
-    sender: aligoSender,
-    receiver: receivers.join(","),
-    msg: message,
-  });
-
-  const res = await fetch("https://apis.aligo.in/send/", {
+  const res = await fetch(proxyUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body,
+    headers: {
+      "Content-Type": "application/json",
+      "X-Proxy-Secret": proxySecret,
+    },
+    body: JSON.stringify({
+      receiver: receivers.join(","),
+      msg: message,
+    }),
   });
 
   const data = await res.json();
@@ -54,10 +53,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid_message" }, { status: 400 });
   }
 
-  const aligoKey = process.env.ALIGO_API_KEY;
-  const aligoUserId = process.env.ALIGO_USER_ID;
-  const aligoSender = process.env.ALIGO_SENDER;
-  if (!aligoKey || !aligoUserId || !aligoSender) {
+  const proxyUrl = process.env.SMS_PROXY_URL;
+  const proxySecret = process.env.SMS_PROXY_SECRET;
+  const senderNumber = process.env.SMS_SENDER_NUMBER;
+  if (!proxyUrl || !proxySecret || !senderNumber) {
     return NextResponse.json({ error: "not_configured" }, { status: 501 });
   }
 
@@ -73,12 +72,12 @@ export async function POST(req: NextRequest) {
   }
 
   // 광고성 메시지 법정 표기: "(광고)" 접두어 + 수신거부 안내 (정보통신망법 제50조)
-  const senderDisplay = aligoSender.replace(/[^0-9]/g, "").replace(/(\d{2,3})(\d{3,4})(\d{4})/, "$1-$2-$3");
+  const senderDisplay = senderNumber.replace(/[^0-9]/g, "").replace(/(\d{2,3})(\d{3,4})(\d{4})/, "$1-$2-$3");
   const fullMessage = `(광고)${message.trim()}\n\n무료거부 ${senderDisplay}`;
 
   const chunks = chunk(receivers, CHUNK_SIZE);
   const outcomes = await Promise.allSettled(
-    chunks.map((c) => sendChunk(c, fullMessage, aligoKey, aligoUserId, aligoSender))
+    chunks.map((c) => sendChunk(c, fullMessage, proxyUrl, proxySecret))
   );
 
   let sent = 0;
