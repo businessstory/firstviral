@@ -44,18 +44,37 @@ class Handler(http.server.BaseHTTPRequestHandler):
         receiver = body.get("receiver", "")
         msg = body.get("msg", "")
 
-        data = urllib.parse.urlencode(
-            {
-                "key": ALIGO_API_KEY,
-                "user_id": ALIGO_USER_ID,
-                "sender": ALIGO_SENDER,
-                "receiver": receiver,
-                "msg": msg,
-            }
-        ).encode()
+        # 한국 통신사 SMS 망은 EUC-KR 인코딩을 쓰기 때문에, 한글이 깨지지 않으려면
+        # UTF-8이 아니라 EUC-KR 기준으로 퍼센트 인코딩해서 보내야 합니다.
+        # 이모지 등 EUC-KR로 표현 안 되는 글자가 섞여 있으면 여기서 에러가 나므로,
+        # 서버가 죽지 않게 안전하게 400으로 응답합니다.
+        try:
+            data = urllib.parse.urlencode(
+                {
+                    "key": ALIGO_API_KEY,
+                    "user_id": ALIGO_USER_ID,
+                    "sender": ALIGO_SENDER,
+                    "receiver": receiver,
+                    "msg": msg,
+                },
+                encoding="euc-kr",
+            ).encode("ascii")
+        except UnicodeEncodeError as e:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(
+                json.dumps(
+                    {"error": "unsupported_character", "detail": str(e)}
+                ).encode()
+            )
+            return
 
         req = urllib.request.Request(
-            "https://apis.aligo.in/send/", data=data, method="POST"
+            "https://apis.aligo.in/send/",
+            data=data,
+            method="POST",
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:

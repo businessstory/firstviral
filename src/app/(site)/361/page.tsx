@@ -37,7 +37,7 @@ const classes: ClassItem[] = [
     title: "100만 뷰 콘텐츠 무료 특강",
     tag: "무료 특강",
     priceLabel: "무료",
-    cta: { type: "link", url: "https://open.kakao.com/o/gyj1vFIi" },
+    cta: { type: "link", url: "https://open.kakao.com/o/guYU4YMi" },
   },
 ];
 
