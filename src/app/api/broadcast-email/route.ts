@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllRecipientEmails } from "@/lib/supabase";
 
 export const maxDuration = 60;
 
 const URL_RE = /(https?:\/\/[^\s<]+)/g;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function escapeHtml(text: string): string {
   return text
@@ -45,7 +45,7 @@ async function sendOne(to: string, subject: string, html: string, resendKey: str
 }
 
 export async function POST(req: NextRequest) {
-  const { subject, body } = await req.json();
+  const { subject, body, recipients: recipientsInput } = await req.json();
 
   if (typeof subject !== "string" || subject.trim().length < 1) {
     return NextResponse.json({ error: "invalid_subject" }, { status: 400 });
@@ -53,15 +53,24 @@ export async function POST(req: NextRequest) {
   if (typeof body !== "string" || body.trim().length < 1) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
+  if (!Array.isArray(recipientsInput) || recipientsInput.length === 0) {
+    return NextResponse.json({ error: "invalid_recipients" }, { status: 400 });
+  }
 
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {
     return NextResponse.json({ error: "not_configured" }, { status: 501 });
   }
 
-  const recipients = await getAllRecipientEmails();
+  const recipients = Array.from(
+    new Set(
+      (recipientsInput as string[])
+        .map((e) => e.trim().toLowerCase())
+        .filter((e) => EMAIL_RE.test(e))
+    )
+  );
   if (recipients.length === 0) {
-    return NextResponse.json({ ok: true, sent: 0, failed: 0, total: 0 });
+    return NextResponse.json({ error: "no_valid_recipients" }, { status: 400 });
   }
 
   const html = bodyToHtml(body);

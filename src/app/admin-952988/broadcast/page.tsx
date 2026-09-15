@@ -1,7 +1,8 @@
 import { getAllRecipientEmails } from "@/lib/supabase";
+import { getExcelEmails } from "@/lib/emailFile";
 import BroadcastEmailForm from "@/components/BroadcastEmailForm";
 
 export default async function BroadcastPage() {
-  const emails = await getAllRecipientEmails();
-  return <BroadcastEmailForm recipients={emails} />;
+  const [dbEmails, excelEmails] = await Promise.all([getAllRecipientEmails(), getExcelEmails()]);
+  return <BroadcastEmailForm dbEmails={dbEmails} excelEmails={excelEmails} />;
 }
