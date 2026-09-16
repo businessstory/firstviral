@@ -53,9 +53,9 @@ async function startCategory(
   apifyToken: string,
   supabaseUrl: string,
   serviceKey: string
-): Promise<"started" | "no_accounts" | "start_failed"> {
+): Promise<{ status: "started" | "no_accounts" | "start_failed"; detail?: unknown }> {
   const accounts = await getAccountsToSync(category.key, supabaseUrl, serviceKey);
-  if (accounts.length === 0) return "no_accounts";
+  if (accounts.length === 0) return { status: "no_accounts" };
   const usernames = accounts.map((a) => a.username);
 
   const runRes = await fetch(
@@ -70,12 +70,15 @@ async function startCategory(
     }
   );
 
-  if (!runRes.ok) return "start_failed";
+  if (!runRes.ok) {
+    const body = await runRes.text();
+    return { status: "start_failed", detail: { httpStatus: runRes.status, body } };
+  }
 
   const runData = await runRes.json();
   const runId: string | undefined = runData?.data?.id;
   const datasetId: string | undefined = runData?.data?.defaultDatasetId;
-  if (!runId || !datasetId) return "start_failed";
+  if (!runId || !datasetId) return { status: "start_failed", detail: runData };
 
   await fetch(`${supabaseUrl}/rest/v1/apify_runs`, {
     method: "POST",
@@ -100,7 +103,7 @@ async function startCategory(
     serviceKey
   );
 
-  return "started";
+  return { status: "started" };
 }
 
 export async function GET(req: NextRequest) {
@@ -118,6 +121,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "not_configured" }, { status: 501 });
   }
 
+  const debugMode = req.nextUrl.searchParams.get("debug") === "1";
+
   const outcomes = await Promise.allSettled(
     TREND_CATEGORIES.map((category) =>
       startCategory(category, apifyToken, supabaseUrl, serviceKey)
@@ -127,9 +132,22 @@ export async function GET(req: NextRequest) {
   const results = Object.fromEntries(
     TREND_CATEGORIES.map((category, i) => {
       const outcome = outcomes[i];
-      return [category.key, outcome.status === "fulfilled" ? outcome.value : "error"];
+      return [category.key, outcome.status === "fulfilled" ? outcome.value.status : "error"];
     })
   );
+
+  if (debugMode) {
+    const debugInfo = Object.fromEntries(
+      TREND_CATEGORIES.map((category, i) => {
+        const outcome = outcomes[i];
+        return [
+          category.key,
+          outcome.status === "fulfilled" ? outcome.value.detail : String(outcome.reason),
+        ];
+      })
+    );
+    return NextResponse.json({ ok: true, started: results, debug: debugInfo });
+  }
 
   return NextResponse.json({ ok: true, started: results });
 }
