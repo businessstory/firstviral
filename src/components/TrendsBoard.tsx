@@ -10,6 +10,30 @@ function formatCount(n: number | null): string {
   return n.toLocaleString();
 }
 
+// 인스타그램 썸네일 URL은 시간이 지나면 만료돼요(서명된 링크). 만료돼서 로드가
+// 실패하면 깨진 이미지 아이콘 대신 자리표시자를 보여줍니다.
+function ReelThumbnail({ src, alt }: { src: string | null; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <div className="flex h-full w-full items-center justify-center text-xs text-neutral-300">
+        이미지 없음
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setFailed(true)}
+      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+    />
+  );
+}
+
 const MILLION = 1000000;
 const MIN_VIEWS = 10000;
 const ALL_KEY = "all";
@@ -60,18 +84,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                 className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
-                  {reel.thumbnail_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={reel.thumbnail_url}
-                      alt={reel.account_handle ?? "릴스 트렌드"}
-                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-neutral-300">
-                      이미지 없음
-                    </div>
-                  )}
+                  <ReelThumbnail src={reel.thumbnail_url} alt={reel.account_handle ?? "릴스 트렌드"} />
                   <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white">
                     TOP {i + 1}
                   </span>
