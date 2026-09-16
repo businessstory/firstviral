@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { postsBySlug } from "@/data/posts";
 import { getNewsletterPostById } from "@/lib/supabase";
 import LinkifiedText from "@/components/LinkifiedText";
-import InstagramEmbedScript from "@/components/InstagramEmbedScript";
 
 export default async function NewsletterPostPage({
   params,
@@ -45,8 +44,6 @@ export default async function NewsletterPostPage({
         >
           내 인스타 계정 도움받으러 가기
         </a>
-
-        <InstagramEmbedScript />
       </article>
     );
   }
