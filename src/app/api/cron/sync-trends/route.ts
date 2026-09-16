@@ -5,12 +5,15 @@ import { isAdminBasicAuth } from "@/lib/adminAuth";
 export const maxDuration = 60;
 
 const REEL_ACTOR = "apify~instagram-reel-scraper";
-const RESULTS_PER_ACCOUNT = 5;
+// 2026-09: 기존 설정(카테고리당 4계정 x 릴스 5개)이 Apify 무료 한도($5/월)를
+// 월 초 5~6일 만에 다 써버려서 대폭 축소함. 5개 카테고리 x 1계정 x 릴스 2개로
+// 하루 비용을 이전의 약 1/10 수준으로 낮춰, 한 달 내내 무료 한도 안에서 돌도록 함.
+const RESULTS_PER_ACCOUNT = 2;
 
-// 카테고리당 하루에 동기화할 계정 수. 5개 카테고리 x 4 = 하루 총 20개.
+// 카테고리당 하루에 동기화할 계정 수. 5개 카테고리 x 1 = 하루 총 5개.
 // 계정이 아무리 많아져도(예: 1000개) 이 숫자만큼만 매일 순환하며 동기화되므로
 // 무료 크레딧 예산이 계정 총수와 무관하게 항상 일정하게 유지됩니다.
-const DAILY_BATCH_PER_CATEGORY = 4;
+const DAILY_BATCH_PER_CATEGORY = 1;
 
 async function getAccountsToSync(
   categoryKey: string,
