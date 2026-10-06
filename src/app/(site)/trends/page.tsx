@@ -3,7 +3,7 @@ import AuthGate from "@/components/AuthGate";
 import type { TrendingReel } from "@/lib/trends";
 
 export const metadata = {
-  title: "릴스 트렌드 랭킹 | 퍼스트 바이럴",
+  title: "릴스 트렌드 랭킹 | 비즈니스 스토리",
   description: "카테고리별로 지금 인스타그램에서 터지고 있는 릴스 트렌드를 한눈에 확인하세요.",
 };
 

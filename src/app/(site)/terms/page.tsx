@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "이용약관 | 퍼스트 바이럴",
+  title: "이용약관 | 비즈니스 스토리",
 };
 
 export default function TermsPage() {
@@ -12,7 +12,7 @@ export default function TermsPage() {
         <article>
           <h2 className="text-base font-bold text-neutral-900">제1조 (목적)</h2>
           <p className="mt-2">
-            이 약관은 비즈니스 스토리(이하 &ldquo;회사&rdquo;)가 운영하는 &ldquo;퍼스트 바이럴&rdquo; 웹사이트
+            이 약관은 비즈니스 스토리(이하 &ldquo;회사&rdquo;)가 운영하는 &ldquo;비즈니스 스토리&rdquo; 웹사이트
             (이하 &ldquo;서비스&rdquo;)에서 제공하는 인스타그램·쓰레드 컨설팅, 교육, 콘텐츠 대행 등 제반
             서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을
             목적으로 합니다.

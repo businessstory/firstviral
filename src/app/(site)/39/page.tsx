@@ -5,7 +5,7 @@ import ReviewsList from "@/components/ReviewsList";
 const featured = {
   youtubeId: "FQKgCmWbMz0",
   overline: "수강생 후기",
-  title: "퍼스트 바이럴과 함께한 이야기",
+  title: "비즈니스 스토리와 함께한 이야기",
 };
 
 // TODO: 영상 편집이 끝나는 대로 이름 옆에 유튜브 ID를 추가해서 실제 영상으로 교체하세요.

@@ -8,10 +8,10 @@ import AccountMenu from "./AccountMenu";
 
 const navItems = [
   { label: "무료 자료실", href: "/261" },
-  { label: "릴스 트렌드", href: "/trends" },
-  { label: "뉴스레터", href: "/48" },
   { label: "수강생 후기", href: "/39" },
-  { label: "클래스", href: "/361" },
+  { label: "릴스 트렌드", href: "/trends" },
+  { label: "비토리 칼럼", href: "/48" },
+  { label: "컨설팅 신청", href: "/361" },
 ];
 
 export default function Header() {
@@ -21,11 +21,12 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link href="/" className="relative h-9 w-[130px] shrink-0">
+        <Link href="/" className="relative h-6 w-[150px] shrink-0 md:h-7 md:w-[200px]">
           <Image
-            src="/brand/logo.png"
-            alt="퍼스트 바이럴"
+            src="/brand/logo-business-story.png"
+            alt="비즈니스 스토리"
             fill
+            sizes="200px"
             className="object-contain object-left"
             priority
           />

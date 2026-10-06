@@ -1,7 +1,5 @@
 import Tag from "@/components/Tag";
 
-const KAKAO_URL = "https://open.kakao.com/o/sGuTwRLi";
-
 const BUTTON_CLASS =
   "mt-4 block w-full rounded-full py-3 text-center text-sm font-semibold transition-transform active:scale-95 focus:outline-none focus:ring-2";
 const BUTTON_PRIMARY = `${BUTTON_CLASS} bg-brand-700 text-white hover:scale-[1.02] hover:bg-brand-800 focus:ring-brand-700`;
@@ -13,7 +11,7 @@ type ClassItem = {
   tag: string;
   priceLabel: string;
   originalPriceLabel?: string;
-  cta: { type: "link"; url: string } | { type: "kakao" } | { type: "soon" };
+  cta: { type: "link"; url: string } | { type: "soon" };
 };
 
 const classes: ClassItem[] = [
@@ -26,18 +24,11 @@ const classes: ClassItem[] = [
     cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
   },
   {
-    image: "/class/reels-agency.png",
-    title: "프리미엄 릴스 대행",
-    tag: "대행",
-    priceLabel: "가격 문의",
-    cta: { type: "kakao" },
-  },
-  {
     image: "/class/million-views-lecture.png",
-    title: "100만 뷰 콘텐츠 무료 특강",
+    title: "AI로 월 100만 원 무료강의",
     tag: "무료 특강",
     priceLabel: "무료",
-    cta: { type: "link", url: "https://open.kakao.com/o/guYU4YMi" },
+    cta: { type: "link", url: "https://open.kakao.com/o/gTR2UfQi" },
   },
 ];
 
@@ -77,11 +68,6 @@ export default function ClassPage() {
             {cls.cta.type === "link" && (
               <a href={cls.cta.url} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>
                 신청하기
-              </a>
-            )}
-            {cls.cta.type === "kakao" && (
-              <a href={KAKAO_URL} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>
-                카카오톡으로 문의하기
               </a>
             )}
             {cls.cta.type === "soon" && (

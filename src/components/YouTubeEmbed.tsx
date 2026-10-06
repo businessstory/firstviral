@@ -44,7 +44,7 @@ export default function YouTubeEmbed({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/40" />
 
-          <span className="relative z-10 text-sm font-bold text-white">퍼스트 바이럴</span>
+          <span className="relative z-10 text-sm font-bold text-white">비즈니스 스토리</span>
 
           <div className="relative z-10 flex items-end justify-between">
             <div>

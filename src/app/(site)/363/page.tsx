@@ -38,7 +38,7 @@ export default function TemplatesPage() {
               className={`relative flex aspect-[4/5] flex-col justify-between overflow-hidden rounded-2xl p-5 shadow-[0_12px_30px_rgba(0,0,0,0.12)] transition-transform group-hover:-translate-y-1 ${tpl.bg} ${tpl.text}`}
             >
               {/* TODO: 브랜드 로고로 교체 */}
-              <span className="text-xs font-bold tracking-wide">퍼스트 바이럴</span>
+              <span className="text-xs font-bold tracking-wide">비즈니스 스토리</span>
               <span
                 className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${tpl.labelBg}`}
               >

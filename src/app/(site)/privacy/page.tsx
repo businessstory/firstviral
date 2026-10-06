@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "개인정보처리방침 | 퍼스트 바이럴",
+  title: "개인정보처리방침 | 비즈니스 스토리",
 };
 
 export default function PrivacyPage() {
@@ -9,7 +9,7 @@ export default function PrivacyPage() {
       <p className="mt-3 text-sm text-neutral-400">시행일자: 2026년 9월 4일</p>
 
       <p className="mt-6 text-sm leading-relaxed text-neutral-600">
-        비즈니스 스토리(이하 &ldquo;회사&rdquo;)는 &ldquo;퍼스트 바이럴&rdquo; 서비스(이하 &ldquo;서비스&rdquo;)를
+        비즈니스 스토리(이하 &ldquo;회사&rdquo;)는 &ldquo;비즈니스 스토리&rdquo; 서비스(이하 &ldquo;서비스&rdquo;)를
         이용하는 회원 및 신청자의 개인정보를 중요시하며, 「개인정보 보호법」 등 관계 법령을 준수하고 있습니다.
         회사는 개인정보처리방침을 통해 회사가 수집하는 개인정보의 항목, 이용 목적, 보유 및 이용 기간, 제3자
         제공 및 처리위탁 여부 등을 안내드립니다.

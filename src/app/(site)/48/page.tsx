@@ -12,7 +12,7 @@ export default async function NewsletterPage() {
     ...dbPosts.map((p) => ({
       id: p.id,
       title: p.title,
-      thumbnail: p.thumbnail_url ?? "https://placehold.co/400x300/0b2b21/ffffff?text=First+Viral",
+      thumbnail: p.thumbnail_url ?? "https://placehold.co/400x300/0b2b21/ffffff?text=Business+Story",
       date: new Date(p.published_at).toLocaleDateString("ko-KR").replaceAll(". ", ".").replace(/\.$/, ""),
       url: `/48/${p.id}`,
       sortAt: p.published_at,
@@ -22,7 +22,7 @@ export default async function NewsletterPage() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-14">
-      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">뉴스레터</h1>
+      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">비토리 칼럼</h1>
       <p className="mt-2 text-sm text-neutral-500">매주 인사이트를 전해드려요.</p>
 
       <div className="mt-8 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
@@ -46,7 +46,7 @@ export default async function NewsletterPage() {
                 {post.title}
               </h2>
               <div className="mt-2 flex items-center gap-1.5">
-                <Tag>뉴스레터</Tag>
+                <Tag>비토리 칼럼</Tag>
                 {i === 0 && <Tag tone="new">New</Tag>}
               </div>
               <p className="mt-2 text-xs text-neutral-400">{post.date}</p>
@@ -66,7 +66,7 @@ export default async function NewsletterPage() {
       </div>
 
       {items.length === 0 && (
-        <p className="mt-20 text-center text-sm text-neutral-400">아직 등록된 뉴스레터가 없어요.</p>
+        <p className="mt-20 text-center text-sm text-neutral-400">아직 등록된 칼럼이 없어요.</p>
       )}
     </section>
   );

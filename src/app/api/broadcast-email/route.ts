@@ -35,7 +35,7 @@ async function sendOne(to: string, subject: string, html: string, resendKey: str
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "퍼스트 바이럴 <noreply@businessstory.co.kr>",
+      from: "비즈니스 스토리 <noreply@businessstory.co.kr>",
       to: [to],
       subject,
       html,

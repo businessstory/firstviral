@@ -4,8 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "퍼스트 바이럴",
-  description: "인스타그램/쓰레드 1:1 맞춤 컨설팅, 퍼스트 바이럴",
+  title: "비즈니스 스토리",
+  description: "인스타그램/쓰레드 1:1 맞춤 컨설팅, 비즈니스 스토리",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

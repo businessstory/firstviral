@@ -35,7 +35,7 @@ export default function AdminShell({
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-8">
             <span className="text-base font-extrabold tracking-tight text-brand-950">
-              퍼스트 바이럴 <span className="text-brand-600">관리자</span>
+              비즈니스 스토리 <span className="text-brand-600">관리자</span>
             </span>
             <nav className="hidden items-center gap-1 sm:flex">
               {TABS.map((tab) => {

@@ -42,4 +42,5 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-pretendard);
+  word-break: keep-all; /* 한글 단어 중간에서 줄이 끊기지 않도록 */
 }

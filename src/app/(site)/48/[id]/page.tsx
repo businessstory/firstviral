@@ -16,7 +16,7 @@ export default async function NewsletterPostPage({
     return (
       <article className="mx-auto max-w-2xl px-5 py-16">
         <Link href="/48" className="text-xs font-medium text-neutral-400 hover:text-neutral-700">
-          ← 뉴스레터 목록
+          ← 비토리 칼럼 목록
         </Link>
         {dbPost.thumbnail_url && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -54,7 +54,7 @@ export default async function NewsletterPostPage({
   return (
     <article className="mx-auto max-w-2xl px-5 py-16">
       <Link href="/48" className="text-xs font-medium text-neutral-400 hover:text-neutral-700">
-        ← 뉴스레터 목록
+        ← 비토리 칼럼 목록
       </Link>
 
       <h1 className="mt-4 text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">

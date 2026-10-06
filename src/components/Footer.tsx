@@ -5,9 +5,9 @@ export default function Footer() {
     <footer className="border-t border-black/5 bg-white">
       <div className="mx-auto max-w-6xl px-5 py-8">
         <div className="flex flex-col gap-4 text-sm text-neutral-500 md:flex-row md:items-center md:justify-between">
-          <p>© 퍼스트 바이럴 | 이용약관</p>
+          <p>© 비즈니스 스토리 | 이용약관</p>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 whitespace-nowrap">
             <Link href="/261" className="hover:text-brand-700">
               무료 자료실
             </Link>
