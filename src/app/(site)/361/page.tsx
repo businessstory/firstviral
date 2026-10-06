@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Tag from "@/components/Tag";
 
 const BUTTON_CLASS =
@@ -11,7 +12,7 @@ type ClassItem = {
   tag: string;
   priceLabel: string;
   originalPriceLabel?: string;
-  cta: { type: "link"; url: string } | { type: "soon" };
+  cta: { type: "link"; url: string } | { type: "page"; href: string } | { type: "soon" };
 };
 
 const classes: ClassItem[] = [
@@ -21,7 +22,7 @@ const classes: ClassItem[] = [
     tag: "1:1 컨설팅",
     priceLabel: "30,000원",
     originalPriceLabel: "200,000원",
-    cta: { type: "link", url: "https://litt.ly/businessstory/sale/p73JCxQ" },
+    cta: { type: "page", href: "/consulting" },
   },
   {
     image: "/class/million-views-lecture.png",
@@ -69,6 +70,11 @@ export default function ClassPage() {
               <a href={cls.cta.url} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>
                 신청하기
               </a>
+            )}
+            {cls.cta.type === "page" && (
+              <Link href={cls.cta.href} className={BUTTON_PRIMARY}>
+                신청하기
+              </Link>
             )}
             {cls.cta.type === "soon" && (
               <button type="button" disabled className={BUTTON_SOON}>
