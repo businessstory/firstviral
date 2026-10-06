@@ -252,8 +252,3 @@ export const consultingReviews: ConsultingReview[] = [
 '대표님과 함께라면 무조건 계정을 키울 수 있겠다'는 생각이 들어서 이제는 믿고 따르려고 합니다.`,
   },
 ];
-
-// 카카오톡 캡처 등 이미지로 된 실제 후기 (public/consulting)
-export const consultingReviewImages = [
-  { src: "/consulting/detail-09.webp", alt: "컨설팅 후 받은 카카오톡 후기와 감사 선물" },
-];
