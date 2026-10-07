@@ -116,8 +116,8 @@ export default function ConsultingDetail() {
     <div className="min-h-screen bg-white pb-28 text-neutral-900 lg:pb-20">
       {/* 상단 바 */}
       <div className="mx-auto flex h-14 max-w-[1240px] items-center justify-between px-5">
-        <Link href="/" className="relative h-5 w-[130px]" aria-label="비즈니스 스토리 홈">
-          <Image src="/brand/logo-business-story.png" alt="비즈니스 스토리" fill sizes="130px" className="object-contain object-left" />
+        <Link href="/" className="relative h-9 w-[107px]" aria-label="비즈니스 스토리 홈">
+          <Image src="/brand/logo-stacked.png" alt="비즈니스 스토리" fill sizes="110px" className="object-contain object-left" />
         </Link>
         <Link
           href="/361"
