@@ -26,20 +26,33 @@ async function suggest(q: string): Promise<string[]> {
   }
 }
 
-// 씨앗 키워드 + "씨앗 ㄱ", "씨앗 ㄴ"… 로 자동완성을 모아 후보 키워드 목록을 만든다.
+// 씨앗 키워드 + "씨앗 ㄱ", "씨앗 ㄴ"… 로 자동완성을 모아, 유망한 순서로 정렬한 후보 목록을 만든다.
+// 쿼터를 쓰지 않는 신호만으로 순위를 매긴다:
+//  - 여러 자동완성 목록에 반복해서 나올수록, 목록 앞쪽에 뜰수록 많이 검색되는 말
+//  - 3단어 이상의 구체적인 키워드는 경쟁이 덜한 롱테일
 export async function expandKeywords(seed: string): Promise<string[]> {
   const queries = [seed, ...CONSONANTS.map((c) => `${seed} ${c}`)];
   const lists = await Promise.all(queries.map(suggest));
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const kw of lists.flat()) {
-    const k = kw.trim();
-    if (k && !seen.has(k)) {
-      seen.add(k);
-      out.push(k);
-    }
+  const seedKey = seed.replace(/\s+/g, "").toLowerCase();
+  const stats = new Map<string, { text: string; hits: number; best: number }>();
+  for (const list of lists) {
+    list.forEach((kw, pos) => {
+      const text = kw.trim();
+      // "챗 gpt 무료"와 "챗gpt 무료"처럼 띄어쓰기만 다른 건 하나로 친다
+      const key = text.replace(/\s+/g, "").toLowerCase();
+      if (!text) return;
+      const cur = stats.get(key);
+      if (cur) {
+        cur.hits += 1;
+        cur.best = Math.min(cur.best, pos);
+      } else stats.set(key, { text, hits: 1, best: pos });
+    });
   }
-  return out;
+  const rank = (key: string, v: { text: string; hits: number; best: number }) => {
+    const words = v.text.split(/\s+/).length;
+    return v.hits * 2 + (10 - v.best) / 10 + (words >= 3 ? 1 : 0) - (key === seedKey ? 3 : 0);
+  };
+  return [...stats.entries()].sort((a, b) => rank(b[0], b[1]) - rank(a[0], a[1])).map(([, v]) => v.text);
 }
 
 export type VideoFormat = "long" | "shorts";

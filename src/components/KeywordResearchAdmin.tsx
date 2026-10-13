@@ -94,29 +94,53 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
   );
   const busy = expanding || progress !== null;
 
+  async function fetchCandidates(q: string): Promise<string[] | null> {
+    try {
+      const res = await fetch(`/api/keyword-research?seed=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      return data.keywords ?? [];
+    } catch {
+      setMessage("자동완성을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.");
+      return null;
+    }
+  }
+
   async function expand() {
     const q = seed.trim();
     if (!q) return;
     setExpanding(true);
     setMessage("");
-    try {
-      const res = await fetch(`/api/keyword-research?seed=${encodeURIComponent(q)}`);
-      const data = await res.json();
-      const list: string[] = data.keywords ?? [];
+    const list = await fetchCandidates(q);
+    if (list) {
       setCandidates(list);
       setSelected([]);
       if (!list.length) setMessage("자동완성 결과가 없어요. 조금 더 짧거나 다른 단어로 검색해 보세요.");
-    } catch {
-      setMessage("자동완성을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.");
     }
     setExpanding(false);
+  }
+
+  // 주제만 넣으면: 자동완성 수집 → 유망한 후보 상위 10개 자동 선택 → 바로 점수 매기기
+  async function autoFind() {
+    const q = seed.trim();
+    if (!q) return;
+    setExpanding(true);
+    setMessage("");
+    const list = await fetchCandidates(q);
+    setExpanding(false);
+    if (!list) return;
+    if (!list.length) return setMessage("자동완성 결과가 없어요. 조금 더 짧거나 다른 단어로 검색해 보세요.");
+    const picks = list.slice(0, MAX_PER_RUN);
+    setCandidates(list);
+    setSelected(picks);
+    await analyze(picks);
   }
 
   function toggle(kw: string) {
     setSelected((s) => (s.includes(kw) ? s.filter((k) => k !== kw) : s.length >= MAX_PER_RUN ? s : [...s, kw]));
   }
 
-  async function analyze() {
+  async function analyze(list: string[] = runList) {
+    const runList = list;
     if (!runList.length) return;
     if (runList.length * UNITS_PER_KEYWORD > remaining) {
       setMessage(`오늘 남은 무료 사용량으로는 ${Math.floor(remaining / UNITS_PER_KEYWORD)}개까지만 분석할 수 있어요.`);
@@ -242,7 +266,7 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
 
       {/* 1. 키워드 모으기 */}
       <section className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-6">
-        <StepTitle n={1} title="후보 키워드 모으기" desc="주제를 넣으면 유튜브 자동완성(사람들이 실제로 검색하는 말)을 모아 와요." />
+        <StepTitle n={1} title="주제 입력" desc="주제만 넣으면 사람들이 실제로 검색하는 말을 모아서, 황금 키워드를 자동으로 찾아 드려요." />
         <form
           className="mt-4 flex flex-col gap-2 sm:flex-row"
           onSubmit={(e) => {
@@ -258,16 +282,32 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
             <input
               value={seed}
               onChange={(e) => setSeed(e.target.value)}
-              placeholder="예: 챗gpt 무료, 인스타 릴스, 부업"
+              placeholder="분석할 주제만 입력하세요 (예: 챗gpt 무료, 인스타 릴스, 부업)"
               aria-label="주제 키워드"
               className="w-full rounded-xl border border-neutral-300 py-3 pl-11 pr-4 text-[15px] outline-none transition-colors focus:border-brand-600 focus:ring-2 focus:ring-brand-100"
             />
           </div>
-          <button type="submit" disabled={!seed.trim() || busy} className={`${BTN} bg-brand-700 py-3 text-white hover:bg-brand-800`}>
-            {expanding ? <Spinner /> : null}
-            {expanding ? "모으는 중…" : "자동완성 모으기"}
+          <button
+            type="button"
+            onClick={autoFind}
+            disabled={!seed.trim() || busy || !configured}
+            className={`${BTN} bg-accent-gold py-3 text-brand-950 shadow-[0_8px_20px_rgba(232,196,104,0.35)] hover:bg-[#f0d07c]`}
+          >
+            {expanding ? <Spinner /> : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z" />
+              </svg>
+            )}
+            {format === "long" ? "롱폼" : "숏폼"} 황금 키워드 자동 찾기
+          </button>
+          <button type="submit" disabled={!seed.trim() || busy} className={`${BTN} bg-white py-3 text-brand-800 ring-1 ring-brand-200 hover:bg-brand-50`}>
+            자동완성만 보기
           </button>
         </form>
+        <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+          <b className="text-neutral-700">자동 찾기</b>는 자동완성 중 자주·앞쪽에 뜨는 키워드와 구체적인 롱테일 키워드를 골라 상위 {MAX_PER_RUN}개를 바로 분석해요
+          (무료 분석 {MAX_PER_RUN}개 사용). 직접 고르고 싶으면 <b className="text-neutral-700">자동완성만 보기</b>를 눌러요.
+        </p>
 
         {candidates.length > 0 && (
           <div className="mt-5">
@@ -370,7 +410,7 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
             </p>
             <button
               type="button"
-              onClick={analyze}
+              onClick={() => analyze()}
               disabled={!configured || !runList.length || busy}
               className={`${BTN} bg-accent-gold px-6 py-3 text-brand-950 shadow-[0_8px_20px_rgba(232,196,104,0.35)] hover:bg-[#f0d07c]`}
             >
