@@ -11,6 +11,7 @@ const TABS = [
   { label: "뉴스레터", href: "/admin-952988/newsletter" },
   { label: "이메일 발송", href: "/admin-952988/broadcast" },
   { label: "문자 발송", href: "/admin-952988/sms" },
+  { label: "황금 키워드", href: "/admin-952988/keywords" },
 ];
 
 export default function AdminShell({
