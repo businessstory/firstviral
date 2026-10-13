@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { KeywordReport, VideoRow } from "@/lib/youtubeKeywords";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import type { KeywordReport, VideoFormat, VideoRow } from "@/lib/youtubeKeywords";
 import AdminShell from "./AdminShell";
 
 const MAX_PER_RUN = 10;
@@ -28,7 +28,14 @@ const ENTITIES: Record<string, string> = { "&amp;": "&", "&lt;": "<", "&gt;": ">
 const decodeEntities = (t: string) => t.replace(/&(amp|lt|gt|quot|#39);/g, (m) => ENTITIES[m] ?? m);
 
 // 구독자 대비 조회수가 높은 영상 = "작은 채널도 터진" 기회 신호
-const isOpportunity = (v: VideoRow) => v.subscribers !== null && v.subscribers < 10_000 && v.views >= 10_000;
+const SMALL_WIN_VIEWS: Record<VideoFormat, number> = { long: 10_000, shorts: 50_000 };
+const isOpportunity = (v: VideoRow, f: VideoFormat) => v.subscribers !== null && v.subscribers < 10_000 && v.views >= SMALL_WIN_VIEWS[f];
+const fmtDuration = (sec: number) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+
+const FORMATS: { key: VideoFormat; label: string; desc: string }[] = [
+  { key: "long", label: "롱폼", desc: "3분 넘는 일반 영상" },
+  { key: "shorts", label: "숏폼", desc: "3분 이하 쇼츠" },
+];
 
 // 무료 사용량은 매일 오후 4시(한국 시간, 태평양 자정)에 초기화돼요
 function quotaDay() {
@@ -42,12 +49,22 @@ function readUsage(): number {
     return 0;
   }
 }
+const usageListeners = new Set<() => void>();
+function subscribeUsage(cb: () => void) {
+  usageListeners.add(cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    usageListeners.delete(cb);
+    window.removeEventListener("storage", cb);
+  };
+}
 function addUsage(units: number) {
   try {
     localStorage.setItem(USAGE_KEY, JSON.stringify({ day: quotaDay(), units: readUsage() + units }));
   } catch {
     // 저장이 막힌 브라우저에서는 사용량 표시만 생략
   }
+  usageListeners.forEach((cb) => cb());
 }
 
 export default function KeywordResearchAdmin({ configured }: { configured: boolean }) {
@@ -60,10 +77,10 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
   const [expanding, setExpanding] = useState(false);
   const [progress, setProgress] = useState<{ done: number; total: number; current: string } | null>(null);
   const [message, setMessage] = useState("");
-  const [usage, setUsage] = useState(0);
   const [sort, setSort] = useState<"score" | "views">("score");
+  const [format, setFormat] = useState<VideoFormat>("long");
 
-  useEffect(() => setUsage(readUsage()), []);
+  const usage = useSyncExternalStore(subscribeUsage, readUsage, () => 0);
 
   const queue = useMemo(() => {
     const manualList = manual.split("\n").map((s) => s.trim()).filter(Boolean);
@@ -72,8 +89,8 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
   const runList = queue.slice(0, MAX_PER_RUN);
   const remaining = Math.max(0, DAILY_UNITS - usage);
   const sorted = useMemo(
-    () => [...reports].sort((a, b) => (sort === "score" ? b.score - a.score : b.medianViews - a.medianViews)),
-    [reports, sort],
+    () => reports.filter((r) => r.format === format).sort((a, b) => (sort === "score" ? b.score - a.score : b.medianViews - a.medianViews)),
+    [reports, sort, format],
   );
   const busy = expanding || progress !== null;
 
@@ -115,7 +132,7 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
         const res = await fetch("/api/keyword-research", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keywords: [kw] }),
+          body: JSON.stringify({ keywords: [kw], format }),
         });
         const data = await res.json();
         if (data.error === "not_configured") {
@@ -127,9 +144,8 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
           break;
         }
         addUsage(UNITS_PER_KEYWORD);
-        setUsage(readUsage());
         const report: KeywordReport | undefined = data.reports?.[0];
-        if (report) setReports((prev) => [report, ...prev.filter((r) => r.keyword !== report.keyword)]);
+        if (report) setReports((prev) => [report, ...prev.filter((r) => !(r.keyword === report.keyword && r.format === report.format))]);
         else failed.push(kw);
       } catch {
         failed.push(kw);
@@ -180,6 +196,49 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
           <p className="mt-1">자동완성으로 키워드 모으기는 키 없이도 바로 쓸 수 있어요.</p>
         </div>
       )}
+
+      {/* 롱폼 / 숏폼 */}
+      <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-white p-2 shadow-sm ring-1 ring-neutral-200" role="tablist" aria-label="영상 형식">
+        {FORMATS.map((f) => {
+          const on = format === f.key;
+          const count = reports.filter((r) => r.format === f.key).length;
+          return (
+            <button
+              key={f.key}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              onClick={() => {
+                setFormat(f.key);
+                setOpen(null);
+              }}
+              disabled={progress !== null}
+              className={`flex items-center justify-center gap-3 rounded-xl px-4 py-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 active:scale-[0.99] disabled:cursor-not-allowed ${
+                on ? "bg-brand-950 text-white shadow-[0_8px_20px_rgba(11,43,33,0.2)]" : "text-neutral-600 hover:bg-neutral-50"
+              }`}
+            >
+              {f.key === "long" ? (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <rect x="2.5" y="5.5" width="19" height="13" rx="3" />
+                  <path d="M10.5 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none" />
+                </svg>
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <rect x="7" y="2.5" width="10" height="19" rx="3" />
+                  <path d="M11 9.5l3 2.5-3 2.5z" fill="currentColor" stroke="none" />
+                </svg>
+              )}
+              <span>
+                <span className="block text-[15px] font-bold">
+                  {f.label}
+                  {count > 0 && <span className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[11px] ${on ? "bg-accent-gold text-brand-950" : "bg-neutral-100 text-neutral-500"}`}>{count}</span>}
+                </span>
+                <span className={`block text-xs ${on ? "text-brand-100/80" : "text-neutral-400"}`}>{f.desc}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* 1. 키워드 모으기 */}
       <section className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-6">
@@ -268,7 +327,11 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
 
       {/* 2. 분석 */}
       <section className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-6">
-        <StepTitle n={2} title="황금 키워드 점수 매기기" desc="직접 넣고 싶은 키워드가 있으면 한 줄에 하나씩 적어 주세요. 위에서 고른 키워드와 함께 분석해요." />
+        <StepTitle
+          n={2}
+          title={`${format === "long" ? "롱폼" : "숏폼"} 황금 키워드 점수 매기기`}
+          desc={`검색 상위 ${format === "long" ? "롱폼(3분 초과)" : "숏폼(3분 이하)"} 영상만 보고 점수를 매겨요. 직접 넣고 싶은 키워드는 한 줄에 하나씩 적어 주세요.`}
+        />
         <textarea
           value={manual}
           onChange={(e) => setManual(e.target.value)}
@@ -314,7 +377,7 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z" />
               </svg>
-              점수 매기기
+              {format === "long" ? "롱폼" : "숏폼"} 점수 매기기
             </button>
           </div>
         )}
@@ -327,11 +390,13 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
       )}
 
       {/* 3. 결과 */}
-      {reports.length > 0 && (
+      {sorted.length > 0 && (
         <section className="mt-8">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h2 className="text-lg font-extrabold text-neutral-900">분석 결과 {reports.length}개</h2>
+              <h2 className="text-lg font-extrabold text-neutral-900">
+                {format === "long" ? "롱폼" : "숏폼"} 분석 결과 {sorted.length}개
+              </h2>
               <p className="mt-0.5 text-sm text-neutral-500">카드를 누르면 검색 상위 영상을 볼 수 있어요.</p>
             </div>
             <div className="flex rounded-full bg-neutral-100 p-1 text-sm font-semibold" role="group" aria-label="정렬">
@@ -364,9 +429,9 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
         </section>
       )}
 
-      {reports.length === 0 && !progress && (
+      {sorted.length === 0 && !progress && (
         <div className="mt-8 rounded-2xl border border-dashed border-neutral-300 px-5 py-12 text-center">
-          <p className="font-semibold text-neutral-700">아직 분석한 키워드가 없어요</p>
+          <p className="font-semibold text-neutral-700">아직 분석한 {format === "long" ? "롱폼" : "숏폼"} 키워드가 없어요</p>
           <p className="mt-1 text-sm text-neutral-500">위에서 주제를 넣고 키워드를 골라 점수를 매겨 보세요.</p>
         </div>
       )}
@@ -375,10 +440,13 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
         <summary className="cursor-pointer font-bold text-neutral-900">점수는 이렇게 매겨요</summary>
         <ul className="mt-3 list-disc space-y-1 pl-5">
           <li>
-            <b>수요 (40점)</b>: 상위 10개 영상의 중간 조회수. 100만 회면 만점
+            <b>롱폼/숏폼 구분</b>: 영상 길이 3분(180초) 이하는 숏폼, 넘으면 롱폼으로 봐요
           </li>
           <li>
-            <b>작은 채널 성공 (30점)</b>: 구독자 1만 명 미만인데 조회수 1만 회 이상인 영상 수. 5개 이상이면 만점
+            <b>수요 (40점)</b>: 상위 10개 영상의 중간 조회수. 롱폼 100만 회, 숏폼 300만 회면 만점
+          </li>
+          <li>
+            <b>작은 채널 성공 (30점)</b>: 구독자 1만 명 미만인데 조회수가 롱폼 1만 회, 숏폼 5만 회 이상인 영상 수. 5개 이상이면 만점
           </li>
           <li>
             <b>상위 영상 나이 (15점)</b>: 상위 영상이 오래될수록 새 영상이 들어갈 자리가 있어요. 2년 이상이면 만점
@@ -387,7 +455,7 @@ export default function KeywordResearchAdmin({ configured }: { configured: boole
             <b>대형 채널이 적음 (15점)</b>: 구독자 100만 명 이상 채널이 적을수록 높아요
           </li>
           <li>
-            70점 이상 <b>황금</b>, 50~69점 <b>괜찮음</b>, 그 아래는 <b>레드오션</b>. 중간 조회수가 3천 회 미만이면 <b>수요 적음</b>
+            70점 이상 <b>황금</b>, 50~69점 <b>괜찮음</b>, 그 아래는 <b>레드오션</b>. 중간 조회수가 롱폼 3천 회·숏폼 1만 회 미만이거나 해당 형식 영상이 5개 미만이면 <b>수요 적음</b>
           </li>
         </ul>
       </details>
@@ -472,25 +540,29 @@ function ReportCard({ r, open, onToggle }: { r: KeywordReport; open: boolean; on
       {open && (
         <div className="border-t border-neutral-100 bg-neutral-50/70 px-4 py-4 md:px-5">
           <p className="text-xs font-semibold text-neutral-500">
-            검색 상위 영상 · <span className="text-accent-gold">★</span> 표시는 작은 채널(구독자 1만 미만)인데 조회수 1만 회 이상 나온 영상이에요
+            검색 상위 {r.format === "long" ? "롱폼" : "숏폼"} 영상 · <span className="text-accent-gold">★</span> 표시는 작은 채널(구독자 1만 미만)인데 조회수{" "}
+            {r.format === "long" ? "1만" : "5만"} 회 이상 나온 영상이에요
           </p>
           <ol className="mt-3 space-y-2">
             {r.videos.slice(0, 10).map((video, i) => (
               <li key={video.id}>
                 <a
-                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  href={r.format === "shorts" ? `https://www.youtube.com/shorts/${video.id}` : `https://www.youtube.com/watch?v=${video.id}`}
                   target="_blank"
                   rel="noreferrer"
                   className={`flex items-center gap-3 rounded-xl bg-white px-3 py-2.5 ring-1 transition-colors hover:bg-brand-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 ${
-                    isOpportunity(video) ? "ring-accent-gold" : "ring-neutral-200"
+                    isOpportunity(video, r.format) ? "ring-accent-gold" : "ring-neutral-200"
                   }`}
                 >
                   <span className="w-5 shrink-0 text-center text-sm font-bold text-neutral-400">{i + 1}</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`} alt="" className="hidden h-12 w-[84px] shrink-0 rounded-md object-cover sm:block" loading="lazy" />
+                  <span className="relative hidden shrink-0 sm:block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`} alt="" className="h-12 w-[84px] rounded-md object-cover" loading="lazy" />
+                    <span className="absolute bottom-0.5 right-0.5 rounded bg-black/75 px-1 text-[10px] font-semibold text-white">{fmtDuration(video.seconds)}</span>
+                  </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-neutral-800">
-                      {isOpportunity(video) && <span className="mr-1 text-accent-gold">★</span>}
+                      {isOpportunity(video, r.format) && <span className="mr-1 text-accent-gold">★</span>}
                       {decodeEntities(video.title)}
                     </span>
                     <span className="mt-0.5 block truncate text-xs text-neutral-500">
