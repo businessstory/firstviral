@@ -7,10 +7,20 @@ type FreeCard = {
   title: string;
   tag: string;
   isNew?: boolean;
-  action: { type: "modal"; leadMagnet: string } | { type: "link"; href: string };
+  action:
+    | { type: "modal"; leadMagnet: string }
+    | { type: "link"; href: string }
+    | { type: "download"; href: string; filename: string };
 };
 
 const cards: FreeCard[] = [
+  {
+    image: "/free-resources/carousel-prompt.png",
+    title: "캐러셀 무료 프롬프트",
+    tag: "프롬프트",
+    isNew: true,
+    action: { type: "download", href: "/free-resources/carousel-prompt.txt", filename: "인스타그램_캐러셀_무료_프롬프트.txt" },
+  },
   {
     image: "/free-resources/million-views-pdf.png",
     title: "인스타그램 100만 뷰 공식 5가지 PDF",
@@ -68,6 +78,15 @@ export default function FreePdfPage() {
             >
               <CardVisual card={card} />
             </LeadMagnetCard>
+          ) : card.action.type === "download" ? (
+            <a
+              key={card.title}
+              href={card.action.href}
+              download={card.action.filename}
+              className="group block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-4"
+            >
+              <CardVisual card={card} />
+            </a>
           ) : (
             <Link key={card.title} href={card.action.href} className="group block">
               <CardVisual card={card} />
