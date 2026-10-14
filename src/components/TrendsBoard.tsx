@@ -10,28 +10,25 @@ function formatCount(n: number | null): string {
   return n.toLocaleString();
 }
 
-// 인스타그램 썸네일 URL은 시간이 지나면 만료돼요(서명된 링크). 만료돼서 로드가
-// 실패하면 깨진 이미지 아이콘 대신 자리표시자를 보여줍니다.
-function ReelThumbnail({ src, alt }: { src: string | null; alt: string }) {
-  const [failed, setFailed] = useState(false);
-
-  if (!src || failed) {
-    return (
-      <div className="flex h-full w-full items-center justify-center text-xs text-neutral-300">
-        이미지 없음
-      </div>
-    );
-  }
-
+// 썸네일은 수집할 때 우리 저장소에 영구 복사해 둬요. 그래도 어떤 이유로 이미지가 안 열리면
+// 깨진 이미지나 "이미지 없음" 칸 대신 카드 자체를 숨겨요.
+function ReelThumbnail({ src, alt, onGiveUp }: { src: string; alt: string; onGiveUp: () => void }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={alt}
-      onError={() => setFailed(true)}
+      loading="lazy"
+      onError={onGiveUp}
       className="h-full w-full object-cover transition-transform group-hover:scale-105"
     />
   );
+}
+
+// 인스타그램 CDN 주소의 oe 값은 만료 시각(16진수 유닉스 초)이에요
+function isExpiredCdnUrl(url: string, now: number) {
+  const m = url.match(/[?&]oe=([0-9A-Fa-f]+)/);
+  return !!m && parseInt(m[1], 16) * 1000 < now;
 }
 
 const MILLION = 1000000;
@@ -41,13 +38,17 @@ const TABS = [{ key: ALL_KEY, label: "모든 콘텐츠" }, ...TREND_CATEGORIES];
 
 export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
   const [category, setCategory] = useState<string>(ALL_KEY);
+  const [now] = useState(() => Date.now());
+  const [broken, setBroken] = useState<string[]>([]);
 
   const filtered = useMemo(() => {
     return reels
       .filter((r) => category === ALL_KEY || r.category === category)
       .filter((r) => (r.view_count ?? 0) >= MIN_VIEWS)
+      // 썸네일이 없거나 인스타그램 임시 주소가 이미 만료된 릴스(원본 삭제·비공개 등)는 "이미지 없음" 대신 숨긴다
+      .filter((r) => !!r.thumbnail_url && !isExpiredCdnUrl(r.thumbnail_url, now) && !broken.includes(r.id))
       .sort((a, b) => (b.view_count ?? 0) - (a.view_count ?? 0));
-  }, [reels, category]);
+  }, [reels, category, now, broken]);
 
   return (
     <div>
@@ -84,7 +85,11 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                 className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
-                  <ReelThumbnail src={reel.thumbnail_url} alt={reel.account_handle ?? "릴스 트렌드"} />
+                  <ReelThumbnail
+                    src={reel.thumbnail_url ?? ""}
+                    alt={reel.account_handle ?? "릴스 트렌드"}
+                    onGiveUp={() => setBroken((b) => (b.includes(reel.id) ? b : [...b, reel.id]))}
+                  />
                   <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white">
                     TOP {i + 1}
                   </span>

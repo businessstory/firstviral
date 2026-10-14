@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAdminBasicAuth } from "@/lib/adminAuth";
 import { isValidUserToken } from "@/lib/userAuth";
+import { isStoredThumbnail, storeReelThumbnail } from "@/lib/reelThumbnails";
 
 export const maxDuration = 60;
 
@@ -102,6 +103,16 @@ async function collectRun(
       posted_at: item.timestamp ?? null,
     }));
 
+  // 썸네일을 영구 저장소로 복사 (인스타그램 CDN 주소는 며칠 뒤 만료되므로). 4개씩 나눠 처리
+  for (let i = 0; i < rows.length; i += 4) {
+    await Promise.all(
+      rows.slice(i, i + 4).map(async (row) => {
+        row.thumbnail_url =
+          (await storeReelThumbnail(row.post_url, row.thumbnail_url, supabaseUrl, serviceKey)) ?? row.thumbnail_url;
+      })
+    );
+  }
+
   if (rows.length > 0) {
     await fetch(`${supabaseUrl}/rest/v1/trending_reels?on_conflict=post_url`, {
       method: "POST",
@@ -117,6 +128,34 @@ async function collectRun(
 
   await markRunStatus(run.id, "done", supabaseUrl, serviceKey);
   return `collected:${rows.length}`;
+}
+
+// 매일 자동 점검: 영구 저장소로 아직 못 옮긴 썸네일을 다시 시도한다 (하루 최대 30개)
+async function healThumbnails(supabaseUrl: string, serviceKey: string): Promise<number> {
+  const headers = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
+  const res = await fetch(
+    `${supabaseUrl}/rest/v1/trending_reels?select=id,post_url,thumbnail_url&thumbnail_url=not.like.*storage/v1/object/public/reel-thumbnails*&order=scraped_at.desc&limit=30`,
+    { headers }
+  );
+  if (!res.ok) return 0;
+  const rows = (await res.json()) as { id: string; post_url: string; thumbnail_url: string | null }[];
+  let healed = 0;
+  for (let i = 0; i < rows.length; i += 4) {
+    await Promise.all(
+      rows.slice(i, i + 4).map(async (row) => {
+        if (isStoredThumbnail(row.thumbnail_url, supabaseUrl)) return;
+        const stored = await storeReelThumbnail(row.post_url, row.thumbnail_url, supabaseUrl, serviceKey);
+        if (!stored) return;
+        await fetch(`${supabaseUrl}/rest/v1/trending_reels?id=eq.${row.id}`, {
+          method: "PATCH",
+          headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify({ thumbnail_url: stored }),
+        });
+        healed++;
+      })
+    );
+  }
+  return healed;
 }
 
 export async function GET(req: NextRequest) {
@@ -149,9 +188,11 @@ export async function GET(req: NextRequest) {
     return { category: run.category, result: outcome.status === "fulfilled" ? outcome.value : "error" };
   });
 
-  if (results.some((r) => r.result.startsWith("collected"))) {
+  const healed = await healThumbnails(supabaseUrl, serviceKey);
+
+  if (healed > 0 || results.some((r) => r.result.startsWith("collected"))) {
     revalidatePath("/trends");
   }
 
-  return NextResponse.json({ ok: true, results });
+  return NextResponse.json({ ok: true, results, healed });
 }
