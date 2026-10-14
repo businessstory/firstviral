@@ -38,6 +38,13 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        // 무료 자료실 캐러셀 프롬프트: 한글 파일 이름으로 바로 다운로드되게 한다
+        source: "/free-resources/carousel-prompt.txt",
+        headers: [
+          { key: "Content-Disposition", value: "attachment; filename=\"carousel-prompt.txt\"; filename*=UTF-8''%EC%9D%B8%EC%8A%A4%ED%83%80%EA%B7%B8%EB%9E%A8_%EC%BA%90%EB%9F%AC%EC%85%80_%EB%AC%B4%EB%A3%8C_%ED%94%84%EB%A1%AC%ED%94%84%ED%8A%B8.txt" },
+        ],
+      },
     ];
   },
 };
