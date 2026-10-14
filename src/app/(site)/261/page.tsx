@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LeadMagnetCard from "@/components/LeadMagnetCard";
+import DownloadWithPopup from "@/components/DownloadWithPopup";
 import Tag from "@/components/Tag";
 
 type FreeCard = {
@@ -79,14 +80,9 @@ export default function FreePdfPage() {
               <CardVisual card={card} />
             </LeadMagnetCard>
           ) : card.action.type === "download" ? (
-            <a
-              key={card.title}
-              href={card.action.href}
-              download={card.action.filename}
-              className="group block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-4"
-            >
+            <DownloadWithPopup key={card.title} href={card.action.href} filename={card.action.filename}>
               <CardVisual card={card} />
-            </a>
+            </DownloadWithPopup>
           ) : (
             <Link key={card.title} href={card.action.href} className="group block">
               <CardVisual card={card} />
