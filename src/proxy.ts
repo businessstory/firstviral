@@ -10,6 +10,7 @@ const PROTECTED_PREFIXES = [
   "/api/broadcast-email",
   "/api/broadcast-sms",
   "/api/keyword-research",
+  "/api/naver-blog",
 ];
 
 export function proxy(req: NextRequest) {
@@ -49,5 +50,6 @@ export const config = {
     "/api/broadcast-email/:path*",
     "/api/broadcast-sms/:path*",
     "/api/keyword-research/:path*",
+    "/api/naver-blog/:path*",
   ],
 };
