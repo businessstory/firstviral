@@ -45,6 +45,12 @@ const nextConfig: NextConfig = {
           { key: "Content-Disposition", value: "attachment; filename=\"carousel-prompt.txt\"; filename*=UTF-8''%EC%9D%B8%EC%8A%A4%ED%83%80%EA%B7%B8%EB%9E%A8_%EC%BA%90%EB%9F%AC%EC%85%80_%EB%AC%B4%EB%A3%8C_%ED%94%84%EB%A1%AC%ED%94%84%ED%8A%B8.txt" },
         ],
       },
+      {
+        source: "/free-resources/claude-topic-prompt.txt",
+        headers: [
+          { key: "Content-Disposition", value: "attachment; filename=\"claude-topic-prompt.txt\"; filename*=UTF-8''%ED%81%B4%EB%A1%9C%EB%93%9C_%EC%9D%B8%EC%8A%A4%ED%83%80_%EC%A3%BC%EC%A0%9C%EC%B6%94%EC%B2%9C_%ED%94%84%EB%A1%AC%ED%94%84%ED%8A%B8.txt" },
+        ],
+      },
     ];
   },
 };

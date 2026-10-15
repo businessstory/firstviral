@@ -16,6 +16,13 @@ type FreeCard = {
 
 const cards: FreeCard[] = [
   {
+    image: "/free-resources/claude-topic-prompt.png",
+    title: "카테고리만 넣으면 주제 10개 뽑아주는 클로드 프롬프트",
+    tag: "프롬프트",
+    isNew: true,
+    action: { type: "download", href: "/free-resources/claude-topic-prompt.txt", filename: "클로드_인스타_주제추천_프롬프트.txt" },
+  },
+  {
     image: "/free-resources/carousel-prompt.png",
     title: "캐러셀 무료 프롬프트",
     tag: "프롬프트",
