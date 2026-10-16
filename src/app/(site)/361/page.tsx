@@ -17,11 +17,12 @@ type ClassItem = {
 
 const classes: ClassItem[] = [
   {
-    image: "/class/success-formula-pdf.png",
-    title: "인스타그램 성공공식 PDF",
-    tag: "PDF",
+    image: "/class/pdf3-consulting.webp",
+    title: "[780명 구매 완료] 인스타 PDF 3종 + 1:1 맞춤 컨설팅",
+    tag: "PDF 3종 + 컨설팅",
     priceLabel: "30,000원",
-    cta: { type: "link", url: "https://open.kakao.com/o/sJy1y4Qi" },
+    originalPriceLabel: "69,000원",
+    cta: { type: "page", href: "/consulting" },
   },
   {
     image: "/class/million-views-lecture.png",
