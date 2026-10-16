@@ -1,8 +1,9 @@
+// 애플 스타일 작은 라벨: 장식 없이 연한 면 + 작은 글씨
 const TONE_CLASS = {
-  brand: "bg-brand-50 text-brand-700",
-  gold: "bg-amber-50 text-amber-600",
-  new: "bg-rose-50 text-rose-500",
-  neutral: "bg-neutral-100 text-neutral-500",
+  brand: "bg-brand-50 text-brand-950",
+  gold: "bg-brand-50 text-brand-700",
+  new: "bg-[#fff1ec] text-[#bf4800]",
+  neutral: "bg-brand-50 text-ink-muted",
 } as const;
 
 export default function Tag({
@@ -13,9 +14,7 @@ export default function Tag({
   tone?: keyof typeof TONE_CLASS;
 }) {
   return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-bold ${TONE_CLASS[tone]}`}
-    >
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${TONE_CLASS[tone]}`}>
       {children}
     </span>
   );

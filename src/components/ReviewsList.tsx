@@ -20,22 +20,22 @@ export default function ReviewsList({ names }: { names: string[] }) {
               setMessage(COMING_SOON_MESSAGE);
             }}
             className={`flex items-center gap-3 rounded-xl p-2 text-left transition-colors ${
-              activeIndex === i ? "bg-brand-50" : "hover:bg-neutral-50"
+              activeIndex === i ? "bg-brand-50" : "hover:bg-brand-50"
             }`}
           >
-            <span className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-950">
+            <span className="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-brand-900">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                 <circle cx="12" cy="12" r="9" opacity="0.4" />
                 <path d="M10 9l5 3-5 3z" fill="white" stroke="none" />
               </svg>
             </span>
-            <p className="text-sm font-semibold text-neutral-800">{name}</p>
+            <p className="text-[15px] font-semibold text-brand-950">{name}</p>
           </button>
         ))}
       </div>
 
       {message && (
-        <p className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-xs font-medium text-amber-700">
+        <p className="mt-3 rounded-xl bg-brand-50 px-4 py-3 text-[13px] text-brand-950">
           {message}
         </p>
       )}

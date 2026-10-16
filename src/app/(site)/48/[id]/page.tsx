@@ -26,7 +26,7 @@ export default async function NewsletterPostPage({
             className="mt-6 w-full rounded-2xl object-cover"
           />
         )}
-        <h1 className="mt-6 text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">
+        <h1 className="mt-6 text-2xl font-semibold leading-snug text-brand-950 md:text-3xl">
           {dbPost.title}
         </h1>
         <p className="mt-2 text-sm text-neutral-400">
@@ -57,7 +57,7 @@ export default async function NewsletterPostPage({
         ← 비토리 칼럼 목록
       </Link>
 
-      <h1 className="mt-4 text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">
+      <h1 className="mt-4 text-2xl font-semibold leading-snug text-brand-950 md:text-3xl">
         {post.title}
       </h1>
       <p className="mt-2 text-sm text-neutral-400">{post.date}</p>
@@ -71,7 +71,7 @@ export default async function NewsletterPostPage({
       <div className="mt-12 flex flex-col gap-12">
         {post.sections.map((section) => (
           <section key={section.heading}>
-            <h2 className="text-lg font-bold text-neutral-900">{section.heading}</h2>
+            <h2 className="text-lg font-bold text-brand-950">{section.heading}</h2>
 
             <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4">
               <p className="text-xs font-semibold text-neutral-500">{section.account}</p>

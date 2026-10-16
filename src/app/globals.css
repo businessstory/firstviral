@@ -1,29 +1,37 @@
 @import "tailwindcss";
 
+/* 디자인 시스템: DESIGN-apple.md 기준
+   - 흰색/파치먼트(#f5f5f7) ↔ 진한 타일(#272729)을 번갈아 쓰고, 색이 바뀌는 것 자체를 구분선으로 쓴다
+   - 클릭할 수 있는 요소는 오직 하나의 파란색(#0066cc)
+   - 그림자는 사진·이미지에만, 장식용 그라데이션은 쓰지 않는다 */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1d1d1f;
 
-  /* 브랜드 그린 팔레트 — Tailwind 기본 green이 아닌 커스텀 톤 */
-  --brand-950: #0b2b21; /* 가장 어두운 딥 그린 (히어로/다크 섹션 배경) */
-  --brand-900: #123b2c;
-  --brand-800: #1c4f3a;
-  --brand-700: #276448;
-  --brand-600: #2f8f5b; /* 메인 인터랙션 컬러 (버튼/링크) */
-  --brand-500: #3fae70;
-  --brand-400: #6fcf97; /* 밝은 포인트 그린 */
-  --brand-200: #bfe8cf;
-  --brand-100: #e3f5e9;
-  --brand-50: #f3faf5;
+  /* 기존 brand-* 토큰 이름은 그대로 두고 값만 애플 팔레트로 바꿔서, 사이트 전체가 한 번에 바뀌게 한다 */
+  --brand-950: #1d1d1f; /* ink: 제목·진한 배경 */
+  --brand-900: #272729; /* 진한 타일 */
+  --brand-800: #0058b0; /* 파란 버튼 눌렀을 때 */
+  --brand-700: #0066cc; /* Action Blue: 모든 클릭 요소 */
+  --brand-600: #0066cc;
+  --brand-500: #0071e3; /* 포커스 링 */
+  --brand-400: #2997ff; /* 진한 배경 위 링크·강조 */
+  --brand-200: #cccccc; /* 진한 배경 위 보조 글씨 */
+  --brand-100: #e8e8ed; /* 연한 칩·테두리 */
+  --brand-50: #f5f5f7; /* parchment */
 
-  /* 그린과 보색 계열의 웜 액센트 (버튼 대비, 배지 등) */
-  --accent-gold: #e8c468;
+  /* 두 번째 강조색은 쓰지 않는다: 진한 배경 위 강조는 Sky Link Blue */
+  --accent-gold: #2997ff;
+
+  --hairline: #e0e0e0;
+  --ink-muted: #7a7a7a;
+  --product-shadow: 3px 5px 30px rgba(0, 0, 0, 0.22);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-pretendard: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-pretendard: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   --color-brand-950: var(--brand-950);
   --color-brand-900: var(--brand-900);
@@ -36,11 +44,37 @@
   --color-brand-100: var(--brand-100);
   --color-brand-50: var(--brand-50);
   --color-accent-gold: var(--accent-gold);
+  --color-hairline: var(--hairline);
+  --color-ink-muted: var(--ink-muted);
+  --shadow-product: var(--product-shadow);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-pretendard);
+  letter-spacing: -0.01em;
   word-break: keep-all; /* 한글 단어 중간에서 줄이 끊기지 않도록 */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 애플 특유의 촘촘한 제목 자간 */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.025em;
+}
+
+/* 한 줄 고정 문구: 화면이 좁으면 줄을 넘기지 않고 글자 크기를 줄인다 (font-size는 min(vw, px)로 지정) */
+.line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* 버튼 공통 눌림 효과 */
+.press {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.press:active {
+  transform: scale(0.95);
 }

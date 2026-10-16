@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Tag from "@/components/Tag";
+import PageTitle from "@/components/PageTitle";
 
 const BUTTON_CLASS =
-  "mt-4 block w-full rounded-full py-3 text-center text-sm font-semibold transition-transform active:scale-95 focus:outline-none focus:ring-2";
-const BUTTON_PRIMARY = `${BUTTON_CLASS} bg-brand-700 text-white hover:scale-[1.02] hover:bg-brand-800 focus:ring-brand-700`;
-const BUTTON_SOON = `${BUTTON_CLASS} bg-neutral-100 text-neutral-400 cursor-not-allowed`;
+  "press mt-4 block w-full rounded-full py-3 text-center text-[15px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500";
+const BUTTON_PRIMARY = `${BUTTON_CLASS} bg-brand-700 text-white hover:bg-brand-800`;
+const BUTTON_SOON = `${BUTTON_CLASS} bg-brand-50 text-ink-muted cursor-not-allowed`;
 
 type ClassItem = {
   image: string;
@@ -35,55 +36,46 @@ const classes: ClassItem[] = [
 
 export default function ClassPage() {
   return (
-    <section className="mx-auto max-w-5xl px-5 py-16">
-      <div className="flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-700">
-          선착순 15명 한정
-        </span>
-      </div>
-      <h1 className="mt-3 text-xl font-extrabold text-neutral-900 md:text-2xl">클래스 &amp; 컨설팅</h1>
-
-      <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {classes.map((cls) => (
-          <div key={cls.title} className="group flex flex-col">
-            <div className="relative aspect-video overflow-hidden rounded-2xl bg-neutral-100 transition-transform group-hover:-translate-y-1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cls.image} alt={cls.title} className="h-full w-full object-cover" />
+    <>
+      <PageTitle eyebrow="선착순 15명 한정" title="클래스 & 컨설팅" desc="지금 가장 빠르게 성장하는 방법." />
+      <section className="bg-brand-50">
+        <div className="mx-auto grid max-w-6xl gap-5 px-5 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+          {classes.map((cls) => (
+            <div key={cls.title} className="flex flex-col rounded-[18px] bg-white p-4 md:p-5">
+              <div className="relative aspect-video overflow-hidden rounded-lg bg-brand-50">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={cls.image} alt={cls.title} className="h-full w-full object-cover" />
+              </div>
+              <div className="mt-3">
+                <Tag>{cls.tag}</Tag>
+              </div>
+              <h3 className="mt-2 line-clamp-2 text-balance text-[17px] font-semibold leading-snug text-brand-950">{cls.title}</h3>
+              <div className="mt-2 flex items-baseline gap-2">
+                {cls.originalPriceLabel && <span className="text-[14px] text-ink-muted line-through">{cls.originalPriceLabel}</span>}
+                <p className="text-[19px] font-semibold text-brand-950">{cls.priceLabel}</p>
+                {cls.originalPriceLabel && <Tag tone="new">할인중</Tag>}
+              </div>
+              <div className="mt-auto">
+                {cls.cta.type === "link" && (
+                  <a href={cls.cta.url} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>
+                    신청하기
+                  </a>
+                )}
+                {cls.cta.type === "page" && (
+                  <Link href={cls.cta.href} className={BUTTON_PRIMARY}>
+                    신청하기
+                  </Link>
+                )}
+                {cls.cta.type === "soon" && (
+                  <button type="button" disabled className={BUTTON_SOON}>
+                    준비 중
+                  </button>
+                )}
+              </div>
             </div>
-
-            <h3 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">
-              {cls.title}
-            </h3>
-            <div className="mt-2">
-              <Tag>{cls.tag}</Tag>
-            </div>
-            <div className="mt-2 flex items-center gap-2">
-              {cls.originalPriceLabel && (
-                <span className="text-sm text-neutral-400 line-through">{cls.originalPriceLabel}</span>
-              )}
-              <p className="text-lg font-extrabold text-neutral-900">{cls.priceLabel}</p>
-              {cls.originalPriceLabel && <Tag tone="new">할인중</Tag>}
-            </div>
-
-            {cls.cta.type === "link" && (
-              <a href={cls.cta.url} target="_blank" rel="noreferrer" className={BUTTON_PRIMARY}>
-                신청하기
-              </a>
-            )}
-            {cls.cta.type === "page" && (
-              <Link href={cls.cta.href} className={BUTTON_PRIMARY}>
-                신청하기
-              </Link>
-            )}
-            {cls.cta.type === "soon" && (
-              <button type="button" disabled className={BUTTON_SOON}>
-                준비 중
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

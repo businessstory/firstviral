@@ -49,7 +49,7 @@ export default function DownloadWithPopup({
             role="dialog"
             aria-modal="true"
             aria-labelledby="download-popup-title"
-            className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-[0_24px_60px_rgba(11,43,33,0.35)]"
+            className="relative w-full max-w-sm overflow-hidden rounded-[18px] bg-white text-center"
           >
             <button
               type="button"
@@ -62,17 +62,17 @@ export default function DownloadWithPopup({
               </svg>
             </button>
 
-            <div className="bg-brand-950 px-6 pb-7 pt-9 text-white" style={{ background: "radial-gradient(circle at 50% 0%, #1c4f3a, #0b2b21 70%)" }}>
+            <div className="bg-brand-900 px-6 pb-7 pt-9 text-white">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-brand-200 ring-1 ring-white/15">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
                   <path d="M5 12.5l4.5 4.5L19 7.5" />
                 </svg>
                 다운로드를 시작했어요
               </span>
-              <h2 id="download-popup-title" className="mt-4 text-[22px] font-extrabold leading-snug tracking-tight">
+              <h2 id="download-popup-title" className="mt-4 text-[22px] font-semibold leading-snug">
                 콘텐츠로
                 <br />
-                <span className="text-accent-gold">수익화</span> 하고 싶다면?
+                <span className="text-brand-400">수익화</span> 하고 싶다면?
               </h2>
               <p className="mt-2.5 text-sm leading-relaxed text-brand-100/80">
                 750회 이상 진행한 1:1 인스타그램 컨설팅에서
@@ -84,7 +84,7 @@ export default function DownloadWithPopup({
               <Link
                 ref={ctaRef}
                 href="/consulting"
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-accent-gold text-base font-bold text-brand-950 shadow-[0_10px_24px_rgba(232,196,104,0.4)] transition-transform hover:scale-[1.02] hover:bg-[#f0d07c] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 active:scale-[0.98]"
+                className="press flex h-12 w-full items-center justify-center gap-1.5 rounded-full bg-brand-700 text-[17px] text-white hover:bg-brand-800 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
               >
                 클릭하기
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>

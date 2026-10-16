@@ -2,6 +2,7 @@ import Link from "next/link";
 import LeadMagnetCard from "@/components/LeadMagnetCard";
 import DownloadWithPopup from "@/components/DownloadWithPopup";
 import Tag from "@/components/Tag";
+import PageTitle from "@/components/PageTitle";
 
 type FreeCard = {
   image: string;
@@ -43,53 +44,52 @@ const cards: FreeCard[] = [
   },
 ];
 
+// 애플 store-utility-card: 흰 카드 + 얇은 테두리 + 18px 모서리
 function CardVisual({ card }: { card: FreeCard }) {
   return (
-    <>
-      <div className="relative aspect-video overflow-hidden rounded-2xl bg-neutral-100 transition-transform group-hover:-translate-y-1">
+    <div className="flex h-full flex-col rounded-[18px] bg-white p-4 transition-transform group-hover:-translate-y-0.5 md:p-5">
+      <div className="relative aspect-video overflow-hidden rounded-lg bg-brand-50">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={card.image} alt={card.title} className="h-full w-full object-cover" />
       </div>
-      <h2 className="mt-3 line-clamp-2 text-sm font-bold leading-snug text-neutral-900">{card.title}</h2>
-      <div className="mt-2 flex items-center gap-1.5">
-        <Tag>{card.tag}</Tag>
-        <Tag tone="gold">무료</Tag>
+      <div className="mt-3 flex items-center gap-1.5">
         {card.isNew && <Tag tone="new">New</Tag>}
+        <Tag>{card.tag}</Tag>
       </div>
-    </>
+      <h2 className="mt-2 line-clamp-2 text-balance text-[17px] font-semibold leading-snug text-brand-950">{card.title}</h2>
+      <p className="mt-auto flex items-center gap-1 pt-3 text-[15px] text-brand-700">
+        무료로 받기
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      </p>
+    </div>
   );
 }
 
 export default function FreePdfPage() {
   return (
-    <section className="mx-auto max-w-5xl px-5 py-16">
-      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">무료 자료실</h1>
-      <p className="mt-2 text-sm text-neutral-500">
-        팔로워는 있는데 수익이 안 된다면, 지금 무료로 확인해보세요
-      </p>
-
-      <div className="mt-10 grid gap-x-5 gap-y-9 sm:grid-cols-3">
-        {cards.map((card) =>
-          card.action.type === "modal" ? (
-            <LeadMagnetCard
-              key={card.title}
-              leadMagnet={card.action.leadMagnet}
-              title={card.title}
-              className="group"
-            >
-              <CardVisual card={card} />
-            </LeadMagnetCard>
-          ) : card.action.type === "download" ? (
-            <DownloadWithPopup key={card.title} href={card.action.href} filename={card.action.filename}>
-              <CardVisual card={card} />
-            </DownloadWithPopup>
-          ) : (
-            <Link key={card.title} href={card.action.href} className="group block">
-              <CardVisual card={card} />
-            </Link>
-          )
-        )}
-      </div>
-    </section>
+    <>
+      <PageTitle eyebrow="FREE" title="무료 자료실" desc="수익이 안 된다면, 지금 무료로 확인해 보세요." />
+      <section className="bg-brand-50">
+        <div className="mx-auto grid max-w-6xl gap-5 px-5 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((card) =>
+            card.action.type === "modal" ? (
+              <LeadMagnetCard key={card.title} leadMagnet={card.action.leadMagnet} title={card.title} className="group h-full rounded-[18px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                <CardVisual card={card} />
+              </LeadMagnetCard>
+            ) : card.action.type === "download" ? (
+              <DownloadWithPopup key={card.title} href={card.action.href} filename={card.action.filename}>
+                <CardVisual card={card} />
+              </DownloadWithPopup>
+            ) : (
+              <Link key={card.title} href={card.action.href} className="group block h-full rounded-[18px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                <CardVisual card={card} />
+              </Link>
+            )
+          )}
+        </div>
+      </section>
+    </>
   );
 }

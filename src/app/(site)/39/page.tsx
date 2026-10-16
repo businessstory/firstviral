@@ -1,5 +1,6 @@
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import ReviewsList from "@/components/ReviewsList";
+import PageTitle from "@/components/PageTitle";
 
 // 실제 편집 완료된 후기 영상
 const featured = {
@@ -24,22 +25,16 @@ const studentNames = [
 
 export default function ReviewsPage() {
   return (
-    <section className="mx-auto max-w-5xl px-5 py-16">
-      <h1 className="text-xl font-extrabold text-neutral-900 md:text-2xl">수강생 후기</h1>
-      <p className="mt-2 text-sm text-neutral-500">달라진 이야기를 직접 들어보세요</p>
-
-      <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-        <h2 className="text-sm font-bold text-brand-950">수강생 후기</h2>
-
-        <div className="mt-4 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <YouTubeEmbed
-            youtubeId={featured.youtubeId}
-            title={featured.title}
-            overline={featured.overline}
-          />
-          <ReviewsList names={studentNames} />
+    <>
+      <PageTitle eyebrow="REVIEW" title="수강생 후기" desc="달라진 이야기를 직접 들어보세요." />
+      <section className="bg-brand-50">
+        <div className="mx-auto max-w-6xl px-5 pb-20">
+          <div className="grid gap-6 rounded-[18px] bg-white p-4 md:p-6 lg:grid-cols-[1.4fr_1fr]">
+            <YouTubeEmbed youtubeId={featured.youtubeId} title={featured.title} overline={featured.overline} />
+            <ReviewsList names={studentNames} />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

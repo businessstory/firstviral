@@ -44,12 +44,12 @@ const notices = [
   "*ZOOM으로 할 수밖에 없는 분들은 비대면으로도 진행합니다*",
 ];
 
-const ACCENT = "#4b4ef0";
+const ACCENT = "#0066cc";
 const APPLY_BTN =
-  "flex h-14 w-full items-center justify-center rounded-lg bg-[#4b4ef0] text-base font-bold text-white shadow-[0_8px_20px_rgba(75,78,240,0.28)] transition-transform hover:scale-[1.01] hover:bg-[#3d40d8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4b4ef0] focus-visible:ring-offset-2 active:scale-[0.98]";
+  "flex h-14 w-full items-center justify-center rounded-full bg-[#0066cc] text-[17px] text-white transition-transform hover:scale-[1.01] hover:bg-[#0058b0] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] focus-visible:ring-offset-2 active:scale-[0.98]";
 const ICON_BTN =
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-transform hover:scale-105 hover:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4b4ef0] active:scale-95";
-const CARD = "rounded-xl border border-neutral-200 bg-white shadow-[0_2px_10px_rgba(20,20,60,0.05)]";
+  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-transform hover:scale-105 hover:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] active:scale-95";
+const CARD = "rounded-[18px] border border-[#e0e0e0] bg-white";
 
 type Section = "intro" | "reviews";
 
@@ -111,15 +111,15 @@ export default function ConsultingDetail() {
 
   const priceCard = (
     <div className={`${CARD} p-6`}>
-      <p className="flex items-center gap-2 text-[17px] font-bold">
+      <p className="flex items-center gap-2 text-[17px] font-semibold">
         구성
-        <span className="rounded-full bg-[#ff4a2a] px-2 py-0.5 text-[11px] font-bold text-white">PDF 3종 + 컨설팅</span>
+        <span className="rounded-full bg-[#bf4800] px-2 py-0.5 text-[11px] font-semibold text-white">PDF 3종 + 컨설팅</span>
       </p>
-      <ul className="mt-4 space-y-2.5 rounded-lg border-2 border-[#4b4ef0] bg-[#f3f4ff] p-4">
+      <ul className="mt-4 space-y-2.5 rounded-lg border-2 border-[#0066cc] bg-[#f5f5f7] p-4">
         {BENEFITS.map((b) => (
           <li key={b.key} className="flex items-start gap-2.5 text-balance text-[14px] font-semibold leading-snug">
             <svg className="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" aria-hidden>
-              <circle cx="12" cy="12" r="11" fill="#4b4ef0" />
+              <circle cx="12" cy="12" r="11" fill="#0066cc" />
               <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             {b.title}
@@ -127,12 +127,12 @@ export default function ConsultingDetail() {
         ))}
       </ul>
       <div className="mt-6 flex items-center justify-between border-t border-neutral-200 pt-5">
-        <span className="text-[15px] font-bold">최종 결제금액</span>
+        <span className="text-[15px] font-semibold">최종 결제금액</span>
         <span className="text-right">
           <span className="block text-sm text-neutral-400 line-through">69,000원</span>
           <span className="flex items-baseline gap-2">
-            <span className="text-base font-bold text-[#ff4a2a]">57%</span>
-            <span className="text-2xl font-extrabold" style={{ color: ACCENT }}>30,000원</span>
+            <span className="text-base font-semibold text-[#bf4800]">57%</span>
+            <span className="text-2xl font-semibold" style={{ color: ACCENT }}>30,000원</span>
           </span>
         </span>
       </div>
@@ -152,7 +152,7 @@ export default function ConsultingDetail() {
         <Link
           href="/361"
           aria-label="닫기"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-transform hover:scale-105 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4b4ef0] active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-transform hover:scale-105 hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] active:scale-95"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 6l12 12M18 6L6 18" />
@@ -174,22 +174,22 @@ export default function ConsultingDetail() {
           </div>
 
           {/* 구성: PDF 3종 + 1:1 컨설팅 */}
-          <section className="mt-10 overflow-hidden rounded-2xl p-6 text-white shadow-[0_16px_40px_rgba(30,32,120,0.25)] md:p-8" style={{ background: "radial-gradient(circle at 85% 0%, #5b5ef5 0%, #2b2d9e 45%, #15164f 100%)" }}>
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/25">지금 신청하면</p>
-            <h2 className="mt-3 text-[min(6vw,30px)] font-extrabold leading-snug tracking-tight">
+          <section className="mt-10 overflow-hidden rounded-[18px] bg-[#272729] p-6 text-white md:p-8">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold ring-1 ring-white/25">지금 신청하면</p>
+            <h2 className="mt-3 text-[min(6vw,30px)] font-semibold leading-snug tracking-tight">
               <span className="block whitespace-nowrap">PDF 3종 + 1:1 컨설팅을</span>
-              <span className="block whitespace-nowrap"><span className="text-[#ffd84d]">30,000원</span>에 모두 드려요</span>
+              <span className="block whitespace-nowrap"><span className="text-[#2997ff]">30,000원</span>에 모두 드려요</span>
             </h2>
             <ol className="mt-6 grid gap-3 md:grid-cols-2">
               {BENEFITS.map((b, i) => (
                 <li key={b.key} className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20 backdrop-blur-sm">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-[#3b3ee0]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-[#0066cc]">
                       <BenefitIcon name={b.icon} />
                     </span>
-                    <span className="text-xs font-bold text-[#ffd84d]">{b.key === "consult" ? "1:1 컨설팅" : `PDF ${i}`}</span>
+                    <span className="text-xs font-semibold text-[#2997ff]">{b.key === "consult" ? "1:1 컨설팅" : `PDF ${i}`}</span>
                   </div>
-                  <p className="mt-3 text-balance text-[16px] font-bold leading-snug">{b.title}</p>
+                  <p className="mt-3 text-balance text-[16px] font-semibold leading-snug">{b.title}</p>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-white/75">{b.desc}</p>
                 </li>
               ))}
@@ -201,11 +201,11 @@ export default function ConsultingDetail() {
 
           {/* BEST 후기 */}
           <div className="mt-10 flex items-center justify-between">
-            <h2 className="text-[22px] font-extrabold">BEST 후기</h2>
+            <h2 className="text-[22px] font-semibold">BEST 후기</h2>
             <button
               type="button"
               onClick={() => goTo("reviews")}
-              className="flex items-center gap-1 rounded text-[15px] font-semibold transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4b4ef0] active:opacity-50"
+              className="flex items-center gap-1 rounded text-[15px] font-semibold transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] active:opacity-50"
               style={{ color: ACCENT }}
             >
               더보기
@@ -220,9 +220,9 @@ export default function ConsultingDetail() {
                   key={idx}
                   type="button"
                   onClick={() => goTo("reviews")}
-                  className="w-[78%] shrink-0 snap-start rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-left transition-colors hover:border-neutral-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4b4ef0] active:scale-[0.99] md:w-auto"
+                  className="w-[78%] shrink-0 snap-start rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-left transition-colors hover:border-neutral-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] active:scale-[0.99] md:w-auto"
                 >
-                  <span className="text-sm font-bold">{r.name}</span>
+                  <span className="text-sm font-semibold">{r.name}</span>
                   <span className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-700">{r.summary}</span>
                   <span className="mt-3 flex items-center gap-1 text-sm font-semibold" style={{ color: ACCENT }}>
                     더보기 <Chevron />
@@ -260,8 +260,8 @@ export default function ConsultingDetail() {
               />
             ))}
 
-            <div className="mt-12 rounded-2xl bg-neutral-50 px-5 py-8 text-center ring-1 ring-neutral-200">
-              <p className="text-[min(4.2vw,17px)] font-bold">
+            <div className="mt-12 rounded-[18px] bg-[#f5f5f7] px-5 py-8 text-center">
+              <p className="text-[min(4.2vw,17px)] font-semibold">
                 <Nowrap>* 1:1 인스타그램 컨설팅 신청 후 *</Nowrap>
               </p>
               <p className="mt-4 text-[min(3.9vw,16px)] leading-relaxed text-neutral-700">
@@ -274,11 +274,11 @@ export default function ConsultingDetail() {
             </div>
 
             {/* 마지막 안내 + 신청 버튼 */}
-            <div className="mt-8 overflow-hidden rounded-2xl px-6 py-10 text-center text-white shadow-[0_16px_40px_rgba(30,32,120,0.25)]" style={{ background: "radial-gradient(circle at 50% 0%, #5b5ef5 0%, #2b2d9e 50%, #15164f 100%)" }}>
-              <p className="text-[min(5.4vw,24px)] font-extrabold leading-[1.55] tracking-tight">
+            <div className="mt-8 overflow-hidden rounded-[18px] bg-black px-6 py-12 text-center text-white">
+              <p className="text-[min(5.4vw,24px)] font-semibold leading-[1.55] tracking-tight">
                 <Nowrap>11월 5일부터 3분 구매할 때마다</Nowrap>
                 <Nowrap>
-                  총비용이 <span className="text-[#ffd84d]">10,000원씩 증가</span>합니다
+                  총비용이 <span className="text-[#2997ff]">10,000원씩 증가</span>합니다
                 </Nowrap>
               </p>
               <p className="mt-5 text-[min(4.4vw,18px)] font-semibold leading-relaxed text-white/85">
@@ -294,7 +294,7 @@ export default function ConsultingDetail() {
                 href={APPLY_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="mx-auto mt-8 flex h-14 w-full max-w-md items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#ffd84d] px-5 text-[min(4.2vw,17px)] font-extrabold text-[#15164f] shadow-[0_10px_24px_rgba(255,216,77,0.35)] transition-transform hover:scale-[1.02] hover:bg-[#ffe27a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b2d9e] active:scale-[0.98]"
+                className="mx-auto mt-8 flex h-14 w-full max-w-md items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0066cc] px-5 text-[min(4.2vw,17px)] font-semibold text-white transition-transform hover:scale-[1.02] hover:bg-[#0058b0] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-[0.98]"
               >
                 인스타그램 PDF 3종 및 컨설팅 신청하기
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
@@ -307,9 +307,9 @@ export default function ConsultingDetail() {
           {/* 후기: 상품정보 맨 아래에 이어서 노출 */}
           <section ref={reviewsRef} className="mx-auto mt-16 max-w-[720px]">
             <div className="flex items-center justify-between border-b border-neutral-200 pb-4">
-              <h2 className="text-xl font-bold">컨설팅 후기</h2>
-              <span className="flex items-center gap-1.5 text-base font-bold">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#6d5dfc" aria-hidden>
+              <h2 className="text-xl font-semibold">컨설팅 후기</h2>
+              <span className="flex items-center gap-1.5 text-base font-semibold">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0066cc" aria-hidden>
                   <path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.6 3.4 6.1L4.5 21l4.2-2.3c1 .2 2.1.3 3.3.3 5.5 0 10-3.6 10-8s-4.5-8-10-8z" />
                 </svg>
                 {consultingReviews.length}개
@@ -342,7 +342,7 @@ export default function ConsultingDetail() {
       {/* 모바일 하단 고정 신청 바 */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-neutral-100 bg-white/95 backdrop-blur lg:hidden">
         <div className="mx-auto flex max-w-[720px] items-center gap-3 px-4 py-2.5">
-          <span className="shrink-0 text-lg font-extrabold" style={{ color: ACCENT }}>30,000원</span>
+          <span className="shrink-0 text-lg font-semibold" style={{ color: ACCENT }}>30,000원</span>
           <a href={APPLY_URL} target="_blank" rel="noreferrer" className={APPLY_BTN}>
             컨설팅 신청하기
           </a>
@@ -362,7 +362,7 @@ function TitleBlock({ onShare }: { onShare: () => void }) {
   return (
     <>
       <div className="flex items-start justify-between gap-3">
-        <h1 className="text-[22px] font-extrabold leading-snug tracking-tight">1:1 맞춤 인스타그램 컨설팅</h1>
+        <h1 className="text-[22px] font-semibold leading-snug tracking-tight">1:1 맞춤 인스타그램 컨설팅</h1>
         <button type="button" onClick={onShare} aria-label="공유하기" className={ICON_BTN}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
             <circle cx="18" cy="5" r="2.5" />
@@ -377,7 +377,7 @@ function TitleBlock({ onShare }: { onShare: () => void }) {
       </p>
       <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-600">
         <span className="flex items-center gap-1">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#6d5dfc" aria-hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#0066cc" aria-hidden>
             <path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.6 3.4 6.1L4.5 21l4.2-2.3c1 .2 2.1.3 3.3.3 5.5 0 10-3.6 10-8s-4.5-8-10-8z" />
           </svg>
           후기 {consultingReviews.length}개
@@ -409,11 +409,11 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
       aria-selected={active}
       onClick={onClick}
       className={`relative flex h-14 items-center gap-1.5 whitespace-nowrap px-5 text-[16px] transition-colors focus:outline-none focus-visible:bg-neutral-50 ${
-        active ? "font-bold text-[#4b4ef0]" : "font-medium text-neutral-600 hover:text-neutral-900"
+        active ? "font-semibold text-[#0066cc]" : "font-medium text-neutral-600 hover:text-neutral-900"
       }`}
     >
       {children}
-      {active && <span className="absolute inset-x-0 -bottom-px h-[3px] bg-[#4b4ef0]" />}
+      {active && <span className="absolute inset-x-0 -bottom-px h-[3px] bg-[#0066cc]" />}
     </button>
   );
 }
@@ -443,7 +443,7 @@ function ReviewItem({ name, date, summary, text }: { name: string; date?: string
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="mt-2.5 inline-flex items-center gap-1 rounded text-sm font-semibold text-[#4a5cf0] transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a5cf0] active:opacity-50"
+          className="mt-2.5 inline-flex items-center gap-1 rounded text-sm font-semibold text-[#0066cc] transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066cc] active:opacity-50"
         >
           {open ? "접기" : "전체 후기 보기"}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={open ? "-rotate-90" : ""} aria-hidden>

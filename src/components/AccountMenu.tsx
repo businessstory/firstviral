@@ -21,7 +21,7 @@ export default function AccountMenu() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="계정 메뉴"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-700 transition-colors hover:bg-brand-100"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="8" r="4" />
@@ -32,7 +32,7 @@ export default function AccountMenu() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-2 w-44 rounded-xl border border-neutral-200 bg-white p-2 text-sm shadow-lg">
+          <div className="absolute right-0 z-50 mt-2 w-44 rounded-[18px] border border-hairline bg-white p-2 text-sm">
             {session ? (
               <>
                 <p className="truncate px-2 py-1.5 text-xs text-neutral-400">{session.email}</p>

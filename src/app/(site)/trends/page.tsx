@@ -1,5 +1,6 @@
 import TrendsBoard from "@/components/TrendsBoard";
 import AuthGate from "@/components/AuthGate";
+import PageTitle from "@/components/PageTitle";
 import type { TrendingReel } from "@/lib/trends";
 
 export const metadata = {
@@ -30,21 +31,15 @@ export default async function TrendsPage() {
   const reels = await getTrendingReels();
 
   return (
-    <section className="mx-auto max-w-5xl px-5 py-16">
-      <div className="flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-700">
-          매일 자동 업데이트
-        </span>
-      </div>
-      <h1 className="mt-3 text-xl font-extrabold text-neutral-900 md:text-2xl">릴스 트렌드</h1>
-      <p className="mt-2 text-sm text-neutral-500">지금 인스타그램에서 터지는 콘텐츠</p>
-
-      <div className="mt-10">
-        <AuthGate>
-          <TrendsBoard reels={reels} />
-        </AuthGate>
-      </div>
-    </section>
+    <>
+      <PageTitle eyebrow="매일 자동 업데이트" title="릴스 트렌드" desc="지금 인스타그램에서 터지는 콘텐츠." />
+      <section className="bg-brand-50">
+        <div className="mx-auto max-w-6xl px-5 pb-20">
+          <AuthGate>
+            <TrendsBoard reels={reels} />
+          </AuthGate>
+        </div>
+      </section>
+    </>
   );
 }

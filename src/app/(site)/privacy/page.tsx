@@ -5,7 +5,7 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <section className="mx-auto max-w-3xl px-5 py-16">
-      <h1 className="text-2xl font-extrabold text-neutral-900 md:text-3xl">개인정보처리방침</h1>
+      <h1 className="text-2xl font-semibold text-brand-950 md:text-3xl">개인정보처리방침</h1>
       <p className="mt-3 text-sm text-neutral-400">시행일자: 2026년 9월 4일</p>
 
       <p className="mt-6 text-sm leading-relaxed text-neutral-600">
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
 
       <div className="mt-10 space-y-10 text-sm leading-relaxed text-neutral-700">
         <article>
-          <h2 className="text-base font-bold text-neutral-900">1. 수집하는 개인정보의 항목 및 수집방법</h2>
+          <h2 className="text-base font-bold text-brand-950">1. 수집하는 개인정보의 항목 및 수집방법</h2>
           <p className="mt-2 font-semibold text-neutral-800">가. 수집 항목</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>회원가입 시: 이메일 주소, 비밀번호(암호화 저장). 구글 계정으로 가입 시 구글이 제공하는 이메일 주소.</li>
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">2. 개인정보의 수집 및 이용목적</h2>
+          <h2 className="text-base font-bold text-brand-950">2. 개인정보의 수집 및 이용목적</h2>
           <ol className="mt-2 list-decimal space-y-1 pl-5">
             <li>회원 가입의사 확인, 회원제 서비스 제공에 따른 본인 식별·인증, 로그인 유지</li>
             <li>무료 자료 및 특강 신청에 따른 자료 발송, 신청 확인 안내 메일 발송</li>
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">3. 개인정보의 보유 및 이용기간</h2>
+          <h2 className="text-base font-bold text-brand-950">3. 개인정보의 보유 및 이용기간</h2>
           <p className="mt-2">
             회사는 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다.
             단, 아래의 정보에 대해서는 명시한 사유로 명시한 기간 동안 보존합니다.
@@ -59,7 +59,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">4. 개인정보의 제3자 제공</h2>
+          <h2 className="text-base font-bold text-brand-950">4. 개인정보의 제3자 제공</h2>
           <p className="mt-2">
             회사는 이용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 다만, 아래의 경우에는 예외로
             합니다.
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">5. 개인정보처리의 위탁</h2>
+          <h2 className="text-base font-bold text-brand-950">5. 개인정보처리의 위탁</h2>
           <p className="mt-2">
             회사는 원활한 서비스 제공을 위하여 아래와 같이 개인정보 처리업무를 외부 전문업체에 위탁하고
             있으며, 관계 법령에 따라 위탁계약 시 개인정보가 안전하게 관리될 수 있도록 필요한 사항을 규정하고
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">6. 정보주체의 권리·의무 및 행사방법</h2>
+          <h2 className="text-base font-bold text-brand-950">6. 정보주체의 권리·의무 및 행사방법</h2>
           <ol className="mt-2 list-decimal space-y-1 pl-5">
             <li>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴 및 수집·이용 동의 철회를 요청할 수 있습니다.</li>
             <li>개인정보 조회, 정정, 삭제, 처리정지 요청은 아래 &ldquo;개인정보 보호책임자&rdquo;에게 이메일로 연락하시면 지체 없이 조치합니다.</li>
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">7. 개인정보의 파기절차 및 방법</h2>
+          <h2 className="text-base font-bold text-brand-950">7. 개인정보의 파기절차 및 방법</h2>
           <ol className="mt-2 list-decimal space-y-1 pl-5">
             <li>회사는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체 없이 해당 개인정보를 파기합니다.</li>
             <li>전자적 파일 형태로 저장된 개인정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 삭제합니다.</li>
@@ -125,7 +125,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">8. 개인정보의 안전성 확보조치</h2>
+          <h2 className="text-base font-bold text-brand-950">8. 개인정보의 안전성 확보조치</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>비밀번호의 암호화 저장 및 관리</li>
             <li>개인정보에 대한 접근 권한을 최소한의 인원으로 제한</li>
@@ -134,7 +134,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">9. 쿠키(Cookie)의 운영</h2>
+          <h2 className="text-base font-bold text-brand-950">9. 쿠키(Cookie)의 운영</h2>
           <p className="mt-2">
             회사는 서비스 이용 통계 분석 및 로그인 상태 유지를 위하여 쿠키 및 브라우저 로컬 저장소를 사용할
             수 있습니다. 이용자는 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으나, 이 경우 로그인이 필요한
@@ -143,7 +143,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">10. 개인정보 보호책임자</h2>
+          <h2 className="text-base font-bold text-brand-950">10. 개인정보 보호책임자</h2>
           <p className="mt-2">
             회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리
             및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.
@@ -156,7 +156,7 @@ export default function PrivacyPage() {
         </article>
 
         <article>
-          <h2 className="text-base font-bold text-neutral-900">11. 고지의 의무</h2>
+          <h2 className="text-base font-bold text-brand-950">11. 고지의 의무</h2>
           <p className="mt-2">
             이 개인정보처리방침은 법령·정책 또는 보안기술의 변경에 따라 내용이 추가·삭제 및 수정될 수 있으며,
             변경 시 서비스 내 공지사항을 통해 고지합니다.

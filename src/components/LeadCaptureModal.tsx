@@ -74,7 +74,7 @@ export default function LeadCaptureModal({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-5">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+      <div className="w-full max-w-sm rounded-[18px] bg-white p-6">
         {status === "done" ? (
           <div className="text-center">
             <p className="text-lg font-bold text-neutral-900">신청 완료!</p>

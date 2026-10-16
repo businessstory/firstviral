@@ -58,10 +58,10 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
             key={c.key}
             type="button"
             onClick={() => setCategory(c.key)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-transform active:scale-95 ${
+            className={`press rounded-full px-4 py-2 text-[14px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
               category === c.key
-                ? "bg-brand-700 text-white"
-                : "bg-brand-50 text-brand-700 hover:bg-brand-100"
+                ? "bg-brand-950 text-white"
+                : "bg-white text-brand-950 hover:bg-brand-100"
             }`}
           >
             {c.label}
@@ -82,7 +82,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                 href={reel.post_url}
                 target="_blank"
                 rel="noreferrer"
-                className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-400"
+                className="group flex flex-col overflow-hidden rounded-[18px] bg-white transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
                   <ReelThumbnail
@@ -94,7 +94,7 @@ export default function TrendsBoard({ reels }: { reels: TrendingReel[] }) {
                     TOP {i + 1}
                   </span>
                   {(reel.view_count ?? 0) >= MILLION && (
-                    <span className="absolute right-3 top-3 rounded-full bg-accent-gold px-2.5 py-1 text-[11px] font-bold text-brand-950">
+                    <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-brand-950 backdrop-blur">
                       🔥 100만 뷰
                     </span>
                   )}

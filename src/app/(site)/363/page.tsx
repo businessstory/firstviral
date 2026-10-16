@@ -8,14 +8,14 @@ const templates = [
     desc: "내 계정이 왜 수익으로 안 이어지는지, 직접 체크해볼 수 있는 자가진단 템플릿이에요.",
     bg: "bg-brand-950",
     text: "text-white",
-    labelBg: "bg-accent-gold text-brand-950",
+    labelBg: "bg-brand-700 text-white",
   },
   {
     leadMagnet: "template_vod",
     label: "Monetization VOD",
     title: "인스타그램 수익화 강의 VOD",
     desc: "팔로워를 수익으로 연결하는 방법을 처음부터 끝까지 담은 영상 강의예요.",
-    bg: "bg-gradient-to-br from-brand-500 to-brand-800",
+    bg: "bg-brand-700",
     text: "text-white",
     labelBg: "bg-white text-brand-800",
   },
@@ -24,7 +24,7 @@ const templates = [
 export default function TemplatesPage() {
   return (
     <section className="mx-auto max-w-3xl px-5 py-20">
-      <h1 className="text-center text-2xl font-extrabold leading-snug text-neutral-900 md:text-3xl">
+      <h1 className="text-center text-2xl font-semibold leading-snug text-brand-950 md:text-3xl">
         인스타그램 수익화를 위한 전용 자료
       </h1>
       <p className="mt-3 text-center text-sm text-neutral-500">

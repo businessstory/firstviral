@@ -18,7 +18,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
 
   if (!loggedIn) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border border-black/5 bg-white px-6 py-20 text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+      <div className="flex flex-col items-center rounded-[18px] bg-white px-6 py-20 text-center">
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-700">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <rect x="4" y="11" width="16" height="9" rx="2" />
