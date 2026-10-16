@@ -8,25 +8,30 @@ import { consultingReviews } from "@/data/consulting-reviews";
 const APPLY_URL = "https://open.kakao.com/o/sJy1y4Qi";
 
 // 상세페이지 이미지 (위에서부터 순서대로 노출, 모두 가로 1080px)
-const detailImages = [
-  { src: "/consulting/detail-00.webp", height: 3000 },
-  { src: "/consulting/detail-13.webp", height: 3000 },
-  { src: "/consulting/detail-07.webp", height: 3000 },
-  { src: "/consulting/detail-15.webp", height: 3000 },
-  { src: "/consulting/detail-17.webp", height: 3103 },
-  { src: "/consulting/detail-06.webp", height: 3000 },
-  { src: "/consulting/detail-08.webp", height: 3000 },
-  { src: "/consulting/detail-10.webp", height: 3000 },
-  { src: "/consulting/detail-02.webp", height: 3000 },
-  { src: "/consulting/detail-05.webp", height: 3000 },
-  { src: "/consulting/detail-04.webp", height: 3000 },
-  { src: "/consulting/detail-09.webp", height: 3000 },
-  { src: "/consulting/detail-14.webp", height: 3000 },
-  { src: "/consulting/detail-16.webp", height: 3000 },
-  { src: "/consulting/detail-11.webp", height: 3000 },
-  { src: "/consulting/detail-01.webp", height: 3000 },
-  { src: "/consulting/detail-12.webp", height: 3000 },
-  { src: "/consulting/detail-03.webp", height: 3000 },
+const detailImages: { src: string; height: number; animated?: boolean }[] = [
+  { src: "/consulting/v2/01.webp", height: 3000 },
+  { src: "/consulting/v2/02.webp", height: 3000 },
+  { src: "/consulting/v2/03.webp", height: 3000 },
+  { src: "/consulting/v2/04.webp", height: 3000 },
+  // 4번과 5번 사이: 컨설팅 성과 모음 (움직이는 이미지)
+  { src: "/consulting/v2/results.webp", height: 1080, animated: true },
+  { src: "/consulting/v2/05.webp", height: 3000 },
+  { src: "/consulting/v2/06.webp", height: 3000 },
+  { src: "/consulting/v2/07.webp", height: 3000 },
+  { src: "/consulting/v2/08.webp", height: 3000 },
+  { src: "/consulting/v2/09.webp", height: 3000 },
+  { src: "/consulting/v2/10.webp", height: 3000 },
+  { src: "/consulting/v2/11.webp", height: 3000 },
+  { src: "/consulting/v2/12.webp", height: 3000 },
+  { src: "/consulting/v2/13.webp", height: 3000 },
+  { src: "/consulting/v2/14.webp", height: 3000 },
+  { src: "/consulting/v2/15.webp", height: 3000 },
+  { src: "/consulting/v2/16.webp", height: 3000 },
+  { src: "/consulting/v2/17.webp", height: 3000 },
+  { src: "/consulting/v2/18.webp", height: 3000 },
+  { src: "/consulting/v2/19.webp", height: 3000 },
+  { src: "/consulting/v2/20.webp", height: 3000 },
+  { src: "/consulting/v2/21.webp", height: 3000 },
 ];
 
 const notices = [
@@ -239,14 +244,16 @@ export default function ConsultingDetail() {
 
           {/* 소개: 상세 이미지 */}
           <section ref={introRef} className="mx-auto max-w-[720px] pt-8">
-            {detailImages.map(({ src, height }, i) => (
+            {detailImages.map(({ src, height, animated }, i) => (
               <Image
                 key={src}
                 src={src}
-                alt={`1:1 인스타그램 컨설팅 상세 ${i + 1}`}
+                alt={animated ? "컨설팅 성과 모음" : `인스타그램 PDF 3종 및 컨설팅 상세 ${i + 1}`}
                 width={1080}
                 height={height}
                 sizes="(min-width: 1024px) 720px, 100vw"
+                // 움직이는 이미지는 최적화(정지 이미지 변환) 없이 그대로 보여준다
+                unoptimized={animated}
                 className="block h-auto w-full"
               />
             ))}
@@ -262,6 +269,36 @@ export default function ConsultingDetail() {
               <p className="mt-6 text-[min(3.6vw,16px)] leading-relaxed text-neutral-700">
                 {notices.map((line, i) => (line ? <Nowrap key={i}>{line}</Nowrap> : <br key={i} />))}
               </p>
+            </div>
+
+            {/* 마지막 안내 + 신청 버튼 */}
+            <div className="mt-8 overflow-hidden rounded-2xl px-6 py-10 text-center text-white shadow-[0_16px_40px_rgba(30,32,120,0.25)]" style={{ background: "radial-gradient(circle at 50% 0%, #5b5ef5 0%, #2b2d9e 50%, #15164f 100%)" }}>
+              <p className="text-[min(5.4vw,24px)] font-extrabold leading-[1.55] tracking-tight">
+                <Nowrap>11월 5일부터 3분 구매할 때마다</Nowrap>
+                <Nowrap>
+                  총비용이 <span className="text-[#ffd84d]">10,000원씩 증가</span>합니다
+                </Nowrap>
+              </p>
+              <p className="mt-5 text-[min(4.4vw,18px)] font-semibold leading-relaxed text-white/85">
+                <Nowrap>지금이 가장 저렴하니까</Nowrap>
+                <Nowrap>기회 놓쳐서 후회하지 말고..</Nowrap>
+                <Nowrap className="mt-1 text-white">지금 바로 신청하세요!</Nowrap>
+              </p>
+              <p className="mt-5 text-[min(3.9vw,16px)] leading-relaxed text-white/75">
+                <Nowrap>오픈채팅방으로 문의 주시면</Nowrap>
+                <Nowrap>제가 연락드릴게요!</Nowrap>
+              </p>
+              <a
+                href={APPLY_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mx-auto mt-8 flex h-14 w-full max-w-md items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#ffd84d] px-5 text-[min(4.2vw,17px)] font-extrabold text-[#15164f] shadow-[0_10px_24px_rgba(255,216,77,0.35)] transition-transform hover:scale-[1.02] hover:bg-[#ffe27a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2b2d9e] active:scale-[0.98]"
+              >
+                인스타그램 PDF 3종 및 컨설팅 신청하기
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </a>
             </div>
           </section>
 
@@ -379,8 +416,8 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
   );
 }
 
-function Nowrap({ children }: { children: React.ReactNode }) {
-  return <span className="block whitespace-nowrap">{children}</span>;
+function Nowrap({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <span className={`block whitespace-nowrap ${className}`}>{children}</span>;
 }
 
 function ReviewItem({ name, date, summary, text }: { name: string; date?: string; summary: string; text: string }) {
