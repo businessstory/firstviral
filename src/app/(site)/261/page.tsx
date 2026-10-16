@@ -30,13 +30,6 @@ const cards: FreeCard[] = [
     action: { type: "download", href: "/free-resources/carousel-prompt.txt", filename: "인스타그램_캐러셀_무료_프롬프트.txt" },
   },
   {
-    image: "/free-resources/million-views-pdf.png",
-    title: "인스타그램 100만 뷰 공식 5가지 PDF",
-    tag: "PDF",
-    isNew: true,
-    action: { type: "link", href: "/261/million-views" },
-  },
-  {
     image: "/free-resources/selfcheck.png",
     title: "인스타그램 자가진단 템플릿",
     tag: "체크리스트",

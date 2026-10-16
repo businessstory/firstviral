@@ -4,12 +4,14 @@
 export type ConsultingReview = {
   name: string;
   date?: string;
+  summary: string; // 목록에 먼저 보여줄 1~2줄 (반드시 본문에 있는 문장 그대로)
   text: string;
 };
 
 export const consultingReviews: ConsultingReview[] = [
   {
     name: "김*주",
+    summary: "대표님은 제 계정을 찬찬히 보시고 제가 놓치고 있던 강점을 바로 짚어주셨습니다.",
     text: `대표님과 상담을 시작하면서 제가 왜 늘 제자리만 맴돌았는지 바로 알 수 있었습니다.
 계속 콘텐츠만 올리면 된다고 생각했는데 그건 본질이 아니라는 걸 깨달았습니다.
 
@@ -25,6 +27,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "최*정",
+    summary: "혼자서는 보지 못했던 맹점을 정확히 짚어주셔서 그동안 얼마나 허공만 치고 있었는지 깨닫게 되었습니다.",
     text: `컨설팅을 신청하고도 정말 도움이 될까, 또 뻔한 얘기만 듣는 건 아닐까 걱정이 컸습니다.
 
 그런데 막상 상담이 시작되자 제가 왜 그동안 제자리걸음을 했는지 바로 알 수 있었습니다.
@@ -41,6 +44,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "이*현",
+    summary: "오늘 이 컨설팅이 내 인생의 분기점이 될 거라 믿는다.",
     text: `인스타그램이라는 건 결국 아무도 걸어가지 않은 길을 내 방식대로 걸어가는 것이라는 걸 다시 깨달았다.
 
 '그만한 각오가 되어 있는가.'
@@ -58,6 +62,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "박*영",
+    summary: "막연히 불안하고 답답했던 마음이 순간 탁 트이듯 사라졌습니다.",
     text: `이 컨설팅을 신청한 이유는 머릿속을 떠나지 않는 단어 하나 때문이었습니다.
 
 "나다움."
@@ -75,6 +80,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "정*민",
+    summary: "오늘은 제 인생의 터닝포인트가 된 날입니다.",
     text: `기대 반 설렘 반으로 인스타그램 컨설팅을 받으러 역삼역으로 향했습니다.
 
 그동안 제가 준비해온 것들은 본질이 아닌 장식이었습니다.
@@ -91,6 +97,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "강*희",
+    summary: "특히 인스타그램의 본질을 말씀해주신 내용에 정말 큰 충격을 받았습니다.",
     text: `제가 지금까지 생각해보지 못했던 수많은 부분들에서 새로운 시각을 선물받았습니다.
 
 특히 인스타그램의 본질을 말씀해주신 내용에 정말 큰 충격을 받았습니다.
@@ -103,6 +110,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "조*우",
+    summary: "이제는 그것들을 하나로 묶어줄 핵심을 발견할 수 있다는 확신이 들었습니다",
     text: `컨설팅을 처음 받아본 것도 처음이고, 인스타그램으로 뭔가 해보고 싶다는 아이디어는 많았지만 정작 어떻게 진행해야 할지는 감이 안 잡혀서 신청하게 되었습니다.
 
 컨설팅을 받으면서 제 자신에 대한 질문을 들었을 때 솔직히 답하기가 쉽지 않았습니다.
@@ -117,6 +125,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "윤*아",
+    summary: "오늘 컨설팅에서 가장 크게 와닿았던 건 인스타그램을 단순히 콘텐츠 채널이 아니라 사업의 관점과 본질로 바라봐야 한다는 점이었습니다.",
     text: `인스타그램 컨설팅 후기
 
 오늘 컨설팅에서 가장 크게 와닿았던 건 인스타그램을 단순히 콘텐츠 채널이 아니라 사업의 관점과 본질로 바라봐야 한다는 점이었습니다.
@@ -135,6 +144,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "장*호",
+    summary: "100만 원의 컨설팅을 들은 기분이었습니다. 너무 감사합니다.",
     text: `컨설팅 이전의 저는 여느 사람들처럼 인스타그램 운영과 성장에 대해 잘 안다고 생각했습니다.
 
 나 자신을 충분히 알고 있다고 믿었고, SNS 콘텐츠 사업이 제 장점을 발휘할 수 있는 최적의 분야라고 생각했습니다.
@@ -153,6 +163,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "임*진",
+    summary: "진짜 100% 수익화 성공할 거 같아요 대표님 너무 감사합니다!",
     text: `설렘 반 두려움 반으로 컨설팅에 들어갔습니다.
 
 컨설팅이 시작되고, 제가 뭘 하고 싶은지, 왜 하고 싶은지, 지금까지 어떤 길을 걸어왔는지 말씀드렸습니다.
@@ -174,6 +185,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "한*솔",
+    summary: "컨설팅 직후 알려주신 방법들을 일주일간 실행해본 결과!! 조회수가 평소보다 약 2배 가까이 올랐습니다!",
     text: `사실 처음엔 "남들도 다 받는 흔한 컨설팅 아닐까?" 싶었습니다.
 
 하지만 세 시간 가까이 진행된 대표님의 컨설팅이 끝날 무렵, 제 계정과 제가 놓치고 있던 본질을 마주할 수 있었습니다.
@@ -187,6 +199,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "오*린",
+    summary: "두리뭉실한 조언이 아니라, 바로 적용할 수 있는 현실적인 전략을 알려주셔서 더 큰 의미가 있었습니다.",
     text: `오늘 생각이 완전히 바뀌었습니다.
 
 "인스타그램에서 진짜 중요한 건 무엇인가"라는 대표님의 설명을 들으면서, 제가 지금까지 놓치고 있던 본질을 마주하게 되었습니다.
@@ -207,6 +220,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "서*준",
+    summary: "구체적으로 무엇을 어떻게 해야 하는지 전혀 감이 없었던 저에게 대표님은 명확한 기준과 로드맵을 제시해 주셨습니다.",
     text: `그동안 '계정을 키우고 싶다'는 생각만 했지, 구체적으로 무엇을 어떻게 해야 하는지 전혀 감이 없었던 저에게 대표님은 명확한 기준과 로드맵을 제시해 주셨습니다.
 
 특히 인상 깊었던 부분은 인스타그램 성장의 핵심 구조를 딱 짚어주신 거였습니다.
@@ -225,6 +239,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "신*경",
+    summary: "믿고 따라가면 된다는 확신이 생겼습니다.",
     text: `팔로워 조금 늘고, 한 달에 1000만원 정도만 벌 수 있어도 괜찮다. 생각뿐이었습니다.
 
 그래서 무작정 리포스트, 전자책 판매, 협찬 제안 등 손에 잡히는 건 뭐든 다 시도했지만 결과는 '없다'였습니다.
@@ -238,6 +253,7 @@ export const consultingReviews: ConsultingReview[] = [
   },
   {
     name: "권*비",
+    summary: "2시간이 넘는 시간 동안 단 1분도 아깝지 않았습니다.",
     text: `대표님 처음 컨설팅 받을 때까지만 해도 사실 반신반의했어요.
 
 제 계정이 과연 성장할 수 있을까 걱정도 많았고, 괜히 말뿐이면 어쩌나 싶었거든요.
