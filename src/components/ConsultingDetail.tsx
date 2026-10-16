@@ -53,16 +53,18 @@ const CARD = "rounded-xl border border-neutral-200 bg-white shadow-[0_2px_10px_r
 
 type Section = "intro" | "reviews";
 
-// 신청하면 함께 드리는 혜택 3가지
+// 신청하면 함께 드리는 구성: PDF 3종 + 1:1 컨설팅
 const BENEFITS = [
-  { key: "consult", title: "1:1 인스타그램 컨설팅 2시간권", desc: "내 계정을 직접 보고 수익화 방향을 잡아 드려요 · 오프라인 / ZOOM", icon: "chat" },
-  { key: "sites", title: "영상 편집에 도움되는 사이트 45개", desc: "무료 소스·자막·음원·편집 툴을 한 번에 정리했어요", icon: "film" },
-  { key: "prompt", title: "인스타그램 AI 프롬프트 5종", desc: "주제 찾기부터 캐러셀·릴스 대본까지 복사해서 바로 써요", icon: "spark" },
+  { key: "consult", title: "1:1 맞춤 인스타그램 컨설팅 (2시간)", desc: "내 계정을 직접 보고 수익화 방향을 잡아 드려요 · 오프라인 / ZOOM", icon: "chat" },
+  { key: "pdf1", title: "10만 팔로워를 위한 인스타그램 성공공식 PDF", desc: "계정 콘셉트부터 팔로워가 쌓이는 구조까지", icon: "book" },
+  { key: "pdf2", title: "인스타그램 AI 프롬프트 자동화 PDF + AI 5종", desc: "주제·원고·후킹·캐러셀·릴스를 복사해서 바로", icon: "spark" },
+  { key: "pdf3", title: "캐러셀로 100만 뷰 A–Z PDF", desc: "기획·구성·디자인·업로드까지 한 권으로", icon: "film" },
 ] as const;
 
 function BenefitIcon({ name, size = 22 }: { name: (typeof BENEFITS)[number]["icon"]; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   if (name === "chat") return <svg {...common}><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 11h7M8.5 14h4" /></svg>;
+  if (name === "book") return <svg {...common}><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" /><path d="M8 7h7M8 11h5" /></svg>;
   if (name === "film") return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="M10 9.5l4.5 2.5-4.5 2.5z" fill="currentColor" stroke="none" /></svg>;
   return <svg {...common}><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" /><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" /></svg>;
 }
@@ -110,12 +112,12 @@ export default function ConsultingDetail() {
   const priceCard = (
     <div className={`${CARD} p-6`}>
       <p className="flex items-center gap-2 text-[17px] font-bold">
-        구성 혜택
-        <span className="rounded-full bg-[#ff4a2a] px-2 py-0.5 text-[11px] font-bold text-white">3종</span>
+        구성
+        <span className="rounded-full bg-[#ff4a2a] px-2 py-0.5 text-[11px] font-bold text-white">PDF 3종 + 컨설팅</span>
       </p>
       <ul className="mt-4 space-y-2.5 rounded-lg border-2 border-[#4b4ef0] bg-[#f3f4ff] p-4">
         {BENEFITS.map((b) => (
-          <li key={b.key} className="flex items-start gap-2.5 text-[14px] font-semibold leading-snug">
+          <li key={b.key} className="flex items-start gap-2.5 text-balance text-[14px] font-semibold leading-snug">
             <svg className="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" aria-hidden>
               <circle cx="12" cy="12" r="11" fill="#4b4ef0" />
               <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -135,7 +137,7 @@ export default function ConsultingDetail() {
         </span>
       </div>
       <a href={APPLY_URL} target="_blank" rel="noreferrer" className={`mt-5 ${APPLY_BTN}`}>
-        혜택 3종 받고 컨설팅 신청하기
+        PDF 3종 + 컨설팅 신청하기
       </a>
     </div>
   );
@@ -171,29 +173,29 @@ export default function ConsultingDetail() {
             <div className="mt-4">{priceCard}</div>
           </div>
 
-          {/* 혜택 3종 */}
+          {/* 구성: PDF 3종 + 1:1 컨설팅 */}
           <section className="mt-10 overflow-hidden rounded-2xl p-6 text-white shadow-[0_16px_40px_rgba(30,32,120,0.25)] md:p-8" style={{ background: "radial-gradient(circle at 85% 0%, #5b5ef5 0%, #2b2d9e 45%, #15164f 100%)" }}>
             <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/25">지금 신청하면</p>
             <h2 className="mt-3 text-[min(6vw,30px)] font-extrabold leading-snug tracking-tight">
-              <span className="block whitespace-nowrap">3가지 혜택을</span>
+              <span className="block whitespace-nowrap">PDF 3종 + 1:1 컨설팅을</span>
               <span className="block whitespace-nowrap"><span className="text-[#ffd84d]">30,000원</span>에 모두 드려요</span>
             </h2>
-            <ol className="mt-6 grid gap-3 md:grid-cols-3">
+            <ol className="mt-6 grid gap-3 md:grid-cols-2">
               {BENEFITS.map((b, i) => (
                 <li key={b.key} className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20 backdrop-blur-sm">
                   <div className="flex items-center gap-2.5">
                     <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-[#3b3ee0]">
                       <BenefitIcon name={b.icon} />
                     </span>
-                    <span className="text-xs font-bold text-[#ffd84d]">혜택 {i + 1}</span>
+                    <span className="text-xs font-bold text-[#ffd84d]">{b.key === "consult" ? "1:1 컨설팅" : `PDF ${i}`}</span>
                   </div>
-                  <p className="mt-3 text-[16px] font-bold leading-snug">{b.title}</p>
+                  <p className="mt-3 text-balance text-[16px] font-bold leading-snug">{b.title}</p>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-white/75">{b.desc}</p>
                 </li>
               ))}
             </ol>
             <p className="mt-5 text-center text-[13px] text-white/70">
-              정가 <span className="line-through">69,000원</span> → <b className="text-white">30,000원</b> · 사이트 리스트와 프롬프트는 신청 후 카카오톡으로 보내 드려요
+              정가 <span className="line-through">69,000원</span> → <b className="text-white">30,000원</b> · PDF 3종은 신청 후 카카오톡으로 보내 드려요
             </p>
           </section>
 
@@ -371,7 +373,7 @@ function TitleBlock({ onShare }: { onShare: () => void }) {
         </button>
       </div>
       <p className="mt-2 text-[15px] leading-relaxed text-neutral-600">
-        1:1 컨설팅 2시간 + 영상 편집 사이트 45개 + 인스타그램 AI 프롬프트 5종을 한 번에 받아 가세요.
+        인스타그램 PDF 3종 + 1:1 맞춤 컨설팅(2시간)을 한 번에 받아 가세요.
       </p>
       <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-600">
         <span className="flex items-center gap-1">
