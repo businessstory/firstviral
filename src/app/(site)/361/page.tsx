@@ -17,14 +17,6 @@ type ClassItem = {
 
 const classes: ClassItem[] = [
   {
-    image: "/class/consulting.png",
-    title: "1:1 맞춤 인스타그램 컨설팅(오프라인)",
-    tag: "1:1 컨설팅",
-    priceLabel: "30,000원",
-    originalPriceLabel: "69,000원",
-    cta: { type: "page", href: "/consulting" },
-  },
-  {
     image: "/class/success-formula-pdf.png",
     title: "인스타그램 성공공식 PDF",
     tag: "PDF",
